@@ -29,16 +29,16 @@ const BASE_CONFIG: COBEOptions = {
   markerColor: [255 / 255, 107 / 255, 53 / 255],
   glowColor: [0.96, 0.96, 0.97],
   markers: [
-    { location: [43.6532, -79.3832],  size: 0.08 }, // Toronto
-    { location: [45.5017, -73.5673],  size: 0.07 }, // Montreal
-    { location: [49.2827, -123.1207], size: 0.06 }, // Vancouver
-    { location: [51.0447, -114.0719], size: 0.05 }, // Calgary
-    { location: [40.7128, -74.006],   size: 0.09 }, // New York
-    { location: [34.0522, -118.2437], size: 0.09 }, // Los Angeles
-    { location: [41.8781, -87.6298],  size: 0.08 }, // Chicago
-    { location: [29.7604, -95.3698],  size: 0.07 }, // Houston
-    { location: [47.6062, -122.3321], size: 0.06 }, // Seattle
-    { location: [25.7617, -80.1918],  size: 0.06 }, // Miami
+    { location: [43.6532, -79.3832],  size: 0.03 }, // Toronto
+    { location: [45.5017, -73.5673],  size: 0.03 }, // Montreal
+    { location: [49.2827, -123.1207], size: 0.03 }, // Vancouver
+    { location: [51.0447, -114.0719], size: 0.02 }, // Calgary
+    { location: [40.7128, -74.006],   size: 0.04 }, // New York
+    { location: [34.0522, -118.2437], size: 0.04 }, // Los Angeles
+    { location: [41.8781, -87.6298],  size: 0.03 }, // Chicago
+    { location: [29.7604, -95.3698],  size: 0.03 }, // Houston
+    { location: [47.6062, -122.3321], size: 0.02 }, // Seattle
+    { location: [25.7617, -80.1918],  size: 0.02 }, // Miami
   ],
 };
 
@@ -65,20 +65,25 @@ function Globe({ className, config = BASE_CONFIG }: { className?: string; config
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let width = canvas.offsetWidth;
-    const handleResize = () => { width = canvas.offsetWidth; };
-    window.addEventListener("resize", handleResize);
+    // Use the container's size, fall back to 600 before layout
+    const getSize = () => canvas.parentElement?.offsetWidth ?? canvas.offsetWidth ?? 600;
+    let size = getSize();
 
     const globe = createGlobe(canvas, {
       ...config,
-      width: width * 2,
-      height: width * 2,
+      width: size * 2,
+      height: size * 2,
     });
+
+    const handleResize = () => {
+      size = getSize();
+    };
+    window.addEventListener("resize", handleResize);
 
     let raf: number;
     const animate = () => {
       if (pointerInteracting.current === null) phiRef.current += 0.004;
-      globe.update({ phi: phiRef.current + dragOffset.current, width: width * 2, height: width * 2 });
+      globe.update({ phi: phiRef.current + dragOffset.current, width: size * 2, height: size * 2 });
       raf = requestAnimationFrame(animate);
     };
     raf = requestAnimationFrame(animate);
@@ -93,10 +98,11 @@ function Globe({ className, config = BASE_CONFIG }: { className?: string; config
   }, []);
 
   return (
-    <div className={cn("absolute inset-0 mx-auto aspect-square w-full max-w-[600px]", className)}>
+    <div className={cn("w-full h-full", className)} style={{ aspectRatio: "1/1" }}>
       <canvas
         ref={canvasRef}
-        className="size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
+        className="w-full h-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
+        style={{ cursor: "grab" }}
         onPointerDown={e => updatePointerInteraction(e.clientX - dragOffset.current * 200)}
         onPointerUp={() => updatePointerInteraction(null)}
         onPointerOut={() => updatePointerInteraction(null)}
@@ -109,59 +115,77 @@ function Globe({ className, config = BASE_CONFIG }: { className?: string; config
 
 export default function ShipTimeGlobeSection() {
   return (
-    <section className="px-6 md:px-10 py-16" style={{ background: ds.white }}>
+    <section className="px-5 md:px-10 py-10 md:py-16" style={{ background: ds.white }}>
       <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-        {/* Card with light surface, globe bleeding off the right */}
         <div
-          className="relative overflow-hidden flex flex-col md:flex-row items-center"
+          className="relative overflow-hidden"
           style={{
             background: ds.surface,
-            borderRadius: 28,
+            borderRadius: 24,
             boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-            minHeight: 320,
           }}
         >
-          {/* Left — copy */}
-          <div className="relative z-10 flex-1 px-10 py-12 md:px-14 md:py-14 max-w-xl">
+          {/* Mobile: stacked, no globe */}
+          <div className="md:hidden px-7 py-10">
             <h2
-              className="mb-4"
+              className="mb-5"
               style={{
                 fontFamily: "var(--font-sora), system-ui, sans-serif",
                 fontWeight: 700,
-                fontSize: "clamp(1.5rem, 2.8vw, 2.1rem)",
+                fontSize: "clamp(1.4rem, 6vw, 1.9rem)",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.2,
                 color: ds.navy,
               }}
             >
-              Ship with{" "}
-              <span style={{ color: ds.orange }}>ShipTime</span>{" "}
+              Ship with <span style={{ color: ds.orange }}>ShipTime</span>
               <span style={{ color: ds.muted, fontWeight: 400 }}>
-                Connect to 25+ carriers across Canada and the US. Every package
-                routed through the fastest, most cost-effective path —
-                automatically.
+                {" "}Connect to 25+ carriers across Canada and the US. Every package routed through the fastest, most cost-effective path — automatically.
               </span>
             </h2>
-
             <a
               href="#get-report"
-              className="inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 mt-2 transition-all hover:opacity-90"
-              style={{
-                background: ds.navy,
-                borderRadius: 999,
-                fontFamily: "var(--font-sora), sans-serif",
-              }}
+              className="w-fit inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90"
+              style={{ background: ds.navy, borderRadius: 999, fontFamily: "var(--font-sora), sans-serif" }}
             >
               See Carrier Options →
             </a>
           </div>
 
-          {/* Right — globe cropped, bleeding off edge */}
-          <div
-            className="relative flex-shrink-0 w-full md:w-[480px] h-[240px] md:h-[340px]"
-            style={{ overflow: "hidden" }}
-          >
-            <Globe className="absolute -right-24 -bottom-10 md:-right-32 md:-bottom-16 scale-[1.15]" />
+          {/* Desktop: side-by-side with globe */}
+          <div className="hidden md:grid grid-cols-2" style={{ minHeight: 360 }}>
+            <div className="flex flex-col justify-center px-14 py-14">
+              <h2
+                className="mb-5"
+                style={{
+                  fontFamily: "var(--font-sora), system-ui, sans-serif",
+                  fontWeight: 700,
+                  fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.2,
+                  color: ds.navy,
+                }}
+              >
+                Ship with <span style={{ color: ds.orange }}>ShipTime</span>
+                <span style={{ color: ds.muted, fontWeight: 400 }}>
+                  {" "}Connect to 25+ carriers across Canada and the US. Every package routed through the fastest, most cost-effective path — automatically.
+                </span>
+              </h2>
+              <a
+                href="#get-report"
+                className="w-fit inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90"
+                style={{ background: ds.navy, borderRadius: 999, fontFamily: "var(--font-sora), sans-serif" }}
+              >
+                See Carrier Options →
+              </a>
+            </div>
+
+            {/* Globe — fixed square, bleeds right */}
+            <div className="relative overflow-hidden">
+              <div className="absolute" style={{ width: 520, height: 520, right: -100, top: "50%", transform: "translateY(-50%)" }}>
+                <Globe className="w-full h-full" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

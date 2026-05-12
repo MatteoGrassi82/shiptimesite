@@ -38,7 +38,7 @@ export default function ShipTimeWhySection() {
     <section style={{ background: ds.bg, color: ds.navy }}>
 
       {/* Header + marquee */}
-      <div className="pt-24 pb-0 px-6 md:px-10">
+      <div className="pt-16 md:pt-24 pb-0 px-5 md:px-10">
         <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
           <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, fontFamily: "var(--font-sora), sans-serif" }}>
             Why ShipTime
@@ -63,9 +63,9 @@ export default function ShipTimeWhySection() {
         </div>
 
         {/* Marquee rows */}
-        <div className="relative overflow-hidden" style={{ maxWidth: 820, margin: "0 auto" }}>
-          <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: `linear-gradient(to right, ${ds.bg}, transparent)` }} />
-          <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: `linear-gradient(to left, ${ds.bg}, transparent)` }} />
+        <div className="relative overflow-hidden w-full" style={{ maxWidth: 820, margin: "0 auto" }}>
+          <div className="absolute left-0 top-0 bottom-0 w-10 md:w-16 z-10 pointer-events-none" style={{ background: `linear-gradient(to right, ${ds.bg}, transparent)` }} />
+          <div className="absolute right-0 top-0 bottom-0 w-10 md:w-16 z-10 pointer-events-none" style={{ background: `linear-gradient(to left, ${ds.bg}, transparent)` }} />
           <div className="flex flex-col gap-2.5 py-2">
             <Marquee className="[--duration:45s] [--gap:0.6rem]" repeat={4}>
               {m1.map(q => (
@@ -92,29 +92,30 @@ export default function ShipTimeWhySection() {
         </div>
       </div>
 
-      {/* 4-col feature grid */}
+      {/* Feature grid — 2-col on mobile, 4-col on desktop */}
       <div
-        className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        className="mt-12 md:mt-16 grid grid-cols-2 lg:grid-cols-4"
         style={{ borderTop: `1px solid ${ds.border}`, background: ds.bg }}
       >
         {features.map((f, i) => (
           <div
             key={f.title}
-            className="flex flex-col gap-4 px-8 py-12"
+            className="flex flex-col gap-3 px-5 md:px-8 py-8 md:py-12"
             style={{
-              borderLeft: i > 0 ? `1px solid ${ds.border}` : "none",
+              borderLeft: i % 2 !== 0 || i >= 2 ? `1px solid ${ds.border}` : "none",
+              borderTop: i >= 2 ? `1px solid ${ds.border}` : "none",
               background: ds.bg,
             }}
           >
-            <div className="w-11 h-11 flex items-center justify-center" style={{ background: ds.peach, borderRadius: 12 }}>
-              <f.Ico size={20} style={{ stroke: ds.orange }} />
+            <div className="w-10 h-10 flex items-center justify-center" style={{ background: ds.peach, borderRadius: 10 }}>
+              <f.Ico size={18} style={{ stroke: ds.orange }} />
             </div>
-            <div className="flex flex-col gap-2 pt-8 lg:pt-16">
+            <div className="flex flex-col gap-2 pt-4 md:pt-10 lg:pt-14">
               <h3
                 style={{
                   fontFamily: "var(--font-sora), system-ui, sans-serif",
                   fontWeight: 700,
-                  fontSize: "clamp(1.1rem, 1.6vw, 1.4rem)",
+                  fontSize: "clamp(0.9rem, 1.4vw, 1.25rem)",
                   letterSpacing: "-0.01em",
                   lineHeight: 1.25,
                   color: ds.navy,
@@ -122,7 +123,7 @@ export default function ShipTimeWhySection() {
               >
                 {f.title}
               </h3>
-              <p style={{ color: ds.body, fontSize: 14, lineHeight: 1.6 }}>{f.description}</p>
+              <p style={{ color: ds.body, fontSize: 13.5, lineHeight: 1.6 }}>{f.description}</p>
             </div>
           </div>
         ))}
