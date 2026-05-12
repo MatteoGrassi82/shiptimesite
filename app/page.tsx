@@ -42,30 +42,30 @@ const sora = { fontFamily: "var(--font-dm-sans), sans-serif" };
 const utm = (campaign: string, content: string) =>
   `?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=${campaign}&utm_content=${content}`;
 
-const SHIPTIME = "https://www.shiptime.com";
+const SHIPTIME = "https://docs.google.com/forms/d/e/1FAIpQLSeLZv90COHXyXqlijLX6Gls5SMAquTHc8POd8JO3ajmxSdiVA/viewform?usp=send_form";
 const MEETING  = "https://meetings.hubspot.com/michael";
 
 const reportUrl  = (content: string) => `${SHIPTIME}${utm("logistics-report", content)}`;
 const meetingUrl = (content: string) => `${MEETING}${utm("book-meeting", content)}`;
 
 const whatCards = [
-  { Ico: Icon.Lightning, title: "Intelligent Rate Shopping",  desc: "Automatically surface the best carrier option across your negotiated rates and ours — every shipment, optimized in seconds." },
+  { Ico: Icon.Lightning, title: "Intelligent Rate Shopping",  desc: "Automatically surface the best carrier option across your negotiated rates and ours. Every shipment, optimized in seconds." },
   { Ico: Icon.Layers,    title: "Unified Logistics Platform", desc: "One system for parcel, LTL, tracking, billing, and analytics. Replace your scattered tools with one control tower." },
   { Ico: Icon.Map,       title: "Fulfillment Optimization",   desc: "Access 2,500+ warehouse nodes across Canada & the US. Route inventory closer to your customers." },
-  { Ico: Icon.Chart,     title: "Visibility & Control",       desc: "See performance clearly, uncover savings, and make better logistics decisions — without adding headcount." },
+  { Ico: Icon.Chart,     title: "Visibility & Control",       desc: "See performance clearly, uncover savings, and make better logistics decisions without adding headcount." },
 ];
 
 const metrics = [
   { big: "70%",    label: "Off walk-in carrier prices", sub: "Pre-negotiated volume discounts passed directly to you" },
   { big: "1,000+", label: "Five-star reviews",          sub: "Rated #1 for ease of use by Canadian SMBs" },
-  { big: null,     label: "Growing 3PL network",        sub: "A growing network of partner 3PLs across Canada and the US — giving you more fulfillment flexibility with every shipment." },
+  { big: "Growing", label: "3PL partner network",        sub: "A growing network of partner 3PLs across Canada and the US, giving you more fulfillment flexibility with every shipment." },
 ];
 
 const compareRows = [
-  { feature: "Carrier choice",      st: "Courier, LTL, and FTL — full flexibility",  fba: "Amazon logistics only" },
+  { feature: "Carrier choice",      st: "Courier, LTL, and FTL with full flexibility",  fba: "Amazon logistics only" },
   { feature: "Rate optimization",   st: "Multi-carrier comparison",                  fba: "Rates set by the platform" },
   { feature: "Delivery experience", st: "Full control over branding & SLAs",         fba: "Platform-controlled" },
-  { feature: "Platform lock-in",    st: "None — ship from any channel",              fba: "Tied to Amazon ecosystem" },
+  { feature: "Platform lock-in",    st: "None. Ship from any channel",            fba: "Tied to Amazon ecosystem" },
   { feature: "Fulfillment",         st: "Tailored by product profile",               fba: "Rigid inbound requirements" },
   { feature: "Cost predictability", st: "Transparent, negotiated rates",             fba: "Variable storage & fee structures" },
   { feature: "Support",             st: "Dedicated, consultative team",              fba: "Ticket-based support" },
@@ -80,10 +80,7 @@ export default function Home() {
         <a href="#">
           <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto" priority />
         </a>
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium" style={{ color: ds.body }}>
-          <a href="#why" className="hover:text-[#FF6B35] transition-colors">Why ShipTime</a>
-          <a href="#compare" className="hover:text-[#FF6B35] transition-colors">vs. FBA</a>
-        </div>
+
         <a href={reportUrl("nav")} target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 9, ...sora }}>
           Free Report
         </a>
@@ -101,7 +98,7 @@ export default function Home() {
 
         {/* Subtitle */}
         <p className="max-w-[480px] mb-8 px-2" style={{ ...body, fontSize: "clamp(15px, 2.5vw, 17px)", lineHeight: 1.65 }}>
-          ShipTime is your logistics operating system — unifying shipping, fulfillment, and carrier strategy across North America.{" "}
+          ShipTime is your logistics operating system, unifying shipping, fulfillment, and carrier strategy across North America.{" "}
           <strong style={{ color: ds.navy, fontWeight: 600 }}>No platform fees. No disruption.</strong>
         </p>
 
@@ -115,7 +112,7 @@ export default function Home() {
           </a>
         </div>
 
-        {/* Tags — hide on very small screens */}
+        {/* Tagshide on very small screens */}
         <div className="hidden sm:flex gap-5 flex-wrap justify-center mb-12">
           {["Intelligent Shipping", "Fulfillment Optimization", "North American Network"].map(t => (
             <span key={t} className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>{t}</span>
@@ -149,7 +146,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── WHAT WE DO ── */}
+      {/* ── WHAT WE DO (BENTO) ── */}
       <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div className="text-center mb-10 md:mb-14">
@@ -158,19 +155,125 @@ export default function Home() {
               One platform. Everything logistics.
             </h2>
             <p className="mx-auto" style={{ ...body, maxWidth: 460, fontSize: 15 }}>
-              Technology, operations, and network execution in one managed solution — so your brand can grow confidently and without limitation.
+              Technology, operations, and network execution in one managed solution, so your brand can grow confidently and without limitation.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {whatCards.map(c => (
-              <div key={c.title} style={card} className="hover:-translate-y-1 transition-transform">
-                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.peach, borderRadius: 10 }}>
-                  <c.Ico size={18} style={{ stroke: ds.orange }} />
+
+          {/* Bento grid */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-auto">
+
+            {/* 1 — Rate Shopping: wide left, dark bg */}
+            <div
+              className="md:col-span-7 relative overflow-hidden flex flex-col justify-between"
+              style={{ background: ds.navy, borderRadius: 22, padding: "36px", minHeight: 260 }}
+            >
+              {/* Decorative rings */}
+              <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(255,107,53,0.15)" }} />
+              <div className="absolute -right-6 -bottom-6 w-40 h-40 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(255,107,53,0.25)" }} />
+              <div>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(255,107,53,0.15)", borderRadius: 10 }}>
+                  <Icon.Lightning size={18} style={{ stroke: ds.orange }} />
                 </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "0.95rem", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{c.title}</h3>
-                <p style={{ ...body, fontSize: 14 }}>{c.desc}</p>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.white }}>Intelligent Rate Shopping</h3>
+                <p style={{ ...body, fontSize: 14, color: "rgba(255,255,255,0.6)", maxWidth: 380 }}>
+                  Automatically surface the best carrier option across your negotiated rates and ours. Every shipment, optimized in seconds.
+                </p>
               </div>
-            ))}
+              {/* Mock rate comparison widget */}
+              <div className="mt-6 flex flex-col gap-2">
+                {[
+                  { carrier: "Canada Post", price: "$8.42", best: true },
+                  { carrier: "Purolator",   price: "$9.18", best: false },
+                  { carrier: "UPS",         price: "$11.05", best: false },
+                ].map(r => (
+                  <div key={r.carrier} className="flex items-center justify-between px-4 py-2.5 rounded-xl" style={{ background: r.best ? "rgba(255,107,53,0.15)" : "rgba(255,255,255,0.05)", border: r.best ? `1px solid ${ds.orange}` : "1px solid rgba(255,255,255,0.08)" }}>
+                    <span style={{ ...sora, fontSize: 13, fontWeight: 600, color: r.best ? ds.orange : "rgba(255,255,255,0.55)" }}>{r.carrier}</span>
+                    <div className="flex items-center gap-2">
+                      <span style={{ ...sora, fontSize: 13, fontWeight: 700, color: r.best ? ds.white : "rgba(255,255,255,0.4)" }}>{r.price}</span>
+                      {r.best && <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: ds.orange, color: ds.white, ...sora }}>Best</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 2 — Unified Platform: narrow right, peach accent */}
+            <div
+              className="md:col-span-5 flex flex-col justify-between relative overflow-hidden"
+              style={{ background: ds.peach, borderRadius: 22, padding: "36px", minHeight: 260 }}
+            >
+              <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full pointer-events-none" style={{ background: "rgba(255,107,53,0.08)" }} />
+              <div>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(255,107,53,0.15)", borderRadius: 10 }}>
+                  <Icon.Layers size={18} style={{ stroke: ds.orange }} />
+                </div>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Unified Logistics Platform</h3>
+                <p style={{ ...body, fontSize: 14, color: ds.body, maxWidth: 300 }}>
+                  One system for parcel, LTL, tracking, billing, and analytics. Replace your scattered tools with one control tower.
+                </p>
+              </div>
+              {/* Module pills */}
+              <div className="mt-6 flex flex-wrap gap-2">
+                {["Parcel", "LTL", "Tracking", "Billing", "Analytics"].map(tag => (
+                  <span key={tag} className="px-3 py-1.5 text-xs font-semibold rounded-full" style={{ background: "rgba(255,107,53,0.12)", color: ds.orange, ...sora }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* 3 — Fulfillment Optimization: narrow left, surface bg */}
+            <div
+              className="md:col-span-5 flex flex-col justify-between relative overflow-hidden"
+              style={{ background: ds.surface, borderRadius: 22, padding: "36px", minHeight: 240 }}
+            >
+              <div>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.peach, borderRadius: 10 }}>
+                  <Icon.Map size={18} style={{ stroke: ds.orange }} />
+                </div>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Fulfillment Optimization</h3>
+                <p style={{ ...body, fontSize: 14, color: ds.body }}>
+                  Access warehouse nodes across Canada and the US. Route inventory closer to your customers, cut last-mile costs.
+                </p>
+              </div>
+              {/* Mini stat */}
+              <div className="mt-6 flex items-end gap-3">
+                <span style={{ ...heading, fontSize: "clamp(2rem, 4vw, 2.8rem)", color: ds.orange }}>2,500+</span>
+                <span className="pb-1" style={{ ...body, fontSize: 13, color: ds.muted }}>warehouse nodes<br />across North America</span>
+              </div>
+            </div>
+
+            {/* 4 — Visibility & Control: wide right, white bg with chart mockup */}
+            <div
+              className="md:col-span-7 flex flex-col justify-between relative overflow-hidden"
+              style={{ background: ds.white, borderRadius: 22, padding: "36px", minHeight: 240, border: `1px solid ${ds.border}` }}
+            >
+              <div>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.peach, borderRadius: 10 }}>
+                  <Icon.Chart size={18} style={{ stroke: ds.orange }} />
+                </div>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Visibility & Control</h3>
+                <p style={{ ...body, fontSize: 14, color: ds.body, maxWidth: 340 }}>
+                  See performance clearly, uncover savings, and make better logistics decisions without adding headcount.
+                </p>
+              </div>
+              {/* Sparkline bars */}
+              <div className="mt-6 flex items-end gap-1.5 h-14">
+                {[40, 55, 45, 70, 60, 80, 65, 90, 75, 95, 85, 100].map((h, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 rounded-sm transition-all"
+                    style={{
+                      height: `${h}%`,
+                      background: i === 11 ? ds.orange : i >= 8 ? "rgba(255,107,53,0.35)" : ds.border,
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="mt-2 flex justify-between">
+                <span style={{ ...sora, fontSize: 11, color: ds.muted }}>Jan</span>
+                <span style={{ ...sora, fontSize: 11, color: ds.muted }}>Dec</span>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -190,19 +293,13 @@ export default function Home() {
               Better performance.<br />Lower total cost.
             </h2>
             <p className="mx-auto" style={{ ...body, maxWidth: 420, fontSize: 15 }}>
-              ShipTime customers see measurable improvements in cost, speed, and satisfaction — consistently.
+              ShipTime customers see measurable improvements in cost, speed, and satisfaction, consistently.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {metrics.map(m => (
               <div key={m.label} style={{ ...card, textAlign: "center", padding: "36px 28px" }}>
-                {m.big ? (
-                  <div className="font-bold leading-none mb-3" style={{ ...heading, fontSize: "clamp(2.4rem, 6vw, 3.5rem)", color: ds.orange }}>{m.big}</div>
-                ) : (
-                  <div className="w-10 h-10 flex items-center justify-center mb-3 mx-auto" style={{ background: ds.peach, borderRadius: 10 }}>
-                    <Icon.Warehouse size={18} style={{ stroke: ds.orange }} />
-                  </div>
-                )}
+                <div className="font-bold leading-none mb-3" style={{ ...heading, fontSize: "clamp(2.4rem, 6vw, 3.5rem)", color: ds.orange }}>{m.big}</div>
                 <div className="font-semibold mb-2" style={{ color: ds.navy, fontSize: 15, ...sora }}>{m.label}</div>
                 <div style={{ ...body, fontSize: 13.5, color: ds.muted }}>{m.sub}</div>
               </div>
@@ -257,7 +354,7 @@ export default function Home() {
 
           {/* Desktop: cleaner table with ShipTime column emphasized via shadow card */}
           <div className="hidden md:block relative">
-            {/* ShipTime emphasis card — sits behind, raised */}
+            {/* ShipTime emphasis cardsits behind, raised */}
             <div
               className="absolute pointer-events-none"
               style={{
@@ -327,7 +424,7 @@ export default function Home() {
             </div>
             <h3 style={{ ...sora, fontWeight: 700, fontSize: "1.2rem", color: "white", letterSpacing: "-0.01em", lineHeight: 1.2 }}>Get Your Free Logistics Performance Report</h3>
             <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
-              Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunities — in under 2 minutes.
+              Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunitiesin under 2 minutes.
             </p>
             <a href={reportUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:-translate-y-0.5" style={{ background: ds.white, color: ds.navy, borderRadius: 9, ...sora }}>
               Start the Free Assessment →

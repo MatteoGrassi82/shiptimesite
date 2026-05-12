@@ -23,7 +23,7 @@ const marqueeData = [
 ];
 
 const features = [
-  { Ico: Icon.Package,   title: "We make shipping simple",           description: "Real rates from every carrier in seconds. Compare, choose, and print — without picking up the phone." },
+  { Ico: Icon.Package,   title: "We make shipping simple",           description: "Real rates from every carrier in seconds. Compare, choose, and print, without picking up the phone." },
   { Ico: Icon.Dollar,    title: "We focus on saving you money",      description: "Every rate comparison is designed to cut your costs. Customers save up to **70% off walk-in carrier prices**." },
   { Ico: Icon.Layers,    title: "We know logistics inside out",      description: "With 25+ carrier integrations and years of experience, we bring the best rates and smartest tools to your business." },
   { Ico: Icon.Lightning, title: "Built to grow with your business",  description: "ShipTime scales from your first label to enterprise volume. Heroic Support is always one click away." },

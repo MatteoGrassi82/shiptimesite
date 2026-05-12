@@ -140,7 +140,7 @@ export default function ShipTimeGlobeSection() {
             >
               Ship with <span style={{ color: ds.orange }}>ShipTime</span>
               <span style={{ color: ds.muted, fontWeight: 400 }}>
-                {" "}Access a growing network of courier, LTL, and FTL carriers across Canada and the US — every shipment routed through the fastest, most cost-effective path, automatically.
+                {" "}Access a growing network of courier, LTL, and FTL carriers across Canada and the US. Every shipment routed through the fastest, most cost-effective path. Automatically.
               </span>
             </h2>
           </div>
@@ -161,7 +161,7 @@ export default function ShipTimeGlobeSection() {
               >
                 Ship with <span style={{ color: ds.orange }}>ShipTime</span>
                 <span style={{ color: ds.muted, fontWeight: 400 }}>
-                  {" "}Access a growing network of courier, LTL, and FTL carriers across Canada and the US — every shipment routed through the fastest, most cost-effective path, automatically.
+                  {" "}Access a growing network of courier, LTL, and FTL carriers across Canada and the US. Every shipment routed through the fastest, most cost-effective path. Automatically.
                 </span>
               </h2>
             </div>
