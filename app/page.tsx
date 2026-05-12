@@ -17,7 +17,7 @@ const ds = {
 };
 
 const heading: React.CSSProperties = {
-  fontFamily: "var(--font-sora), system-ui, sans-serif",
+  fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
   color: ds.navy,
   letterSpacing: "-0.02em",
   lineHeight: 1.1,
@@ -37,7 +37,16 @@ const card: React.CSSProperties = {
   boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
 };
 
-const sora = { fontFamily: "var(--font-sora), sans-serif" };
+const sora = { fontFamily: "var(--font-dm-sans), sans-serif" };
+
+const utm = (campaign: string, content: string) =>
+  `?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=${campaign}&utm_content=${content}`;
+
+const SHIPTIME = "https://www.shiptime.com";
+const MEETING  = "https://meetings.hubspot.com/michael";
+
+const reportUrl  = (content: string) => `${SHIPTIME}${utm("logistics-report", content)}`;
+const meetingUrl = (content: string) => `${MEETING}${utm("book-meeting", content)}`;
 
 const whatCards = [
   { Ico: Icon.Lightning, title: "Intelligent Rate Shopping",  desc: "Automatically surface the best carrier option across your negotiated rates and ours — every shipment, optimized in seconds." },
@@ -48,18 +57,18 @@ const whatCards = [
 
 const metrics = [
   { big: "70%",    label: "Off walk-in carrier prices", sub: "Pre-negotiated volume discounts passed directly to you" },
-  { big: "25+",    label: "Carriers integrated",        sub: "Canada Post, UPS, FedEx, Purolator, DHL & more" },
   { big: "1,000+", label: "Five-star reviews",          sub: "Rated #1 for ease of use by Canadian SMBs" },
+  { big: null,     label: "Growing 3PL network",        sub: "A growing network of partner 3PLs across Canada and the US — giving you more fulfillment flexibility with every shipment." },
 ];
 
 const compareRows = [
-  { feature: "Carrier choice",      st: "25+ carriers, full flexibility",    fba: "Amazon logistics only" },
-  { feature: "Rate optimization",   st: "Multi-carrier comparison",          fba: "Fixed Amazon rates" },
-  { feature: "Delivery experience", st: "Full control over branding & SLAs", fba: "Amazon-controlled" },
-  { feature: "Platform lock-in",    st: "None — ship from any channel",      fba: "Amazon ecosystem only" },
-  { feature: "Fulfillment",         st: "Tailored by product profile",       fba: "Rigid inbound requirements" },
-  { feature: "Cost predictability", st: "Transparent, negotiated rates",     fba: "Variable storage & fee surges" },
-  { feature: "Support",             st: "Dedicated, consultative team",      fba: "Ticket-based, limited" },
+  { feature: "Carrier choice",      st: "Courier, LTL, and FTL — full flexibility",  fba: "Amazon logistics only" },
+  { feature: "Rate optimization",   st: "Multi-carrier comparison",                  fba: "Rates set by the platform" },
+  { feature: "Delivery experience", st: "Full control over branding & SLAs",         fba: "Platform-controlled" },
+  { feature: "Platform lock-in",    st: "None — ship from any channel",              fba: "Tied to Amazon ecosystem" },
+  { feature: "Fulfillment",         st: "Tailored by product profile",               fba: "Rigid inbound requirements" },
+  { feature: "Cost predictability", st: "Transparent, negotiated rates",             fba: "Variable storage & fee structures" },
+  { feature: "Support",             st: "Dedicated, consultative team",              fba: "Ticket-based support" },
 ];
 
 export default function Home() {
@@ -69,13 +78,13 @@ export default function Home() {
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-3.5" style={{ background: "rgba(255,255,255,0.93)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${ds.border}` }}>
         <a href="#">
-          <Image src="/shiptime-logo.svg" alt="ShipTime" width={110} height={34} className="h-7 w-auto" priority />
+          <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto" priority />
         </a>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium" style={{ color: ds.body }}>
           <a href="#why" className="hover:text-[#FF6B35] transition-colors">Why ShipTime</a>
           <a href="#compare" className="hover:text-[#FF6B35] transition-colors">vs. FBA</a>
         </div>
-        <a href="#get-report" className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 9, ...sora }}>
+        <a href={reportUrl("nav")} target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 9, ...sora }}>
           Free Report
         </a>
       </nav>
@@ -83,12 +92,6 @@ export default function Home() {
       {/* ── HERO ── */}
       <section className="relative flex flex-col items-center justify-center text-center px-5 pt-28 md:pt-36 pb-0 overflow-hidden" style={{ background: ds.white, minHeight: "100svh" }}>
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,53,0.07) 0%, transparent 68%)" }} />
-
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 mb-6 px-3.5 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-widest" style={{ background: ds.peach, color: ds.orange, ...sora }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-          Logistics Intelligence Platform
-        </div>
 
         {/* Headline */}
         <h1 className="mb-5 max-w-[820px]" style={{ ...heading, fontSize: "clamp(2.2rem, 7vw, 4.8rem)" }}>
@@ -104,10 +107,10 @@ export default function Home() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10 w-full max-w-sm sm:max-w-none">
-          <a href="#get-report" className="inline-flex items-center justify-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.orange, borderRadius: 9, boxShadow: "0 4px 20px rgba(255,107,53,0.28)", ...sora }}>
+          <a href={reportUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.orange, borderRadius: 9, boxShadow: "0 4px 20px rgba(255,107,53,0.28)", ...sora }}>
             Get Free Logistics Report →
           </a>
-          <a href="#book-meeting" className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.white, border: `1.5px solid ${ds.border}`, borderRadius: 999, color: ds.navy, ...sora }}>
+          <a href={meetingUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.white, border: `1.5px solid ${ds.border}`, borderRadius: 999, color: ds.navy, ...sora }}>
             Book a Meeting
           </a>
         </div>
@@ -119,54 +122,10 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Stats bar */}
-        <div className="w-full max-w-2xl border-t mb-0" style={{ borderColor: ds.border }}>
-          <div className="grid grid-cols-3">
-            {[
-              { label: "vs. walk-in rates",  value: "Up to 70%" },
-              { label: "Carriers",           value: "25+" },
-              { label: "5-Star Reviews",     value: "1,000+" },
-            ].map((s, i) => (
-              <div key={s.label} className="flex flex-col items-center py-6 gap-1" style={{ borderLeft: i > 0 ? `1px solid ${ds.border}` : undefined }}>
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-center" style={{ color: ds.muted, ...sora }}>{s.label}</span>
-                <span className="font-bold leading-none" style={{ ...heading, fontSize: "clamp(1.1rem, 4vw, 1.8rem)" }}>{s.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
-
-      {/* ── WHAT WE DO ── */}
-      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.surfaceAlt }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div className="text-center mb-10 md:mb-14">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>What ShipTime Does</p>
-            <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
-              One platform. Everything logistics.
-            </h2>
-            <p className="mx-auto" style={{ ...body, maxWidth: 460, fontSize: 15 }}>
-              Technology, operations, and network execution in one managed solution — so your brand can grow without limitation.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {whatCards.map(c => (
-              <div key={c.title} style={card} className="hover:-translate-y-1 transition-transform">
-                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.peach, borderRadius: 10 }}>
-                  <c.Ico size={18} style={{ stroke: ds.orange }} />
-                </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "0.95rem", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{c.title}</h3>
-                <p style={{ ...body, fontSize: 14 }}>{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── GLOBE ── */}
-      <ShipTimeGlobeSection />
 
       {/* ── PAIN POINTS ── */}
-      <section className="px-5 md:px-10 py-20 md:py-24" style={{ background: ds.white }}>
+      <section className="px-5 md:px-10 py-20 md:py-24" style={{ background: ds.surfaceAlt }}>
         <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
           <p className="text-xs font-bold uppercase tracking-[0.12em] mb-4" style={{ color: ds.orange, ...sora }}>The Real Cost of Doing Nothing</p>
           <h2 className="mb-10 md:mb-14" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
@@ -190,6 +149,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── WHAT WE DO ── */}
+      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <div className="text-center mb-10 md:mb-14">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>What ShipTime Does</p>
+            <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
+              One platform. Everything logistics.
+            </h2>
+            <p className="mx-auto" style={{ ...body, maxWidth: 460, fontSize: 15 }}>
+              Technology, operations, and network execution in one managed solution — so your brand can grow confidently and without limitation.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {whatCards.map(c => (
+              <div key={c.title} style={card} className="hover:-translate-y-1 transition-transform">
+                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.peach, borderRadius: 10 }}>
+                  <c.Ico size={18} style={{ stroke: ds.orange }} />
+                </div>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "0.95rem", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{c.title}</h3>
+                <p style={{ ...body, fontSize: 14 }}>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── GLOBE ── */}
+      <ShipTimeGlobeSection />
+
       {/* ── WHY SHIPTIME ── */}
       <div id="why"><ShipTimeWhySection /></div>
 
@@ -207,8 +195,14 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {metrics.map(m => (
-              <div key={m.big} style={{ ...card, textAlign: "center", padding: "36px 28px" }}>
-                <div className="font-bold leading-none mb-3" style={{ ...heading, fontSize: "clamp(2.4rem, 6vw, 3.5rem)", color: ds.orange }}>{m.big}</div>
+              <div key={m.label} style={{ ...card, textAlign: "center", padding: "36px 28px" }}>
+                {m.big ? (
+                  <div className="font-bold leading-none mb-3" style={{ ...heading, fontSize: "clamp(2.4rem, 6vw, 3.5rem)", color: ds.orange }}>{m.big}</div>
+                ) : (
+                  <div className="w-10 h-10 flex items-center justify-center mb-3 mx-auto" style={{ background: ds.peach, borderRadius: 10 }}>
+                    <Icon.Warehouse size={18} style={{ stroke: ds.orange }} />
+                  </div>
+                )}
                 <div className="font-semibold mb-2" style={{ color: ds.navy, fontSize: 15, ...sora }}>{m.label}</div>
                 <div style={{ ...body, fontSize: 13.5, color: ds.muted }}>{m.sub}</div>
               </div>
@@ -218,71 +212,108 @@ export default function Home() {
       </section>
 
       {/* ── SHIPTIME VS FBA ── */}
-      <section id="compare" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
-        <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          <div className="text-center mb-10 md:mb-14">
+      <section id="compare" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.surfaceAlt }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+          <div className="text-center mb-12 md:mb-16">
             <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>ShipTime vs. FBA</p>
-            <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
+            <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.8rem, 4.5vw, 2.6rem)" }}>
               Platform flexibility beats lock-in
             </h2>
-            <p className="mx-auto" style={{ ...body, maxWidth: 460, fontSize: 15 }}>
+            <p className="mx-auto" style={{ ...body, maxWidth: 520, fontSize: 16 }}>
               FBA is powerful for Amazon reach. ShipTime is built for flexible, omnichannel logistics that you control.
             </p>
           </div>
 
           {/* Mobile: stacked cards */}
-          <div className="flex flex-col gap-3 md:hidden">
+          <div className="flex flex-col gap-4 md:hidden">
             {compareRows.map(row => (
-              <div key={row.feature} style={{ borderRadius: 16, overflow: "hidden", border: `1px solid ${ds.border}` }}>
-                <div className="px-4 py-2.5" style={{ background: ds.surface }}>
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>{row.feature}</span>
+              <div key={row.feature} style={{ borderRadius: 18, overflow: "hidden", background: ds.white, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                <div className="px-5 py-3" style={{ background: ds.surface, borderBottom: `1px solid ${ds.border}` }}>
+                  <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: ds.navy, ...sora }}>{row.feature}</span>
                 </div>
-                <div className="grid grid-cols-2">
-                  <div className="px-4 py-3 flex items-start gap-2" style={{ background: "#0F1B2D08", borderLeft: `2px solid ${ds.orange}` }}>
-                    <div className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: ds.orange }}>
-                      <Icon.Check size={9} style={{ stroke: "white" }} />
+                <div className="px-5 py-4 flex flex-col gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ background: ds.orange }}>
+                      <Icon.Check size={11} style={{ stroke: "white" }} />
                     </div>
-                    <span style={{ ...body, fontSize: 12.5, color: ds.navy }}>{row.st}</span>
+                    <div className="flex-1">
+                      <div className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: ds.orange, ...sora }}>ShipTime</div>
+                      <span style={{ ...body, fontSize: 14, color: ds.navy }}>{row.st}</span>
+                    </div>
                   </div>
-                  <div className="px-4 py-3 flex items-start gap-2" style={{ borderLeft: `1px solid ${ds.border}` }}>
-                    <span className="flex-shrink-0 text-xs font-bold mt-0.5" style={{ color: ds.muted }}>✕</span>
-                    <span style={{ ...body, fontSize: 12.5, color: ds.muted }}>{row.fba}</span>
+                  <div className="flex items-start gap-3 pt-3" style={{ borderTop: `1px solid ${ds.border}` }}>
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ background: ds.surface }}>
+                      <span className="text-[11px] font-bold" style={{ color: ds.muted }}>✕</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: ds.muted, ...sora }}>FBA</div>
+                      <span style={{ ...body, fontSize: 14, color: ds.muted }}>{row.fba}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Desktop: full table */}
-          <div className="hidden md:block" style={{ borderRadius: 20, overflow: "hidden", border: `1px solid ${ds.border}` }}>
-            <div className="grid grid-cols-3">
-              <div className="px-6 py-4" style={{ background: ds.surface, borderBottom: `1px solid ${ds.border}` }}>
-                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>Feature</span>
-              </div>
-              <div className="px-6 py-4" style={{ background: ds.navy, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: ds.orange, ...sora }}>ShipTime</span>
-              </div>
-              <div className="px-6 py-4" style={{ background: ds.surface, borderBottom: `1px solid ${ds.border}`, borderLeft: `1px solid ${ds.border}` }}>
-                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>FBA</span>
-              </div>
-            </div>
-            {compareRows.map((row, i) => (
-              <div key={row.feature} className="grid grid-cols-3" style={{ borderTop: i > 0 ? `1px solid ${ds.border}` : undefined }}>
-                <div className="px-6 py-4" style={{ background: ds.surfaceAlt }}>
-                  <span className="text-sm font-semibold" style={{ color: ds.navy, ...sora }}>{row.feature}</span>
+          {/* Desktop: cleaner table with ShipTime column emphasized via shadow card */}
+          <div className="hidden md:block relative">
+            {/* ShipTime emphasis card — sits behind, raised */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: -16,
+                bottom: -16,
+                left: "calc(33.333% + 8px)",
+                width: "calc(33.333% - 16px)",
+                background: ds.white,
+                borderRadius: 20,
+                boxShadow: "0 12px 40px rgba(15,27,45,0.10), 0 2px 8px rgba(15,27,45,0.06)",
+                border: `1.5px solid ${ds.orange}`,
+              }}
+            />
+
+            <div className="relative" style={{ borderRadius: 16, overflow: "hidden" }}>
+              {/* Header row */}
+              <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
+                <div className="px-7 py-6">
+                  <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>Feature</span>
                 </div>
-                <div className="px-6 py-4 flex items-center gap-2.5" style={{ background: "#0F1B2D08", borderLeft: `2px solid ${ds.orange}` }}>
-                  <div className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: ds.orange }}>
-                    <Icon.Check size={9} style={{ stroke: "white" }} />
+                <div className="px-7 py-6 text-center">
+                  <span className="text-sm font-bold uppercase tracking-widest" style={{ color: ds.orange, ...sora }}>ShipTime</span>
+                </div>
+                <div className="px-7 py-6 text-center">
+                  <span className="text-sm font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>FBA</span>
+                </div>
+              </div>
+
+              {/* Data rows */}
+              {compareRows.map((row, i) => (
+                <div
+                  key={row.feature}
+                  className="grid items-center"
+                  style={{
+                    gridTemplateColumns: "1fr 1fr 1fr",
+                    borderTop: `1px solid ${ds.border}`,
+                  }}
+                >
+                  <div className="px-7 py-5">
+                    <span className="font-semibold" style={{ color: ds.navy, fontSize: 15, ...sora }}>{row.feature}</span>
                   </div>
-                  <span style={{ ...body, fontSize: 13.5, color: ds.navy }}>{row.st}</span>
+                  <div className="px-7 py-5 flex items-center gap-3">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: ds.orange }}>
+                      <Icon.Check size={11} style={{ stroke: "white" }} />
+                    </div>
+                    <span style={{ ...body, fontSize: 14.5, color: ds.navy, fontWeight: 500 }}>{row.st}</span>
+                  </div>
+                  <div className="px-7 py-5 flex items-center gap-3">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: ds.surface }}>
+                      <span className="text-[11px] font-bold" style={{ color: ds.muted }}>✕</span>
+                    </div>
+                    <span style={{ ...body, fontSize: 14.5, color: ds.muted }}>{row.fba}</span>
+                  </div>
                 </div>
-                <div className="px-6 py-4 flex items-center gap-2.5" style={{ borderLeft: `1px solid ${ds.border}` }}>
-                  <span className="flex-shrink-0 text-xs font-bold" style={{ color: ds.muted }}>✕</span>
-                  <span style={{ ...body, fontSize: 13.5, color: ds.muted }}>{row.fba}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -298,7 +329,7 @@ export default function Home() {
             <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
               Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunities — in under 2 minutes.
             </p>
-            <a href="#" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:-translate-y-0.5" style={{ background: ds.white, color: ds.navy, borderRadius: 9, ...sora }}>
+            <a href={reportUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:-translate-y-0.5" style={{ background: ds.white, color: ds.navy, borderRadius: 9, ...sora }}>
               Start the Free Assessment →
             </a>
           </div>
@@ -310,7 +341,7 @@ export default function Home() {
             <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
               Skip the form and get straight to the conversation. Book a 20-minute call to discuss your current setup and where we can drive the most impact.
             </p>
-            <a href="mailto:michael@shiptime.com" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:bg-white/10" style={{ color: "white", borderRadius: 9, border: "1.5px solid rgba(255,255,255,0.3)", ...sora }}>
+            <a href={meetingUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:bg-white/10" style={{ color: "white", borderRadius: 9, border: "1.5px solid rgba(255,255,255,0.3)", ...sora }}>
               Book a Meeting →
             </a>
           </div>

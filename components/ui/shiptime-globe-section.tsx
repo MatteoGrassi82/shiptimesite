@@ -130,7 +130,7 @@ export default function ShipTimeGlobeSection() {
             <h2
               className="mb-5"
               style={{
-                fontFamily: "var(--font-sora), system-ui, sans-serif",
+                fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
                 fontWeight: 700,
                 fontSize: "clamp(1.4rem, 6vw, 1.9rem)",
                 letterSpacing: "-0.02em",
@@ -140,16 +140,9 @@ export default function ShipTimeGlobeSection() {
             >
               Ship with <span style={{ color: ds.orange }}>ShipTime</span>
               <span style={{ color: ds.muted, fontWeight: 400 }}>
-                {" "}Connect to 25+ carriers across Canada and the US. Every package routed through the fastest, most cost-effective path — automatically.
+                {" "}Access a growing network of courier, LTL, and FTL carriers across Canada and the US — every shipment routed through the fastest, most cost-effective path, automatically.
               </span>
             </h2>
-            <a
-              href="#get-report"
-              className="w-fit inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90"
-              style={{ background: ds.navy, borderRadius: 999, fontFamily: "var(--font-sora), sans-serif" }}
-            >
-              See Carrier Options →
-            </a>
           </div>
 
           {/* Desktop: side-by-side with globe */}
@@ -158,7 +151,7 @@ export default function ShipTimeGlobeSection() {
               <h2
                 className="mb-5"
                 style={{
-                  fontFamily: "var(--font-sora), system-ui, sans-serif",
+                  fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
                   fontWeight: 700,
                   fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
                   letterSpacing: "-0.02em",
@@ -168,16 +161,9 @@ export default function ShipTimeGlobeSection() {
               >
                 Ship with <span style={{ color: ds.orange }}>ShipTime</span>
                 <span style={{ color: ds.muted, fontWeight: 400 }}>
-                  {" "}Connect to 25+ carriers across Canada and the US. Every package routed through the fastest, most cost-effective path — automatically.
+                  {" "}Access a growing network of courier, LTL, and FTL carriers across Canada and the US — every shipment routed through the fastest, most cost-effective path, automatically.
                 </span>
               </h2>
-              <a
-                href="#get-report"
-                className="w-fit inline-flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90"
-                style={{ background: ds.navy, borderRadius: 999, fontFamily: "var(--font-sora), sans-serif" }}
-              >
-                See Carrier Options →
-              </a>
             </div>
 
             {/* Globe — fixed square, bleeds right */}

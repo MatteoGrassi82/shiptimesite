@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Sora, DM_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = "G-Y984M16EL7";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -29,7 +32,23 @@ export default function RootLayout({
       lang="en"
       className={`${sora.variable} ${dmSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-[var(--font-dm-sans)]">{children}</body>
+      <body className="min-h-full flex flex-col font-[var(--font-dm-sans)]">
+        {children}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              linker: { domains: ['shiptime.com', 'shiptimelandin.com'] }
+            });
+          `}
+        </Script>
+      </body>
     </html>
   );
 }

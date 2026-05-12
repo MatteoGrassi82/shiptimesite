@@ -40,13 +40,13 @@ export default function ShipTimeWhySection() {
       {/* Header + marquee */}
       <div className="pt-16 md:pt-24 pb-0 px-5 md:px-10">
         <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-          <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, fontFamily: "var(--font-sora), sans-serif" }}>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, fontFamily: "var(--font-dm-sans), sans-serif" }}>
             Why ShipTime
           </p>
           <h2
             className="mb-4"
             style={{
-              fontFamily: "var(--font-sora), system-ui, sans-serif",
+              fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
               fontWeight: 700,
               fontSize: "clamp(2rem, 5vw, 3.2rem)",
               letterSpacing: "-0.02em",
@@ -113,7 +113,7 @@ export default function ShipTimeWhySection() {
             <div className="flex flex-col gap-2 pt-4 md:pt-10 lg:pt-14">
               <h3
                 style={{
-                  fontFamily: "var(--font-sora), system-ui, sans-serif",
+                  fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
                   fontWeight: 700,
                   fontSize: "clamp(0.9rem, 1.4vw, 1.25rem)",
                   letterSpacing: "-0.01em",
