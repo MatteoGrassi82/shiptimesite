@@ -43,7 +43,7 @@ const utm = (campaign: string, content: string) =>
   `?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=${campaign}&utm_content=${content}`;
 
 const SHIPTIME = "https://docs.google.com/forms/d/e/1FAIpQLSeLZv90COHXyXqlijLX6Gls5SMAquTHc8POd8JO3ajmxSdiVA/viewform?usp=send_form";
-const MEETING  = "https://meetings.hubspot.com/michael";
+const MEETING  = "https://meetings-na3.hubspot.com/peter-sexton/meeting-with-peter";
 
 const reportUrl  = (content: string) => `${SHIPTIME}${utm("logistics-report", content)}`;
 const meetingUrl = (content: string) => `${MEETING}${utm("book-meeting", content)}`;
