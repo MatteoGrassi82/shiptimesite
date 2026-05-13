@@ -474,13 +474,9 @@ export default function Home() {
       {/* ── FOOTER ── */}
       <footer className="px-5 md:px-10 py-10 md:py-14" style={{ background: ds.navy, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
         <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-8" style={{ maxWidth: 1240, margin: "0 auto" }}>
-          {/* Logo + tagline + CTA */}
-          <div className="flex flex-col gap-4">
-            <Image src="/shiptime-logo.svg" alt="ShipTime" width={130} height={40} className="brightness-0 invert opacity-80 h-8 w-auto" />
+          {/* Tagline */}
+          <div className="flex flex-col gap-2">
             <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.7)", ...sora }}>Ship Smarter Today</p>
-            <a href={reportUrl("footer")} target="_blank" rel="noopener noreferrer" className="w-fit text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90" style={{ background: ds.orange, color: ds.white, borderRadius: 9, ...sora }}>
-              Get a Quote →
-            </a>
           </div>
 
           {/* Address + phone */}
