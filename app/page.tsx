@@ -90,6 +90,11 @@ export default function Home() {
       <section className="relative flex flex-col items-center justify-center text-center px-5 pt-28 md:pt-36 pb-0 overflow-hidden" style={{ background: ds.white, minHeight: "100svh" }}>
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,53,0.07) 0%, transparent 68%)" }} />
 
+        {/* Eyebrow */}
+        <p className="text-xs font-bold uppercase tracking-[0.14em] mb-4" style={{ color: ds.orange, ...sora }}>
+          Get Your Free Logistics Performance Report
+        </p>
+
         {/* Headline */}
         <h1 className="mb-5 max-w-[820px]" style={{ ...heading, fontSize: "clamp(2.2rem, 7vw, 4.8rem)" }}>
           Your Logistics.<br />
@@ -97,26 +102,36 @@ export default function Home() {
         </h1>
 
         {/* Subtitle */}
-        <p className="max-w-[480px] mb-8 px-2" style={{ ...body, fontSize: "clamp(15px, 2.5vw, 17px)", lineHeight: 1.65 }}>
-          ShipTime is your logistics operating system, unifying shipping, fulfillment, and carrier strategy across North America.{" "}
-          <strong style={{ color: ds.navy, fontWeight: 600 }}>No platform fees. No disruption.</strong>
+        <p className="max-w-[500px] mb-8 px-2" style={{ ...body, fontSize: "clamp(15px, 2.5vw, 17px)", lineHeight: 1.65 }}>
+          Identify cost savings, delivery improvements, and fulfillment opportunities in under 2 minutes.{" "}
+          <strong style={{ color: ds.navy, fontWeight: 600 }}>Confidential. No obligation.</strong>
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10 w-full max-w-sm sm:max-w-none">
           <a href={reportUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.orange, borderRadius: 9, boxShadow: "0 4px 20px rgba(255,107,53,0.28)", ...sora }}>
-            Get Free Logistics Report →
+            Start the 2-Minute Questionnaire →
           </a>
           <a href={meetingUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.white, border: `1.5px solid ${ds.border}`, borderRadius: 999, color: ds.navy, ...sora }}>
             Book a Meeting
           </a>
         </div>
 
-        {/* Tagshide on very small screens */}
-        <div className="hidden sm:flex gap-5 flex-wrap justify-center mb-12">
-          {["Intelligent Shipping", "Fulfillment Optimization", "North American Network"].map(t => (
-            <span key={t} className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>{t}</span>
-          ))}
+        {/* 3-step how it works strip */}
+        <div className="w-full max-w-2xl mb-10">
+          <div className="grid grid-cols-3 gap-0" style={{ borderTop: `1px solid ${ds.border}` }}>
+            {[
+              { n: "1", label: "Fill out the questionnaire", sub: "2 minutes, confidential" },
+              { n: "2", label: "Get your performance report", sub: "Personalised to your business" },
+              { n: "3", label: "Optional 20-min expert review", sub: "With a ShipTime logistics expert" },
+            ].map((step, i) => (
+              <div key={step.n} className="flex flex-col items-center text-center px-3 pt-6 pb-2 gap-1.5" style={{ borderLeft: i > 0 ? `1px solid ${ds.border}` : undefined }}>
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mb-1" style={{ background: ds.orange, color: ds.white, ...sora }}>{step.n}</div>
+                <span className="text-xs font-semibold leading-tight" style={{ color: ds.navy, ...sora }}>{step.label}</span>
+                <span className="text-[11px]" style={{ color: ds.muted }}>{step.sub}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
       </section>
@@ -417,7 +432,17 @@ export default function Home() {
 
       {/* ── DUAL CTA ── */}
       <section id="get-report" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.navy }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ maxWidth: 960, margin: "0 auto" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] mb-3" style={{ color: ds.orange, ...sora }}>Two ways to get started</p>
+            <h2 className="mb-3" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: ds.white }}>
+              Walk away with at least one<br />actionable insight
+            </h2>
+            <p style={{ ...body, fontSize: 15, color: "rgba(255,255,255,0.55)", maxWidth: 440, margin: "0 auto" }}>
+              Fill out the questionnaire or speak directly with a ShipTime logistics expert. Either way, you leave with a clearer picture of where to improve.
+            </p>
+          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="flex flex-col gap-5" style={{ background: ds.orange, borderRadius: 22, padding: "32px" }}>
             <div className="w-10 h-10 flex items-center justify-center" style={{ background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
               <Icon.Clipboard size={18} style={{ stroke: "white" }} />
@@ -442,6 +467,7 @@ export default function Home() {
               Book a Meeting →
             </a>
           </div>
+        </div>
         </div>
       </section>
 
