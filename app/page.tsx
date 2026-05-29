@@ -2,6 +2,7 @@ import type React from "react";
 import Image from "next/image";
 import ShipTimeWhySection from "@/components/ui/shiptime-why-section";
 import ShipTimeGlobeSection from "@/components/ui/shiptime-globe-section";
+import ShipTimeHeroChat from "@/components/ui/shiptime-hero-chat";
 import { Icon } from "@/components/ui/icons";
 
 const ds = {
@@ -88,54 +89,7 @@ export default function Home() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center justify-center text-center px-5 pt-28 md:pt-36 pb-0 overflow-hidden" style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #E3EEFC 55%, #F8FAFB 100%)", minHeight: "100svh" }}>
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(240,132,91,0.12) 0%, transparent 68%)" }} />
-
-        {/* Eyebrow */}
-        <p className="text-xs font-bold uppercase tracking-[0.14em] mb-4" style={{ color: ds.orange, ...sora }}>
-          Get Your Free Logistics Performance Report
-        </p>
-
-        {/* Headline */}
-        <h1 className="mb-5 max-w-[820px]" style={{ ...heading, fontSize: "clamp(2.2rem, 7vw, 4.8rem)" }}>
-          Your Logistics.<br />
-          <span style={{ color: ds.orange }}>Fully Optimized.</span>
-        </h1>
-
-        {/* Subtitle */}
-        <p className="max-w-[500px] mb-8 px-2" style={{ ...body, fontSize: "clamp(15px, 2.5vw, 17px)", lineHeight: 1.65 }}>
-          Identify cost savings, delivery improvements, and fulfillment opportunities in under 2 minutes.{" "}
-          <strong style={{ color: ds.navy, fontWeight: 600 }}>Confidential. No obligation.</strong>
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10 w-full max-w-sm sm:max-w-none">
-          <a href={reportUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-all hover:opacity-90" style={{ background: ds.orange, borderRadius: 999, boxShadow: "0 4px 20px rgba(236,90,38,0.25)", ...sora }}>
-            Start the 2-Minute Questionnaire →
-          </a>
-          <a href={meetingUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all hover:opacity-90" style={{ background: ds.navy, borderRadius: 999, color: ds.white, ...sora }}>
-            Book a Meeting
-          </a>
-        </div>
-
-        {/* 3-step how it works strip */}
-        <div className="w-full max-w-2xl mb-10">
-          <div className="grid grid-cols-3 gap-0" style={{ borderTop: `1px solid ${ds.border}` }}>
-            {[
-              { n: "1", label: "Fill out the questionnaire", sub: "2 minutes, confidential" },
-              { n: "2", label: "Get your performance report", sub: "Personalised to your business" },
-              { n: "3", label: "Optional 20-min expert review", sub: "With a ShipTime logistics expert" },
-            ].map((step, i) => (
-              <div key={step.n} className="flex flex-col items-center text-center px-3 pt-6 pb-2 gap-1.5" style={{ borderLeft: i > 0 ? `1px solid ${ds.border}` : undefined }}>
-                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mb-1" style={{ background: ds.orange, color: ds.white, ...sora }}>{step.n}</div>
-                <span className="text-xs font-semibold leading-tight" style={{ color: ds.navy, ...sora }}>{step.label}</span>
-                <span className="text-[11px]" style={{ color: ds.muted }}>{step.sub}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </section>
+      <ShipTimeHeroChat />
 
       {/* ── PAIN POINTS ── */}
       <section className="px-5 md:px-10 py-20 md:py-24" style={{ background: ds.surfaceAlt }}>
