@@ -151,7 +151,7 @@ export default function Home() {
               { Ico: Icon.Cog,    title: "Manual workflows slowing growth", desc: "Your team is copy-pasting orders, chasing exceptions, and firefighting logistics instead of scaling." },
             ].map(p => (
               <div key={p.title} style={card}>
-                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.lightBlue, borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.lightBlue, borderRadius: 12 }}>
                   <p.Ico size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "0.95rem", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{p.title}</h3>
@@ -181,13 +181,13 @@ export default function Home() {
             {/* 1 — Rate Shopping: wide left, dark bg */}
             <div
               className="md:col-span-7 relative overflow-hidden flex flex-col justify-between"
-              style={{ background: ds.navy, borderRadius: 22, padding: "36px", minHeight: 260 }}
+              style={{ background: ds.navy, borderRadius: 24, padding: "36px", minHeight: 260 }}
             >
               {/* Decorative rings */}
               <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(236,90,38,0.15)" }} />
               <div className="absolute -right-6 -bottom-6 w-40 h-40 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(236,90,38,0.25)" }} />
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 12 }}>
                   <Icon.Lightning size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.white }}>Intelligent Rate Shopping</h3>
@@ -216,15 +216,15 @@ export default function Home() {
             {/* 2 — Unified Platform: narrow right, peach accent */}
             <div
               className="md:col-span-5 flex flex-col justify-between relative overflow-hidden"
-              style={{ background: ds.lightBlue, borderRadius: 22, padding: "36px", minHeight: 260 }}
+              style={{ background: ds.lightBlue, borderRadius: 24, padding: "36px", minHeight: 260 }}
             >
               <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full pointer-events-none" style={{ background: "rgba(236,90,38,0.08)" }} />
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 12 }}>
                   <Icon.Layers size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Unified Logistics Platform</h3>
-                <p style={{ ...body, fontSize: 14, color: ds.body, maxWidth: 300 }}>
+                <p style={{ ...body, fontSize: 14, color: ds.muted, maxWidth: 300 }}>
                   One system for parcel, LTL, tracking, billing, and analytics. Replace your scattered tools with one control tower.
                 </p>
               </div>
@@ -239,14 +239,14 @@ export default function Home() {
             {/* 3 — Fulfillment Optimization: narrow left, surface bg */}
             <div
               className="md:col-span-5 flex flex-col justify-between relative overflow-hidden"
-              style={{ background: ds.surface, borderRadius: 22, padding: "36px", minHeight: 240 }}
+              style={{ background: ds.surface, borderRadius: 24, padding: "36px", minHeight: 240 }}
             >
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 12 }}>
                   <Icon.Map size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Fulfillment Optimization</h3>
-                <p style={{ ...body, fontSize: 14, color: ds.body }}>
+                <p style={{ ...body, fontSize: 14, color: ds.muted }}>
                   Access warehouse nodes across Canada and the US. Route inventory closer to your customers, cut last-mile costs.
                 </p>
               </div>
@@ -260,14 +260,14 @@ export default function Home() {
             {/* 4 — Visibility & Control: wide right, white bg with chart mockup */}
             <div
               className="md:col-span-7 flex flex-col justify-between relative overflow-hidden"
-              style={{ background: ds.white, borderRadius: 22, padding: "36px", minHeight: 240, border: `1px solid ${ds.border}` }}
+              style={{ background: ds.white, borderRadius: 24, padding: "36px", minHeight: 240, border: `1px solid ${ds.border}` }}
             >
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 12 }}>
                   <Icon.Chart size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Visibility & Control</h3>
-                <p style={{ ...body, fontSize: 14, color: ds.body, maxWidth: 340 }}>
+                <p style={{ ...body, fontSize: 14, color: ds.muted, maxWidth: 340 }}>
                   See performance clearly, uncover savings, and make better logistics decisions without adding headcount.
                 </p>
               </div>
@@ -325,7 +325,7 @@ export default function Home() {
       </section>
 
       {/* ── SHIPTIME VS FBA ── */}
-      <section id="compare" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.surfaceAlt }}>
+      <section id="compare" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
         <div style={{ maxWidth: 1040, margin: "0 auto" }}>
           <div className="text-center mb-12 md:mb-16">
             <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>ShipTime vs. FBA</p>
@@ -380,7 +380,7 @@ export default function Home() {
                 width: "calc(33.333% - 16px)",
                 background: ds.white,
                 borderRadius: 20,
-                boxShadow: "0 12px 40px rgba(15,27,45,0.10), 0 2px 8px rgba(15,27,45,0.06)",
+                boxShadow: "0 12px 40px rgba(28,30,61,0.10), 0 2px 8px rgba(28,30,61,0.06)",
                 border: `1.5px solid ${ds.orange}`,
               }}
             />
@@ -444,19 +444,19 @@ export default function Home() {
             </p>
           </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="flex flex-col gap-5" style={{ background: ds.orange, borderRadius: 22, padding: "32px" }}>
+          <div className="flex flex-col gap-5" style={{ background: ds.orange, borderRadius: 24, padding: "32px" }}>
             <div className="w-10 h-10 flex items-center justify-center" style={{ background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
               <Icon.Clipboard size={18} style={{ stroke: "white" }} />
             </div>
             <h3 style={{ ...sora, fontWeight: 700, fontSize: "1.2rem", color: "white", letterSpacing: "-0.01em", lineHeight: 1.2 }}>Get Your Free Logistics Performance Report</h3>
             <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
-              Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunitiesin under 2 minutes.
+              Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunities in under 2 minutes.
             </p>
             <a href={reportUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90" style={{ background: ds.white, color: ds.navy, borderRadius: 999, ...sora }}>
               Start the Free Assessment →
             </a>
           </div>
-          <div id="book-meeting" className="flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 22, padding: "32px", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <div id="book-meeting" className="flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 24, padding: "32px", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div className="w-10 h-10 flex items-center justify-center" style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12 }}>
               <Icon.Calendar size={18} style={{ stroke: "white" }} />
             </div>
@@ -484,7 +484,7 @@ export default function Home() {
           <div className="flex flex-col gap-2 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
             <p>700 Dorval Dr., Suite 700</p>
             <p>Oakville, ON L6K 3V3 Canada</p>
-            <a href="tel:18777845744" className="mt-2 transition-colors hover:text-[#FF6B35]" style={{ color: "rgba(255,255,255,0.45)" }}>1-877-784-5744</a>
+            <a href="tel:18777845744" className="mt-2 transition-colors hover:text-[#EC5A26]" style={{ color: "rgba(255,255,255,0.45)" }}>1-877-784-5744</a>
           </div>
         </div>
         <p className="mt-8 text-xs text-center md:text-left" style={{ color: "rgba(255,255,255,0.25)", maxWidth: 1240, margin: "32px auto 0" }}>© 2026 ShipTime Inc. All rights reserved.</p>
