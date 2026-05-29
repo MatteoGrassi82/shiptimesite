@@ -5,39 +5,40 @@ import ShipTimeGlobeSection from "@/components/ui/shiptime-globe-section";
 import { Icon } from "@/components/ui/icons";
 
 const ds = {
-  navy:       "#0F1B2D",
-  body:       "#4A5468",
-  muted:      "#8A94A6",
-  orange:     "#FF6B35",
-  peach:      "#FFE8DD",
-  surface:    "#F4F5F7",
-  surfaceAlt: "#FAFAFB",
-  border:     "#E5E7EB",
+  navy:       "#1C1E3D",
+  body:       "#1C1E3D",
+  muted:      "#6E728A",
+  orange:     "#EC5A26",
+  orangeSoft: "#F0845B",
+  lightBlue:  "#E3EEFC",
+  surface:    "#F8FAFB",
+  surfaceAlt: "#F8FAFB",
+  border:     "#E8E8E8",
   white:      "#FFFFFF",
 };
 
 const heading: React.CSSProperties = {
-  fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
+  fontFamily: "var(--font-manrope), system-ui, sans-serif",
   color: ds.navy,
   letterSpacing: "-0.02em",
   lineHeight: 1.1,
-  fontWeight: 700,
+  fontWeight: 800,
 };
 
 const body: React.CSSProperties = {
-  fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
-  color: ds.body,
+  fontFamily: "var(--font-inter), system-ui, sans-serif",
+  color: ds.muted,
   lineHeight: 1.6,
 };
 
 const card: React.CSSProperties = {
-  background: ds.surface,
-  borderRadius: 22,
+  background: ds.white,
+  borderRadius: 16,
   padding: "28px",
-  boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+  border: `1px solid ${ds.border}`,
 };
 
-const sora = { fontFamily: "var(--font-dm-sans), sans-serif" };
+const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 
 const utm = (campaign: string, content: string) =>
   `?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=${campaign}&utm_content=${content}`;
@@ -81,14 +82,14 @@ export default function Home() {
           <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto" priority />
         </a>
 
-        <a href={reportUrl("nav")} target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 9, ...sora }}>
+        <a href={reportUrl("nav")} target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 999, ...sora }}>
           Free Report
         </a>
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center justify-center text-center px-5 pt-28 md:pt-36 pb-0 overflow-hidden" style={{ background: ds.white, minHeight: "100svh" }}>
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,107,53,0.07) 0%, transparent 68%)" }} />
+      <section className="relative flex flex-col items-center justify-center text-center px-5 pt-28 md:pt-36 pb-0 overflow-hidden" style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #E3EEFC 55%, #F8FAFB 100%)", minHeight: "100svh" }}>
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(240,132,91,0.12) 0%, transparent 68%)" }} />
 
         {/* Eyebrow */}
         <p className="text-xs font-bold uppercase tracking-[0.14em] mb-4" style={{ color: ds.orange, ...sora }}>
@@ -98,7 +99,7 @@ export default function Home() {
         {/* Headline */}
         <h1 className="mb-5 max-w-[820px]" style={{ ...heading, fontSize: "clamp(2.2rem, 7vw, 4.8rem)" }}>
           Your Logistics.<br />
-          <span style={{ color: "#FFB899" }}>Fully Optimized.</span>
+          <span style={{ color: ds.orange }}>Fully Optimized.</span>
         </h1>
 
         {/* Subtitle */}
@@ -109,10 +110,10 @@ export default function Home() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10 w-full max-w-sm sm:max-w-none">
-          <a href={reportUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.orange, borderRadius: 9, boxShadow: "0 4px 20px rgba(255,107,53,0.28)", ...sora }}>
+          <a href={reportUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-all hover:opacity-90" style={{ background: ds.orange, borderRadius: 999, boxShadow: "0 4px 20px rgba(236,90,38,0.25)", ...sora }}>
             Start the 2-Minute Questionnaire →
           </a>
-          <a href={meetingUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: ds.white, border: `1.5px solid ${ds.border}`, borderRadius: 999, color: ds.navy, ...sora }}>
+          <a href={meetingUrl("hero")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold transition-all hover:opacity-90" style={{ background: ds.navy, borderRadius: 999, color: ds.white, ...sora }}>
             Book a Meeting
           </a>
         </div>
@@ -150,7 +151,7 @@ export default function Home() {
               { Ico: Icon.Cog,    title: "Manual workflows slowing growth", desc: "Your team is copy-pasting orders, chasing exceptions, and firefighting logistics instead of scaling." },
             ].map(p => (
               <div key={p.title} style={card}>
-                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.peach, borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.lightBlue, borderRadius: 10 }}>
                   <p.Ico size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "0.95rem", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{p.title}</h3>
@@ -183,10 +184,10 @@ export default function Home() {
               style={{ background: ds.navy, borderRadius: 22, padding: "36px", minHeight: 260 }}
             >
               {/* Decorative rings */}
-              <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(255,107,53,0.15)" }} />
-              <div className="absolute -right-6 -bottom-6 w-40 h-40 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(255,107,53,0.25)" }} />
+              <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(236,90,38,0.15)" }} />
+              <div className="absolute -right-6 -bottom-6 w-40 h-40 rounded-full pointer-events-none" style={{ border: "1.5px solid rgba(236,90,38,0.25)" }} />
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(255,107,53,0.15)", borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 10 }}>
                   <Icon.Lightning size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.white }}>Intelligent Rate Shopping</h3>
@@ -201,7 +202,7 @@ export default function Home() {
                   { carrier: "Purolator",   price: "$9.18", best: false },
                   { carrier: "UPS",         price: "$11.05", best: false },
                 ].map(r => (
-                  <div key={r.carrier} className="flex items-center justify-between px-4 py-2.5 rounded-xl" style={{ background: r.best ? "rgba(255,107,53,0.15)" : "rgba(255,255,255,0.05)", border: r.best ? `1px solid ${ds.orange}` : "1px solid rgba(255,255,255,0.08)" }}>
+                  <div key={r.carrier} className="flex items-center justify-between px-4 py-2.5 rounded-xl" style={{ background: r.best ? "rgba(236,90,38,0.15)" : "rgba(255,255,255,0.05)", border: r.best ? `1px solid ${ds.orange}` : "1px solid rgba(255,255,255,0.08)" }}>
                     <span style={{ ...sora, fontSize: 13, fontWeight: 600, color: r.best ? ds.orange : "rgba(255,255,255,0.55)" }}>{r.carrier}</span>
                     <div className="flex items-center gap-2">
                       <span style={{ ...sora, fontSize: 13, fontWeight: 700, color: r.best ? ds.white : "rgba(255,255,255,0.4)" }}>{r.price}</span>
@@ -215,11 +216,11 @@ export default function Home() {
             {/* 2 — Unified Platform: narrow right, peach accent */}
             <div
               className="md:col-span-5 flex flex-col justify-between relative overflow-hidden"
-              style={{ background: ds.peach, borderRadius: 22, padding: "36px", minHeight: 260 }}
+              style={{ background: ds.lightBlue, borderRadius: 22, padding: "36px", minHeight: 260 }}
             >
-              <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full pointer-events-none" style={{ background: "rgba(255,107,53,0.08)" }} />
+              <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full pointer-events-none" style={{ background: "rgba(236,90,38,0.08)" }} />
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(255,107,53,0.15)", borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 10 }}>
                   <Icon.Layers size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Unified Logistics Platform</h3>
@@ -230,7 +231,7 @@ export default function Home() {
               {/* Module pills */}
               <div className="mt-6 flex flex-wrap gap-2">
                 {["Parcel", "LTL", "Tracking", "Billing", "Analytics"].map(tag => (
-                  <span key={tag} className="px-3 py-1.5 text-xs font-semibold rounded-full" style={{ background: "rgba(255,107,53,0.12)", color: ds.orange, ...sora }}>{tag}</span>
+                  <span key={tag} className="px-3 py-1.5 text-xs font-semibold rounded-full" style={{ background: "rgba(236,90,38,0.12)", color: ds.orange, ...sora }}>{tag}</span>
                 ))}
               </div>
             </div>
@@ -241,7 +242,7 @@ export default function Home() {
               style={{ background: ds.surface, borderRadius: 22, padding: "36px", minHeight: 240 }}
             >
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.peach, borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 10 }}>
                   <Icon.Map size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Fulfillment Optimization</h3>
@@ -262,7 +263,7 @@ export default function Home() {
               style={{ background: ds.white, borderRadius: 22, padding: "36px", minHeight: 240, border: `1px solid ${ds.border}` }}
             >
               <div>
-                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.peach, borderRadius: 10 }}>
+                <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 10 }}>
                   <Icon.Chart size={18} style={{ stroke: ds.orange }} />
                 </div>
                 <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Visibility & Control</h3>
@@ -278,7 +279,7 @@ export default function Home() {
                     className="flex-1 rounded-sm transition-all"
                     style={{
                       height: `${h}%`,
-                      background: i === 11 ? ds.orange : i >= 8 ? "rgba(255,107,53,0.35)" : ds.border,
+                      background: i === 11 ? ds.orange : i >= 8 ? "rgba(236,90,38,0.35)" : ds.border,
                     }}
                   />
                 ))}
@@ -451,7 +452,7 @@ export default function Home() {
             <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
               Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunitiesin under 2 minutes.
             </p>
-            <a href={reportUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:-translate-y-0.5" style={{ background: ds.white, color: ds.navy, borderRadius: 9, ...sora }}>
+            <a href={reportUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90" style={{ background: ds.white, color: ds.navy, borderRadius: 999, ...sora }}>
               Start the Free Assessment →
             </a>
           </div>
@@ -463,7 +464,7 @@ export default function Home() {
             <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
               Skip the form and get straight to the conversation. Book a 20-minute call to discuss your current setup and where we can drive the most impact.
             </p>
-            <a href={meetingUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:bg-white/10" style={{ color: "white", borderRadius: 9, border: "1.5px solid rgba(255,255,255,0.3)", ...sora }}>
+            <a href={meetingUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:bg-white/10" style={{ color: "white", borderRadius: 999, border: "1.5px solid rgba(255,255,255,0.3)", ...sora }}>
               Book a Meeting →
             </a>
           </div>

@@ -5,13 +5,13 @@ import createGlobe, { type COBEOptions } from "cobe";
 import { cn } from "@/lib/utils";
 
 const ds = {
-  navy:   "#0F1B2D",
-  body:   "#4A5468",
-  muted:  "#8A94A6",
-  orange: "#FF6B35",
-  peach:  "#FFE8DD",
-  surface:"#F4F5F7",
-  border: "#E5E7EB",
+  navy:   "#1C1E3D",
+  body:   "#1C1E3D",
+  muted:  "#6E728A",
+  orange: "#EC5A26",
+  peach:  "#E3EEFC",
+  surface:"#F8FAFB",
+  border: "#E8E8E8",
   white:  "#FFFFFF",
 };
 
@@ -26,7 +26,7 @@ const BASE_CONFIG: COBEOptions = {
   mapSamples: 16000,
   mapBrightness: 1.2,
   baseColor: [0.96, 0.96, 0.97],
-  markerColor: [255 / 255, 107 / 255, 53 / 255],
+  markerColor: [236 / 255, 90 / 255, 38 / 255],
   glowColor: [0.96, 0.96, 0.97],
   markers: [
     { location: [43.6532, -79.3832],  size: 0.03 }, // Toronto
@@ -130,7 +130,7 @@ export default function ShipTimeGlobeSection() {
             <h2
               className="mb-5"
               style={{
-                fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
+                fontFamily: "var(--font-manrope), system-ui, sans-serif",
                 fontWeight: 700,
                 fontSize: "clamp(1.4rem, 6vw, 1.9rem)",
                 letterSpacing: "-0.02em",
@@ -151,7 +151,7 @@ export default function ShipTimeGlobeSection() {
               <h2
                 className="mb-5"
                 style={{
-                  fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
+                  fontFamily: "var(--font-manrope), system-ui, sans-serif",
                   fontWeight: 700,
                   fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
                   letterSpacing: "-0.02em",
