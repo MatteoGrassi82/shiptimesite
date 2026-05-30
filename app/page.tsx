@@ -78,9 +78,9 @@ export default function Home() {
     <div className="min-h-screen overflow-x-hidden" style={{ background: ds.white, ...body }}>
 
       {/* ── NAV ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-3.5" style={{ background: "rgba(14,16,34,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-3.5" style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(12px)", borderBottom: "1px solid #E8E8E8" }}>
         <a href="#">
-          <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto brightness-0 invert" priority />
+          <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto" priority />
         </a>
 
         <a href={reportUrl("nav")} target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 999, ...sora }}>
@@ -91,18 +91,32 @@ export default function Home() {
       {/* ── HERO ── */}
       <ShipTimeHeroChat />
 
-      {/* ── PAIN POINTS ── */}
+      {/* ── TRUST STRIP ── */}
+      <section className="px-5 md:px-10 py-10" style={{ background: ds.white, borderBottom: `1px solid ${ds.border}` }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] mb-6" style={{ color: ds.muted, ...sora }}>
+            Trusted by thousands of businesses across Canada and the US
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+            {["Canada Post", "UPS", "FedEx", "Purolator", "DHL", "Canpar", "GLS", "Loomis"].map(name => (
+              <span key={name} className="text-sm font-bold" style={{ color: "#C8CDD8", letterSpacing: "0.02em", ...sora }}>{name}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── COMPARE. SHIP. GROW. ── */}
       <section className="px-5 md:px-10 py-20 md:py-24" style={{ background: ds.surfaceAlt }}>
         <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-          <p className="text-xs font-bold uppercase tracking-[0.12em] mb-4" style={{ color: ds.orange, ...sora }}>The Real Cost of Doing Nothing</p>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] mb-4" style={{ color: ds.orange, ...sora }}>Compare. Ship. Grow.</p>
           <h2 className="mb-10 md:mb-14" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
-            Three problems holding your logistics back
+            Trusted by thousands of businesses
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
             {[
-              { Ico: Icon.Dollar, title: "Unpredictable costs",             desc: "Carrier rates, surcharges, and fees that shift without warning. Budgeting for shipping feels like guesswork." },
-              { Ico: Icon.Return, title: "Declining customer experience",   desc: "Late deliveries and poor tracking visibility erode trust. Each missed SLA is a loyalty hit you can't recover." },
-              { Ico: Icon.Cog,    title: "Manual workflows slowing growth", desc: "Your team is copy-pasting orders, chasing exceptions, and firefighting logistics instead of scaling." },
+              { Ico: Icon.Search,    title: "Compare", desc: "Every carrier's rates and transit times, one screen. Pick the best option in seconds." },
+              { Ico: Icon.Package,   title: "Ship",    desc: "Automate labels, schedule pickups, track every package. One dashboard for your entire operation." },
+              { Ico: Icon.Lightning, title: "Grow",    desc: "Unified billing, analytics, and freight. The platform scales as you do." },
             ].map(p => (
               <div key={p.title} style={card}>
                 <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.lightBlue, borderRadius: 12 }}>
@@ -120,12 +134,12 @@ export default function Home() {
       <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div className="text-center mb-10 md:mb-14">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>What ShipTime Does</p>
+            <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>The Platform</p>
             <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
-              One platform. Everything logistics.
+              One Platform That Grows With You
             </h2>
             <p className="mx-auto" style={{ ...body, maxWidth: 460, fontSize: 15 }}>
-              Technology, operations, and network execution in one managed solution, so your brand can grow confidently and without limitation.
+              Every major carrier, parcel and freight, one login. Bring your own rates or use ours.
             </p>
           </div>
 
@@ -144,9 +158,9 @@ export default function Home() {
                 <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 12 }}>
                   <Icon.Lightning size={18} style={{ stroke: ds.orange }} />
                 </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.white }}>Intelligent Rate Shopping</h3>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.white }}>Multi-Carrier + BYOR</h3>
                 <p style={{ ...body, fontSize: 14, color: "rgba(255,255,255,0.6)", maxWidth: 380 }}>
-                  Automatically surface the best carrier option across your negotiated rates and ours. Every shipment, optimized in seconds.
+                  Every major carrier, parcel and freight, one login. Bring your own rates or use ours.
                 </p>
               </div>
               {/* Mock rate comparison widget */}
@@ -177,9 +191,9 @@ export default function Home() {
                 <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: "rgba(236,90,38,0.15)", borderRadius: 12 }}>
                   <Icon.Layers size={18} style={{ stroke: ds.orange }} />
                 </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Unified Logistics Platform</h3>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Freight & LTL</h3>
                 <p style={{ ...body, fontSize: 14, color: ds.muted, maxWidth: 300 }}>
-                  One system for parcel, LTL, tracking, billing, and analytics. Replace your scattered tools with one control tower.
+                  One invoice, total cost visibility, no surprise surcharges.
                 </p>
               </div>
               {/* Module pills */}
@@ -199,12 +213,14 @@ export default function Home() {
                 <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 12 }}>
                   <Icon.Map size={18} style={{ stroke: ds.orange }} />
                 </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Fulfillment Optimization</h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Warehouse & Fulfillment</h3>
+                  <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: ds.lightBlue, color: ds.orange, ...sora }}>Coming Soon</span>
+                </div>
                 <p style={{ ...body, fontSize: 14, color: ds.muted }}>
-                  Access warehouse nodes across Canada and the US. Route inventory closer to your customers, cut last-mile costs.
+                  Multi-location order routing, on the way.
                 </p>
               </div>
-              {/* Mini stat */}
               <div className="mt-6 flex items-end gap-3">
                 <span style={{ ...heading, fontSize: "clamp(2rem, 4vw, 2.8rem)", color: ds.orange }}>2,500+</span>
                 <span className="pb-1" style={{ ...body, fontSize: 13, color: ds.muted }}>warehouse nodes<br />across North America</span>
@@ -220,9 +236,9 @@ export default function Home() {
                 <div className="w-10 h-10 flex items-center justify-center mb-5" style={{ background: ds.lightBlue, borderRadius: 12 }}>
                   <Icon.Chart size={18} style={{ stroke: ds.orange }} />
                 </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Visibility & Control</h3>
+                <h3 className="mb-2" style={{ ...heading, fontSize: "1.15rem", color: ds.navy }}>Comprehensive Support</h3>
                 <p style={{ ...body, fontSize: 14, color: ds.muted, maxWidth: 340 }}>
-                  See performance clearly, uncover savings, and make better logistics decisions without adding headcount.
+                  Real people who know your account. Voice, email, live chat.
                 </p>
               </div>
               {/* Sparkline bars */}
@@ -248,8 +264,81 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── GLOBE ── */}
-      <ShipTimeGlobeSection />
+      {/* ── TESTIMONIAL ── */}
+      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.navy }}>
+        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+          <div className="text-5xl mb-6 leading-none" style={{ color: ds.orange, fontFamily: "Georgia, serif" }}>"</div>
+          <blockquote
+            className="mb-8"
+            style={{ ...heading, fontSize: "clamp(1.4rem, 3.5vw, 2rem)", color: ds.white, fontWeight: 700, lineHeight: 1.3 }}
+          >
+            I Was Spending 90 Minutes a Day on Shipping. Four Tools. Now It&apos;s One.
+          </blockquote>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)", ...sora }}>ShipTime Customer</span>
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Canadian eCommerce business</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── INTEGRATIONS ── */}
+      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+            <div style={{ maxWidth: 440 }}>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>Integrations</p>
+              <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
+                Connects to Your Store in Minutes
+              </h2>
+              <p className="mb-6" style={{ ...body, fontSize: 15 }}>
+                Orders in, labels out. ShipTime connects directly to your eCommerce platform so you can ship without switching tabs.
+              </p>
+              <a
+                href="https://www.shiptime.com/integrations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-semibold transition-all hover:opacity-90"
+                style={{ color: ds.navy, ...sora }}
+              >
+                Browse All Integrations →
+              </a>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+              {[
+                "Shopify", "WooCommerce", "Magento", "BigCommerce",
+                "Amazon", "eBay", "Etsy", "Squarespace",
+              ].map(name => (
+                <div key={name} className="flex items-center justify-center px-4 py-3 rounded-xl text-xs font-semibold text-center" style={{ background: ds.surface, border: `1px solid ${ds.border}`, color: ds.muted, ...sora }}>
+                  {name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SAMPLE RATES ── */}
+      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.surfaceAlt }}>
+        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>Ship Smarter</p>
+          <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.8rem, 4.5vw, 2.6rem)" }}>
+            See Sample Rates in 30 Seconds
+          </h2>
+          <p className="mb-8 mx-auto" style={{ ...body, fontSize: 16, maxWidth: 500 }}>
+            Enter origin, destination, and weight. Compare real carrier rates, no account needed. Your actual rates may be lower.
+          </p>
+          <a
+            href="https://www.shiptime.com/get-a-quote"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-white text-sm font-semibold px-7 py-3.5 transition-all hover:opacity-90"
+            style={{ background: ds.orange, borderRadius: 999, boxShadow: "0 4px 20px rgba(236,90,38,0.25)", ...sora }}
+          >
+            Get Your Rates →
+          </a>
+          <p className="mt-4 text-xs" style={{ color: ds.muted }}>No account needed. Takes under 30 seconds.</p>
+        </div>
+      </section>
 
       {/* ── WHY SHIPTIME ── */}
       <div id="why"><ShipTimeWhySection /></div>
@@ -389,12 +478,11 @@ export default function Home() {
       <section id="get-report" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.navy }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div className="text-center mb-10">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] mb-3" style={{ color: ds.orange, ...sora }}>Two ways to get started</p>
-            <h2 className="mb-3" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: ds.white }}>
-              Walk away with at least one<br />actionable insight
+            <h2 className="mb-3" style={{ ...heading, fontSize: "clamp(1.8rem, 4.5vw, 2.8rem)", color: ds.white }}>
+              Your Shipping Shouldn&apos;t Be<br />This Complicated.
             </h2>
             <p style={{ ...body, fontSize: 15, color: "rgba(255,255,255,0.55)", maxWidth: 440, margin: "0 auto" }}>
-              Fill out the questionnaire or speak directly with a ShipTime logistics expert. Either way, you leave with a clearer picture of where to improve.
+              Most businesses are up and running in under five minutes.
             </p>
           </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
