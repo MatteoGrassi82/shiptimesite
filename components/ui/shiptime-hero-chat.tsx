@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { InteractiveGlobe } from "@/components/ui/interactive-globe";
 import { cn } from "@/lib/utils";
 import {
   ArrowUpIcon,
@@ -79,20 +80,26 @@ export default function ShipTimeHeroChat() {
       className="relative w-full flex flex-col items-center justify-center overflow-hidden"
       style={{
         minHeight: "100svh",
-        background: "linear-gradient(135deg, #FFFFFF 0%, #E3EEFC 55%, #F8FAFB 100%)",
+        background: "linear-gradient(160deg, #0E1022 0%, #1C1E3D 50%, #0E1022 100%)",
       }}
     >
-      {/* Warm accent glow */}
+      {/* Globe background — full bleed, centered */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <InteractiveGlobe
+          size={900}
+          className="w-[900px] h-[900px] opacity-80"
+          dotColor="rgba(200, 210, 255, ALPHA)"
+          arcColor="rgba(236, 90, 38, 0.65)"
+          markerColor="rgba(236, 90, 38, 1)"
+          autoRotateSpeed={0.0012}
+        />
+      </div>
+
+      {/* Radial fade overlay so content stays readable */}
       <div
-        className="absolute pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          width: 700,
-          height: 700,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -60%)",
-          background: "radial-gradient(circle, rgba(240,132,91,0.10) 0%, transparent 65%)",
-          borderRadius: "50%",
+          background: "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 20%, rgba(14,16,34,0.75) 100%)",
         }}
       />
 
@@ -116,7 +123,7 @@ export default function ShipTimeHeroChat() {
             fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
             letterSpacing: "-0.03em",
             lineHeight: 1.05,
-            color: "#1C1E3D",
+            color: "#FFFFFF",
           }}
         >
           Your Logistics.<br />
@@ -130,11 +137,11 @@ export default function ShipTimeHeroChat() {
             fontFamily: "var(--font-inter), system-ui, sans-serif",
             fontSize: "clamp(15px, 2vw, 17px)",
             lineHeight: 1.65,
-            color: "#6E728A",
+            color: "rgba(255,255,255,0.65)",
           }}
         >
           Identify cost savings, delivery improvements, and fulfillment opportunities in under 2 minutes.{" "}
-          <strong style={{ color: "#1C1E3D", fontWeight: 600 }}>Confidential. No obligation.</strong>
+          <strong style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Confidential. No obligation.</strong>
         </p>
 
         {/* Chat input */}
@@ -142,10 +149,10 @@ export default function ShipTimeHeroChat() {
           <div
             className="relative rounded-2xl border"
             style={{
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(12px)",
-              borderColor: "#E8E8E8",
-              boxShadow: "0 8px 32px rgba(28,30,61,0.08)",
+              background: "rgba(255,255,255,0.08)",
+              backdropFilter: "blur(16px)",
+              borderColor: "rgba(255,255,255,0.15)",
+              boxShadow: "0 8px 40px rgba(0,0,0,0.3)",
             }}
           >
             <Textarea
@@ -159,10 +166,10 @@ export default function ShipTimeHeroChat() {
               className={cn(
                 "w-full px-5 py-4 resize-none border-none bg-transparent",
                 "text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-                "placeholder:text-[#8A94A6] min-h-[56px]"
+                "placeholder:text-white/35 min-h-[56px]"
               )}
               style={{
-                color: "#1C1E3D",
+                color: "rgba(255,255,255,0.9)",
                 fontFamily: "var(--font-inter), sans-serif",
                 overflow: "hidden",
               }}
@@ -172,7 +179,7 @@ export default function ShipTimeHeroChat() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-[#6E728A] hover:bg-[#F8FAFB] hover:text-[#1C1E3D]"
+                className="text-white/50 hover:bg-white/10 hover:text-white"
               >
                 <Paperclip className="w-4 h-4" />
               </Button>
@@ -207,7 +214,7 @@ export default function ShipTimeHeroChat() {
         </div>
 
         {/* 3-step strip */}
-        <div className="w-full max-w-2xl mt-12" style={{ borderTop: "1px solid #E8E8E8" }}>
+        <div className="w-full max-w-2xl mt-12" style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
           <div className="grid grid-cols-3 gap-0">
             {[
               { n: "1", label: "Fill out the questionnaire", sub: "2 minutes, confidential" },
@@ -217,7 +224,7 @@ export default function ShipTimeHeroChat() {
               <div
                 key={step.n}
                 className="flex flex-col items-center text-center px-3 pt-6 pb-2 gap-1.5"
-                style={{ borderLeft: i > 0 ? "1px solid #E8E8E8" : undefined }}
+                style={{ borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.12)" : undefined }}
               >
                 <div
                   className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mb-1"
@@ -231,11 +238,11 @@ export default function ShipTimeHeroChat() {
                 </div>
                 <span
                   className="text-xs font-semibold leading-tight"
-                  style={{ color: "#1C1E3D", fontFamily: "var(--font-manrope), sans-serif" }}
+                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-manrope), sans-serif" }}
                 >
                   {step.label}
                 </span>
-                <span className="text-[11px]" style={{ color: "#6E728A" }}>{step.sub}</span>
+                <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.45)" }}>{step.sub}</span>
               </div>
             ))}
           </div>
