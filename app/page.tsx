@@ -1,8 +1,17 @@
 import type React from "react";
-import Image from "next/image";
 import ShipTimeWhySection from "@/components/ui/shiptime-why-section";
-import ShipTimeGlobeSection from "@/components/ui/shiptime-globe-section";
 import ShipTimeHeroChat from "@/components/ui/shiptime-hero-chat";
+import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials";
+import DashboardSection from "@/components/ui/feature-showcase";
+import SiteNav from "@/components/ui/site-nav";
+import MeetShipTimeIntro from "@/components/ui/meet-shiptime-intro";
+import ShipTimeSceneDivider from "@/components/ui/shiptime-scene-divider";
+import AlternatingFeatures from "@/components/ui/alternating-features";
+import ShipTimeEdgeCases from "@/components/ui/shiptime-edge-cases";
+import ShipTimeTimeline from "@/components/ui/shiptime-timeline";
+import ShipTimeRoadmap from "@/components/ui/shiptime-roadmap";
+import ComparisonMatrix from "@/components/ui/comparison-matrix";
+import ShipTimeFAQ from "@/components/ui/shiptime-faq";
 import { Icon } from "@/components/ui/icons";
 
 const ds = {
@@ -50,27 +59,10 @@ const MEETING  = "https://meetings-na3.hubspot.com/peter-sexton/meeting-with-pet
 const reportUrl  = (content: string) => `${SHIPTIME}${utm("logistics-report", content)}`;
 const meetingUrl = (content: string) => `${MEETING}${utm("book-meeting", content)}`;
 
-const whatCards = [
-  { Ico: Icon.Lightning, title: "Intelligent Rate Shopping",  desc: "Automatically surface the best carrier option across your negotiated rates and ours. Every shipment, optimized in seconds." },
-  { Ico: Icon.Layers,    title: "Unified Logistics Platform", desc: "One system for parcel, LTL, tracking, billing, and analytics. Replace your scattered tools with one control tower." },
-  { Ico: Icon.Map,       title: "Fulfillment Optimization",   desc: "Access 2,500+ warehouse nodes across Canada & the US. Route inventory closer to your customers." },
-  { Ico: Icon.Chart,     title: "Visibility & Control",       desc: "See performance clearly, uncover savings, and make better logistics decisions without adding headcount." },
-];
-
 const metrics = [
   { big: "70%",    label: "Off walk-in carrier prices", sub: "Pre-negotiated volume discounts passed directly to you" },
   { big: "1,000+", label: "Five-star reviews",          sub: "Rated #1 for ease of use by Canadian SMBs" },
   { big: "Growing", label: "3PL partner network",        sub: "A growing network of partner 3PLs across Canada and the US, giving you more fulfillment flexibility with every shipment." },
-];
-
-const compareRows = [
-  { feature: "Carrier choice",      st: "Courier, LTL, and FTL with full flexibility",  fba: "Amazon logistics only" },
-  { feature: "Rate optimization",   st: "Multi-carrier comparison",                  fba: "Rates set by the platform" },
-  { feature: "Delivery experience", st: "Full control over branding & SLAs",         fba: "Platform-controlled" },
-  { feature: "Platform lock-in",    st: "None. Ship from any channel",            fba: "Tied to Amazon ecosystem" },
-  { feature: "Fulfillment",         st: "Tailored by product profile",               fba: "Rigid inbound requirements" },
-  { feature: "Cost predictability", st: "Transparent, negotiated rates",             fba: "Variable storage & fee structures" },
-  { feature: "Support",             st: "Dedicated, consultative team",              fba: "Ticket-based support" },
 ];
 
 export default function Home() {
@@ -78,18 +70,12 @@ export default function Home() {
     <div className="min-h-screen overflow-x-hidden" style={{ background: ds.white, ...body }}>
 
       {/* ── NAV ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-3.5" style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(12px)", borderBottom: "1px solid #E8E8E8" }}>
-        <a href="#">
-          <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto" priority />
-        </a>
-
-        <a href={reportUrl("nav")} target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 999, ...sora }}>
-          Free Report
-        </a>
-      </nav>
+      <SiteNav ctaHref={reportUrl("nav")} ctaLabel="Free Report" />
 
       {/* ── HERO ── */}
       <ShipTimeHeroChat />
+
+      {/* ── DUAL CTA + ILLUSTRATED SCENE ── */}
 
       {/* ── TRUST STRIP ── */}
       <section className="px-5 md:px-10 py-10" style={{ background: ds.white, borderBottom: `1px solid ${ds.border}` }}>
@@ -105,30 +91,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── COMPARE. SHIP. GROW. ── */}
-      <section className="px-5 md:px-10 py-20 md:py-24" style={{ background: ds.surfaceAlt }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-          <p className="text-xs font-bold uppercase tracking-[0.12em] mb-4" style={{ color: ds.orange, ...sora }}>Compare. Ship. Grow.</p>
-          <h2 className="mb-10 md:mb-14" style={{ ...heading, fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
-            Trusted by thousands of businesses
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-            {[
-              { Ico: Icon.Search,    title: "Compare", desc: "Every carrier's rates and transit times, one screen. Pick the best option in seconds." },
-              { Ico: Icon.Package,   title: "Ship",    desc: "Automate labels, schedule pickups, track every package. One dashboard for your entire operation." },
-              { Ico: Icon.Lightning, title: "Grow",    desc: "Unified billing, analytics, and freight. The platform scales as you do." },
-            ].map(p => (
-              <div key={p.title} style={card}>
-                <div className="w-10 h-10 flex items-center justify-center mb-4" style={{ background: ds.lightBlue, borderRadius: 12 }}>
-                  <p.Ico size={18} style={{ stroke: ds.orange }} />
-                </div>
-                <h3 className="mb-2" style={{ ...heading, fontSize: "0.95rem", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{p.title}</h3>
-                <p style={{ ...body, fontSize: 14 }}>{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── MEET SHIPTIME (typographic statement) ── */}
+      <MeetShipTimeIntro background={ds.surface} />
 
       {/* ── WHAT WE DO (BENTO) ── */}
       <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
@@ -264,22 +228,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TESTIMONIAL ── */}
-      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.navy }}>
-        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
-          <div className="text-5xl mb-6 leading-none" style={{ color: ds.orange, fontFamily: "Georgia, serif" }}>"</div>
-          <blockquote
-            className="mb-8"
-            style={{ ...heading, fontSize: "clamp(1.4rem, 3.5vw, 2rem)", color: ds.white, fontWeight: 700, lineHeight: 1.3 }}
-          >
-            I Was Spending 90 Minutes a Day on Shipping. Four Tools. Now It&apos;s One.
-          </blockquote>
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.8)", ...sora }}>ShipTime Customer</span>
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Canadian eCommerce business</span>
-          </div>
-        </div>
-      </section>
+      {/* ── PERSONA TABS (tabbed Remotion players, framed by role) ── */}
+      <DashboardSection />
+
+      {/* ── EVERY ACCOUNT INCLUDES (alternating feature blocks) ── */}
+      <AlternatingFeatures background={ds.white} />
+
+      {/* ── TODAY vs WITH SHIPTIME (edge cases) ── */}
+      <ShipTimeEdgeCases background={ds.surface} />
+
+      {/* ── TESTIMONIALS ── */}
+      <ShipTimeTestimonials />
+
+      {/* ── FIRST-WEEK TIMELINE ── */}
+      <ShipTimeTimeline background={ds.surface} />
+
+      {/* ── ROADMAP (Week 1 → Year 1) ── */}
+      <ShipTimeRoadmap background={ds.white} />
+
+      {/* ── WHY SHIPTIME ── */}
+      <div id="why"><ShipTimeWhySection /></div>
+
+      {/* ── COMPARISON MATRIX (ShipTime vs named competitors) ── */}
+      <div id="compare"><ComparisonMatrix background={ds.surface} /></div>
 
       {/* ── INTEGRATIONS ── */}
       <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
@@ -317,7 +288,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SAMPLE RATES ── */}
+      {/* ── SAMPLE RATES (self-serve quote CTA) ── */}
       <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.surfaceAlt }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
           <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>Ship Smarter</p>
@@ -340,11 +311,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── WHY SHIPTIME ── */}
-      <div id="why"><ShipTimeWhySection /></div>
-
       {/* ── METRICS ── */}
-      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.surfaceAlt }}>
+      <section className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div className="text-center mb-10 md:mb-14">
             <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>The Numbers</p>
@@ -367,152 +335,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SHIPTIME VS FBA ── */}
-      <section id="compare" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.white }}>
-        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
-          <div className="text-center mb-12 md:mb-16">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] mb-3" style={{ color: ds.orange, ...sora }}>ShipTime vs. FBA</p>
-            <h2 className="mb-4" style={{ ...heading, fontSize: "clamp(1.8rem, 4.5vw, 2.6rem)" }}>
-              Platform flexibility beats lock-in
-            </h2>
-            <p className="mx-auto" style={{ ...body, maxWidth: 520, fontSize: 16 }}>
-              FBA is powerful for Amazon reach. ShipTime is built for flexible, omnichannel logistics that you control.
-            </p>
-          </div>
+      {/* ── FAQ ── */}
+      <ShipTimeFAQ background={ds.surface} />
 
-          {/* Mobile: stacked cards */}
-          <div className="flex flex-col gap-4 md:hidden">
-            {compareRows.map(row => (
-              <div key={row.feature} style={{ borderRadius: 18, overflow: "hidden", background: ds.white, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-                <div className="px-5 py-3" style={{ background: ds.surface, borderBottom: `1px solid ${ds.border}` }}>
-                  <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: ds.navy, ...sora }}>{row.feature}</span>
-                </div>
-                <div className="px-5 py-4 flex flex-col gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ background: ds.orange }}>
-                      <Icon.Check size={11} style={{ stroke: "white" }} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: ds.orange, ...sora }}>ShipTime</div>
-                      <span style={{ ...body, fontSize: 14, color: ds.navy }}>{row.st}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 pt-3" style={{ borderTop: `1px solid ${ds.border}` }}>
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ background: ds.surface }}>
-                      <span className="text-[11px] font-bold" style={{ color: ds.muted }}>✕</span>
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: ds.muted, ...sora }}>FBA</div>
-                      <span style={{ ...body, fontSize: 14, color: ds.muted }}>{row.fba}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Desktop: cleaner table with ShipTime column emphasized via shadow card */}
-          <div className="hidden md:block relative">
-            {/* ShipTime emphasis cardsits behind, raised */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: -16,
-                bottom: -16,
-                left: "calc(33.333% + 8px)",
-                width: "calc(33.333% - 16px)",
-                background: ds.white,
-                borderRadius: 20,
-                boxShadow: "0 12px 40px rgba(28,30,61,0.10), 0 2px 8px rgba(28,30,61,0.06)",
-                border: `1.5px solid ${ds.orange}`,
-              }}
-            />
-
-            <div className="relative" style={{ borderRadius: 16, overflow: "hidden" }}>
-              {/* Header row */}
-              <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
-                <div className="px-7 py-6">
-                  <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>Feature</span>
-                </div>
-                <div className="px-7 py-6 text-center">
-                  <span className="text-sm font-bold uppercase tracking-widest" style={{ color: ds.orange, ...sora }}>ShipTime</span>
-                </div>
-                <div className="px-7 py-6 text-center">
-                  <span className="text-sm font-bold uppercase tracking-widest" style={{ color: ds.muted, ...sora }}>FBA</span>
-                </div>
-              </div>
-
-              {/* Data rows */}
-              {compareRows.map((row, i) => (
-                <div
-                  key={row.feature}
-                  className="grid items-center"
-                  style={{
-                    gridTemplateColumns: "1fr 1fr 1fr",
-                    borderTop: `1px solid ${ds.border}`,
-                  }}
-                >
-                  <div className="px-7 py-5">
-                    <span className="font-semibold" style={{ color: ds.navy, fontSize: 15, ...sora }}>{row.feature}</span>
-                  </div>
-                  <div className="px-7 py-5 flex items-center gap-3">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: ds.orange }}>
-                      <Icon.Check size={11} style={{ stroke: "white" }} />
-                    </div>
-                    <span style={{ ...body, fontSize: 14.5, color: ds.navy, fontWeight: 500 }}>{row.st}</span>
-                  </div>
-                  <div className="px-7 py-5 flex items-center gap-3">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: ds.surface }}>
-                      <span className="text-[11px] font-bold" style={{ color: ds.muted }}>✕</span>
-                    </div>
-                    <span style={{ ...body, fontSize: 14.5, color: ds.muted }}>{row.fba}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── DUAL CTA ── */}
-      <section id="get-report" className="px-5 md:px-10 py-20 md:py-28" style={{ background: ds.navy }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div className="text-center mb-10">
-            <h2 className="mb-3" style={{ ...heading, fontSize: "clamp(1.8rem, 4.5vw, 2.8rem)", color: ds.white }}>
-              Your Shipping Shouldn&apos;t Be<br />This Complicated.
-            </h2>
-            <p style={{ ...body, fontSize: 15, color: "rgba(255,255,255,0.55)", maxWidth: 440, margin: "0 auto" }}>
-              Most businesses are up and running in under five minutes.
-            </p>
-          </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="flex flex-col gap-5" style={{ background: ds.orange, borderRadius: 24, padding: "32px" }}>
-            <div className="w-10 h-10 flex items-center justify-center" style={{ background: "rgba(255,255,255,0.2)", borderRadius: 12 }}>
-              <Icon.Clipboard size={18} style={{ stroke: "white" }} />
-            </div>
-            <h3 style={{ ...sora, fontWeight: 700, fontSize: "1.2rem", color: "white", letterSpacing: "-0.01em", lineHeight: 1.2 }}>Get Your Free Logistics Performance Report</h3>
-            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
-              Answer 10 quick questions and identify cost savings, delivery improvements, and fulfillment opportunities in under 2 minutes.
-            </p>
-            <a href={reportUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:opacity-90" style={{ background: ds.white, color: ds.navy, borderRadius: 999, ...sora }}>
-              Start the Free Assessment →
-            </a>
-          </div>
-          <div id="book-meeting" className="flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.06)", borderRadius: 24, padding: "32px", border: "1px solid rgba(255,255,255,0.1)" }}>
-            <div className="w-10 h-10 flex items-center justify-center" style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12 }}>
-              <Icon.Calendar size={18} style={{ stroke: "white" }} />
-            </div>
-            <h3 style={{ ...sora, fontWeight: 700, fontSize: "1.2rem", color: "white", letterSpacing: "-0.01em", lineHeight: 1.2 }}>Talk to a ShipTime Logistics Expert</h3>
-            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
-              Skip the form and get straight to the conversation. Book a 20-minute call to discuss your current setup and where we can drive the most impact.
-            </p>
-            <a href={meetingUrl("dual-cta")} target="_blank" rel="noopener noreferrer" className="w-fit inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 transition-all hover:bg-white/10" style={{ color: "white", borderRadius: 999, border: "1.5px solid rgba(255,255,255,0.3)", ...sora }}>
-              Book a Meeting →
-            </a>
-          </div>
-        </div>
-        </div>
-      </section>
+      {/* ── SCENE DIVIDER (stats + illustration) ── */}
+      <ShipTimeSceneDivider />
 
       {/* ── FOOTER ── */}
       <footer className="px-5 md:px-10 py-10 md:py-14" style={{ background: ds.navy, borderTop: "1px solid rgba(255,255,255,0.07)" }}>

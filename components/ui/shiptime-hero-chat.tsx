@@ -158,7 +158,7 @@ export default function ShipTimeHeroChat() {
       className="relative w-full flex flex-col items-center justify-start overflow-hidden"
       style={{
         minHeight: "100svh",
-        background: "linear-gradient(160deg, #FFFFFF 0%, #EEF4FD 55%, #F8FAFB 100%)",
+        background: "linear-gradient(160deg, #FFFFFF 0%, #EEF4FD 50%, #F5E9D8 100%)",
       }}
     >
       {/* Globe — bottom-center, large, bleeds down */}
@@ -169,7 +169,7 @@ export default function ShipTimeHeroChat() {
       {/* Soft fade over the bottom of the globe so it dissolves cleanly */}
       <div
         className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
-        style={{ background: "linear-gradient(to top, #F8FAFB 10%, transparent 100%)" }}
+        style={{ background: "linear-gradient(to top, #F0DFC0 0%, #F5E9D8 30%, transparent 100%)" }}
       />
 
       {/* Content — sits above globe */}
