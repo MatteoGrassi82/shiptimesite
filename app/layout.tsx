@@ -35,6 +35,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-[var(--font-inter)]">
         {children}
         <Script
+          src="https://cdn.rlets.com/capture_configs/d9b/289/64b/6c8419f97e667fb5aea755e.js"
+          strategy="afterInteractive"
+        />
+        <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
