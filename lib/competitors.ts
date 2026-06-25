@@ -257,7 +257,7 @@ export const competitors: Competitor[] = [
       benefitCards: ALT_BENEFITS,
       social: ALT_SOCIAL,
       quote: {
-        text: "We cut our carrier spend by 40% in the first month just by using ShipTime's rate comparison. Wish we'd switched sooner.",
+        text: "Seeing every carrier's rate side by side — and being able to drop in our own negotiated pricing — changed how we ship. Wish we'd switched sooner.",
         name: "Lena B.",
         role: "CEO, Wellness Brand",
       },
@@ -279,7 +279,7 @@ export const competitors: Competitor[] = [
       subhead: "ShipTime goes further with Bring Your Own Rates, native Canada Post, and parcel and freight on one invoice — the things Freightcom doesn't offer out of the box.",
       answerFirst:
         "ShipTime and Freightcom are both Canadian multi-carrier shipping platforms with LTL freight capability. The key differences: ShipTime includes Canada Post natively, offers Bring Your Own Rates, provides unified billing across parcel and freight carriers on one invoice, and has no platform fee. Freightcom is primarily freight-focused with parcel as a secondary capability and doesn't offer BYOR.",
-      savings: "$6,200 per year",
+      savings: "Bring your own negotiated rates and keep every discount you've earned.",
       competitorPricing: "Rates vary, no BYOR",
       whoShouldChoose: {
         shiptime: {
@@ -404,7 +404,7 @@ export const competitors: Competitor[] = [
       subhead: "ShipStation is built for US-first automation. ShipTime is built for Canadian businesses — no platform fee, full Canadian carrier coverage, and Bring Your Own Rates.",
       answerFirst:
         "ShipTime and ShipStation are both multi-carrier shipping platforms, but they serve different needs. ShipStation is US-first with strong automation and integrations, starting at $14.99/month. ShipTime is Canadian-first with no platform fee, native Canada Post and Canadian carrier support, parcel and LTL freight unified, and a Bring Your Own Rates model that ShipStation doesn't offer.",
-      savings: "$8,400 per year",
+      savings: "Skip the monthly subscription and keep your own negotiated carrier rates.",
       competitorPricing: "$14.99–$7,499/mo subscription",
       whoShouldChoose: {
         shiptime: {
@@ -529,7 +529,7 @@ export const competitors: Competitor[] = [
       subhead: "Stallion Express is built for Canada-to-US Shopify parcel. ShipTime is built for Canadian businesses that ship domestic, cross-border, and freight — same free pricing model, significantly broader coverage.",
       answerFirst:
         "ShipTime and Stallion Express are both free to use — no monthly platform fee on either. The difference is coverage. Stallion Express specialises in Canada-to-US Shopify parcel volume. ShipTime adds full domestic Canadian carrier coverage (Canada Post, Purolator, Canpar, GLS), LTL freight, Bring Your Own Rates, and a shipping audit that Stallion Express doesn't offer. If you're still growing, both work. Once you ship domestic or negotiate your own rates, ShipTime is the better fit.",
-      savings: "$5,800 per year",
+      savings: "Same free pricing model, with domestic, freight, and your own rates added.",
       competitorPricing: "Free / low-cost",
       whoShouldChoose: {
         shiptime: {

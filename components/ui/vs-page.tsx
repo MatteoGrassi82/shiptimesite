@@ -318,7 +318,7 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
               {data.name} vs ShipTime
             </h2>
             <p className="mx-auto" style={{ ...body, color: ds.muted, fontSize: 15, maxWidth: 420 }}>
-              Save up to {vs.savings}. No platform fee, ever.
+              {vs.savings} No platform fee, ever.
             </p>
           </div>
 
