@@ -544,6 +544,156 @@ export const competitors: Competitor[] = [
       reasons: vsReasons("Stallion Express"),
     },
   },
+
+  // ── ESHIPPER ────────────────────────────────────────────────
+  {
+    slug: "eshipper",
+    name: "eShipper",
+    metaTitle: "eShipper Alternative — BYOR, Transparency & Canada Post | ShipTime",
+    metaDescription:
+      "Comparing ShipTime and eShipper? ShipTime adds Bring Your Own Rates, full carrier transparency, native Canada Post, shipping audit, and no platform fee — so you always see the carrier and every fee before you ship.",
+    eyebrow: "eShipper Alternative",
+    headline: "eShipper hides the carrier. ShipTime shows you everything.",
+    subhead:
+      "See the exact courier and every surcharge before you ship. Bring your own negotiated rates. Native Canada Post, shipping audit, and no platform fee — all in one transparent platform.",
+    answerFirst:
+      "ShipTime and eShipper are both Canadian multi-carrier shipping platforms with competitive discounted rates. The difference is control and transparency: ShipTime lets you Bring Your Own Rates, shows you the exact carrier and itemized surcharges on every quote, includes native Canada Post, audits your invoices for billing errors, and charges no platform fee. eShipper leans on white-label services where the underlying courier is not always visible.",
+    differentiators: [
+      {
+        icon: "Tag",
+        title: "Bring Your Own Rates (BYOR)",
+        desc: "Plug in the carrier rates you have already negotiated and shop them against ours on every label. eShipper does not let you bring your own negotiated rates.",
+      },
+      {
+        icon: "Search",
+        title: "Full carrier transparency",
+        desc: "ShipTime shows you the exact courier and every surcharge before you ship. eShipper's white-label products do not always reveal which underlying carrier is moving your parcel.",
+      },
+      {
+        icon: "Chart",
+        title: "Shipping audit built in",
+        desc: "ShipTime audits your invoices for carrier billing errors and recovers overcharges automatically. eShipper does not offer a shipping audit.",
+      },
+    ],
+    rows: [
+      { feature: "Discounted carrier rates", shiptime: "Yes", competitor: "Yes", competitorWin: true },
+      { feature: "Bring Your Own Rates (BYOR)", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Full carrier transparency", shiptime: "Yes", shiptimeWin: true, competitor: "White-label" },
+      { feature: "Native Canada Post support", shiptime: "Yes", shiptimeWin: true, competitor: "Yes", competitorWin: true },
+      { feature: "Courier + LTL in one platform", shiptime: "Yes", competitor: "Yes", competitorWin: true },
+      { feature: "3rd-party fulfillment & warehousing", shiptime: "Partner network", competitor: "Yes", competitorWin: true },
+      { feature: "Shipping audit", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Carrier dispute support", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Pre-shipment duties & tax calculator", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "No monthly platform fee", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+    ],
+    deepDives: [
+      {
+        eyebrow: "Know exactly what you're shipping on",
+        title: "Transparency on every label, not white-label guesswork",
+        body: "eShipper's strength is its white-label and fulfillment services — but white-label means the underlying courier is often hidden. ShipTime shows you the exact carrier and every itemized surcharge before you commit, so you always know who is moving your parcel and what each fee is for.",
+        points: [
+          "See the exact courier on every quote",
+          "Itemized surcharges before you ship, not after",
+          "No white-label markup you can't trace",
+        ],
+      },
+      {
+        eyebrow: "Your rates, your savings, audited",
+        title: "BYOR and shipping audit keep more money in your pocket",
+        body: "ShipTime lets you bring the carrier rates you've already negotiated and shop them against ours on every shipment — then audits your invoices for billing errors automatically. eShipper offers neither, so you ship on their book of rates and catch overcharges yourself.",
+        points: [
+          "Bring your own negotiated carrier pricing",
+          "Shop your rates against ShipTime's on every label",
+          "Automatic invoice audit recovers carrier overcharges",
+        ],
+      },
+    ],
+    fairCredit: {
+      title: "Where eShipper is a good fit",
+      body: SIGNUP_FAIR,
+      points: [
+        "Brands that need third-party fulfillment and warehousing under one roof",
+        "Merchants who want white-label and branded shipping experiences",
+        "High-volume shippers who value zone skipping and same-day options and don't need to bring their own rates",
+      ],
+    },
+    faq: [
+      { q: "Is ShipTime cheaper than eShipper?", a: "Both offer strongly discounted carrier rates and the cheapest option varies by lane and weight. Where ShipTime pulls ahead is control: Bring Your Own Rates lets you shop your negotiated pricing on every label, and a built-in shipping audit recovers carrier overcharges eShipper would leave on the table." },
+      { q: "Does ShipTime show which carrier I'm shipping with?", a: "Yes — ShipTime shows the exact courier and every itemized surcharge before you ship. eShipper's white-label products don't always reveal the underlying carrier." },
+      { q: "Can I bring my own negotiated carrier rates?", a: "Yes — Bring Your Own Rates (BYOR) blends your negotiated pricing with ShipTime's discounts on every shipment. eShipper does not support BYOR." },
+      { q: "Does ShipTime have a platform fee like a subscription?", a: "No — ShipTime is free to start with no monthly platform fee. You pay only for the labels you print." },
+      { q: "Does ShipTime handle fulfillment like eShipper?", a: "ShipTime offers a growing network of partner 3PLs across Canada and the US for fulfillment flexibility. eShipper runs its own in-house fulfillment and warehousing, which is a good fit if you want everything under one provider." },
+      { q: "Will ShipTime handle carrier claims and disputes for me?", a: "Yes — ShipTime's Heroic Support team handles carrier disputes, claims, and billing errors on your behalf, and the shipping audit flags overcharges automatically." },
+    ],
+    alternative: {
+      competitorPrice: "Varies",
+      benefitCards: ALT_BENEFITS,
+      social: ALT_SOCIAL,
+      quote: {
+        text: "What sold us was seeing the actual carrier and every fee up front, then dropping in our own UPS rates. No more guessing what we were really paying for.",
+        name: "Marcus T.",
+        role: "Head of Operations",
+        context: "Switched from eShipper",
+      },
+      switchingGuide:
+        "Switching from eShipper takes under an hour. Sign up free — no credit card, no sales call. Connect your existing carrier accounts or bring your negotiated rates. Link your store or upload orders. Your first label in under 60 minutes. Your eShipper account stays active; there's nothing to migrate and nothing to break.",
+      whyTeamsSwitch: {
+        opener:
+          "eShipper is strong on fulfillment and white-label. But if you want to see the actual carrier behind every rate, bring your own negotiated pricing, and have your invoices audited for you — here's what changes with ShipTime.",
+        bullets: [
+          { before: "White-label rates can hide which courier is carrying your parcel", after: "ShipTime shows the exact courier and every surcharge before you ship." },
+          { before: "You ship on eShipper's book of rates", after: "Bring your own negotiated rates and shop them against ShipTime's on every label." },
+          { before: "Carrier billing errors are yours to catch", after: "ShipTime's shipping audit flags and recovers overcharges automatically." },
+        ],
+      },
+      features: ALT_FEATURES,
+    },
+    vs: {
+      headline: "ShipTime vs eShipper: Transparency, Your Own Rates, and What Each Platform Covers",
+      subhead: "eShipper is built around white-label and fulfillment. ShipTime is built around transparency and control — see the exact carrier, bring your own rates, and get a shipping audit eShipper doesn't offer.",
+      answerFirst:
+        "ShipTime and eShipper are both Canadian multi-carrier platforms with competitive discounted rates, and on price the cheapest option depends on the lane. The real differences are control and transparency: ShipTime offers Bring Your Own Rates, shows the exact carrier and itemized surcharges on every quote, includes native Canada Post, audits invoices for billing errors, and has no platform fee. eShipper's strengths are its in-house fulfillment, warehousing, and white-label services.",
+      savings: "See the exact carrier and every fee, then ship on your own rates.",
+      competitorPricing: "Rates vary, white-label",
+      whoShouldChoose: {
+        shiptime: {
+          title: "Choose ShipTime if",
+          body: "You want to see the exact carrier and surcharges before you ship, bring your own negotiated rates, need Canada Post and a shipping audit built in, or want real support that handles carrier disputes on your behalf.",
+        },
+        competitor: {
+          title: "Choose eShipper if",
+          body: "You need in-house third-party fulfillment and warehousing under one provider, want white-label or branded shipping experiences, or rely on zone skipping and same-day delivery at high volume.",
+        },
+      },
+      reasons: [
+        {
+          tab: "Reason #1",
+          title: "See the exact carrier and every fee before you ship",
+          body: "eShipper's white-label products don't always reveal which underlying courier is moving your parcel or what each surcharge is for. ShipTime shows you the exact carrier and itemized fees on every quote, so you always know what you're paying for and who's delivering it.",
+          mini: [
+            { feature: "Exact carrier shown on every quote", shiptime: true, competitor: "basic" },
+            { feature: "Itemized surcharges before you ship", shiptime: true, competitor: false },
+            { feature: "Shipping audit recovers overcharges", shiptime: true, competitor: false },
+          ],
+          chips: ["Carrier shown", "Every fee itemized"],
+          image: "vs-reason-1",
+        },
+        {
+          tab: "Reason #2",
+          title: "Bring your own rates, with no platform fee",
+          body: "eShipper ships you on their book of rates. ShipTime lets you bring the carrier pricing you've already negotiated and shop it against ours on every label — with no monthly platform fee, so the discounts you see are the savings you keep.",
+          mini: [
+            { feature: "Bring Your Own Rates", shiptime: true, competitor: false },
+            { feature: "Discounted carrier rates", shiptime: true, competitor: true },
+            { feature: "No platform fee", shiptime: true, competitor: true },
+          ],
+          chips: ["Your rates blended in", "No platform fee"],
+          image: "vs-reason-2",
+        },
+      ],
+    },
+  },
 ];
 
 export function getCompetitor(slug: string): Competitor | undefined {
