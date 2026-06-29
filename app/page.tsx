@@ -25,17 +25,6 @@ type Section = {
 
 const sections: Section[] = [
   {
-    label: "Acquisition",
-    pages: [
-      {
-        href: "/shopify",
-        title: "ShipTime for Shopify",
-        desc: "Shopify merchants — cut your shipping bill up to 70%. Install free, compare 500+ carriers.",
-        tag: "New",
-      },
-    ],
-  },
-  {
     label: "Comparison (vs)",
     pages: competitors.map((c) => ({
       href: `/vs/${c.slug}`,

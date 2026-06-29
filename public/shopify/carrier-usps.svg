@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 28" fill="none">
-  <rect width="28" height="24" x="0" y="2" rx="3" fill="#004B87"/>
-  <path d="M4 8l10 6 10-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-  <rect x="4" y="8" width="20" height="12" rx="1" stroke="#fff" stroke-width="1.5" fill="none"/>
-  <text x="33" y="19" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#004B87">USPS</text>
-</svg>
