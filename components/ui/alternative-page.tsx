@@ -483,7 +483,7 @@ export default function AlternativePage({ data }: { data: Competitor }) {
                 </p>
                 {/* step list */}
                 <div className="mt-8 flex flex-col gap-3">
-                  {["Create your free account in 2 minutes", "Connect your carriers or use ours", "Start comparing rates and saving immediately"].map((step, i) => (
+                  {["Register your free account in under a minute", "Connect your carrier rates and compare with our discounted rates", "Start comparing rates and saving immediately"].map((step, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <span
                         className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0"

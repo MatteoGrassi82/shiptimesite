@@ -50,7 +50,7 @@ const CSS = `
 const tabs = [
   {
     id: "shipping",
-    label: "Shipping & Warehouse",
+    label: "Shipping",
     headline: "Print the cheapest label in seconds",
     desc: "No carrier tabs, no rate spreadsheet — just the next box.",
     points: [
