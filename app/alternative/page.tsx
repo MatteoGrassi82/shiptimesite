@@ -34,7 +34,7 @@ const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 export const metadata: Metadata = {
   title: "ShipTime Alternatives — A Better Way to Ship | ShipTime",
   description:
-    "Looking for an alternative to Freightcom, ShipStation, or Stallion Express? See why growing brands switch to ShipTime: no platform fee, Bring Your Own Rates, and Canada Post in one place.",
+    "Looking for an alternative to Freightcom, ShipStation, or eShipper? See why growing brands switch to ShipTime: no platform fee, Bring Your Own Rates, and Canada Post in one place.",
   alternates: { canonical: "/alternative" },
 };
 

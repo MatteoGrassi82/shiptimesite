@@ -2,16 +2,13 @@
 
 import Image from "next/image";
 import { Icon } from "@/components/ui/icons";
+import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 
 const NAVY    = "#1C1E3D";
 const ORANGE  = "#EC5A26";
 const MUTED   = "#6E728A";
 const BORDER  = "#E8E8E8";
 const SURFACE = "#F8FAFB";
-
-const SIGNUP = "https://app.shiptime.com/";
-const signupUrl = (content: string) =>
-  `${SIGNUP}?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=signup&utm_content=${content}`;
 
 const AVATARS = [
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop",
@@ -188,20 +185,18 @@ export default function AlternativeHero({ competitorName, photo }: Props) {
 
           {/* CTA */}
           <div className="flex flex-col gap-3">
-            <a
-              href={signupUrl("alt-hero")}
-              target="_blank"
-              rel="noopener noreferrer"
+            <LeadCaptureButton
+              source="alt-hero"
               className="inline-flex items-center gap-2 self-start px-7 py-3.5 rounded-full text-white text-sm font-bold transition-opacity hover:opacity-90"
               style={{ background: NAVY, fontFamily: "var(--font-manrope), sans-serif", letterSpacing: "0.01em" }}
             >
-              Start Shipping Free
+              Get in Touch
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
               </svg>
-            </a>
+            </LeadCaptureButton>
             <p style={{ fontSize: 12, color: MUTED, fontFamily: "var(--font-inter), sans-serif" }}>
-              No platform fee · No contract · Setup in 5 minutes
+              No platform fee · No contract · Connect your store in minutes
             </p>
           </div>
         </div>

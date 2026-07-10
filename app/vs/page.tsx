@@ -27,7 +27,7 @@ const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 export const metadata: Metadata = {
   title: "Choose ShipTime — Side-by-Side Comparisons | ShipTime",
   description:
-    "See how ShipTime compares head-to-head with Freightcom, ShipStation, and Stallion Express. No platform fee, Bring Your Own Rates, Canada Post, and more.",
+    "See how ShipTime compares head-to-head with Freightcom, ShipStation, and eShipper. No platform fee, Bring Your Own Rates, Canada Post, and more.",
   alternates: { canonical: "/vs" },
 };
 

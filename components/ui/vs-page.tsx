@@ -11,6 +11,7 @@ import ShipTimeTimeline from "@/components/ui/shiptime-timeline";
 import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials";
 import ShipTimeSceneDivider from "@/components/ui/shiptime-scene-divider";
 import { Icon } from "@/components/ui/icons";
+import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 import type { Competitor } from "@/lib/competitors";
 
 // ── Table icon cells ────────────────────────────────────────────────────────
@@ -113,8 +114,8 @@ function Chip({ label, accent }: { label: string; accent: string }) {
 const STAT_CHEVRONS = [
   { big: "70%", label: "off walk-in carrier rates", bg: "#E3EEFC", fg: ds.navy },
   { big: "1,000+", label: "five-star customer reviews", bg: "#B6E04A", fg: ds.navy },
-  { big: "1", label: "invoice across every carrier", bg: ds.orange, fg: ds.white },
-  { big: "5 min", label: "to sign up and start shipping", bg: "#A9A2F2", fg: ds.navy },
+  { big: "1", label: "invoice across every carrier", bg: ds.navyDeep, fg: ds.white },
+  { big: "5 min", label: "to register a free account", bg: "#A9A2F2", fg: ds.navy },
 ];
 
 // Right-pointing arrow notch. First segment is flat on the left, the rest are
@@ -167,15 +168,13 @@ function StatsChevrons() {
         </div>
 
         <div className="mt-8">
-          <a
-            href={signupUrl("stats-band")}
-            target="_blank"
-            rel="noopener noreferrer"
+          <LeadCaptureButton
+            source="stats-band"
             className="inline-flex items-center gap-2 text-white text-sm font-semibold px-6 py-3 transition-colors hover:opacity-90"
             style={{ background: ds.orange, borderRadius: 10, ...sora }}
           >
             Hear from our customers <span aria-hidden>→</span>
-          </a>
+          </LeadCaptureButton>
         </div>
       </div>
     </section>
@@ -204,15 +203,13 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
             <p className="mb-8" style={{ ...body, color: "rgba(255,255,255,0.72)", fontSize: 17, maxWidth: 460 }}>
               {vs.subhead || data.subhead}
             </p>
-            <a
-              href={signupUrl("hero")}
-              target="_blank"
-              rel="noopener noreferrer"
+            <LeadCaptureButton
+              source="hero"
               className="inline-block text-white text-sm font-semibold px-7 py-3.5 transition-colors hover:opacity-90"
               style={{ background: ds.orange, borderRadius: 999, ...sora }}
             >
-              Get started free
-            </a>
+              Get in touch
+            </LeadCaptureButton>
           </div>
           {/* Hero photo with floating accent badges */}
           <div className="relative">
@@ -379,9 +376,9 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
                 <span style={{ ...sora, fontSize: 13, fontWeight: 700, color: ds.navy }}>Ready to switch?</span>
               </div>
               <div className="py-4 flex justify-center" style={{ borderLeft: `1px solid ${ds.border}` }}>
-                <a href={signupUrl("compare-table")} target="_blank" rel="noopener noreferrer" className="text-white text-[12px] font-semibold px-4 py-2 transition-opacity hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 999, ...sora }}>
-                  Start free
-                </a>
+                <LeadCaptureButton source="compare-table" className="text-white text-[12px] font-semibold px-4 py-2 transition-opacity hover:opacity-90 whitespace-nowrap" style={{ background: ds.orange, borderRadius: 999, ...sora }}>
+                  Get in touch
+                </LeadCaptureButton>
               </div>
               <div className="py-4" style={{ borderLeft: `1px solid ${ds.border}` }} />
             </div>
@@ -414,15 +411,13 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
                 <h3 className="mb-4" style={{ ...heading, color: ds.navy, fontSize: "1.25rem" }}>{vs.whoShouldChoose.shiptime.title}</h3>
                 <p style={{ ...body, fontSize: 15, color: ds.navy }}>{vs.whoShouldChoose.shiptime.body}</p>
                 <div className="mt-6">
-                  <a
-                    href={signupUrl("who-should-choose")}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <LeadCaptureButton
+                    source="who-should-choose"
                     className="inline-flex items-center gap-2 text-white text-sm font-semibold px-6 py-3 transition-all hover:opacity-90"
                     style={{ background: ds.orange, borderRadius: 999, ...sora }}
                   >
-                    Start free
-                  </a>
+                    Get in touch
+                  </LeadCaptureButton>
                 </div>
               </div>
               <div className="p-8" style={{ borderRadius: 20, background: ds.surface, border: `1px solid ${ds.border}` }}>
@@ -483,7 +478,7 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
               </p>
             </div>
             {[
-              { title: "Compare", links: [["All comparisons", "/vs"], ["Freightcom", "/vs/freightcom"], ["ShipStation", "/vs/shipstation"], ["Stallion Express", "/vs/stallion-express"]] },
+              { title: "Compare", links: [["All comparisons", "/vs"], ["Freightcom", "/vs/freightcom"], ["ShipStation", "/vs/shipstation"], ["eShipper", "/vs/eshipper"]] },
               { title: "Alternatives", links: [["All alternatives", "/alternative"], ["ShipStation alternative", "/alternative/shipstation"], ["Freightcom alternative", "/alternative/freightcom"]] },
               { title: "Company", links: [["Home", "/"], ["Sign up free", signupUrl("footer")]] },
             ].map((col) => (

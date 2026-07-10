@@ -12,6 +12,7 @@ import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials";
 import ShipTimeSceneDivider from "@/components/ui/shiptime-scene-divider";
 import { Reveal } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icons";
+import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 import type { Competitor } from "@/lib/competitors";
 
 // Server-side check (runs at build/prerender time): does a generated PNG exist
@@ -298,15 +299,13 @@ function CompareTable({
           <span style={{ ...sora, fontSize: 13, fontWeight: 700, color: ds.navy }}>Ready to switch?</span>
         </div>
         <div className="py-4 flex justify-center" style={{ borderLeft: `1px solid ${ds.border}` }}>
-          <a
-            href="https://app.shiptime.com/?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=compare-table"
-            target="_blank"
-            rel="noopener noreferrer"
+          <LeadCaptureButton
+            source="compare-table"
             className="text-white text-[12px] font-semibold px-4 py-2 transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{ background: ds.orange, borderRadius: 999, ...sora }}
           >
-            Start free
-          </a>
+            Get in touch
+          </LeadCaptureButton>
         </div>
         <div className="py-4" style={{ borderLeft: `1px solid ${ds.border}` }} />
       </div>
@@ -391,18 +390,16 @@ export default function AlternativePage({ data }: { data: Competitor }) {
 
             {/* CTA */}
             <div className="mt-12">
-              <a
-                href={signupUrl("why-switch")}
-                target="_blank"
-                rel="noopener noreferrer"
+              <LeadCaptureButton
+                source="why-switch"
                 className="inline-flex items-center gap-2.5 text-white text-sm font-semibold px-7 py-3.5 transition-all hover:opacity-90"
                 style={{ background: ds.orange, borderRadius: 999, boxShadow: "0 4px 20px rgba(236,90,38,0.35)", ...sora }}
               >
-                Start for free
+                Get in touch
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M3 7h8M8 4l3 3-3 3" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </a>
+              </LeadCaptureButton>
             </div>
           </div>
         </section>
@@ -514,18 +511,16 @@ export default function AlternativePage({ data }: { data: Competitor }) {
                   <p className="font-bold text-lg mb-1" style={{ color: ds.white, ...sora }}>Free forever</p>
                   <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)", ...inter }}>No platform fee. No contract.</p>
                 </div>
-                <a
-                  href={signupUrl("switching-guide")}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <LeadCaptureButton
+                  source="switching-guide"
                   className="w-full inline-flex items-center justify-center gap-2 text-white font-semibold px-6 py-3.5 transition-all hover:opacity-90"
                   style={{ background: ds.orange, borderRadius: 999, fontSize: 14, boxShadow: "0 4px 20px rgba(236,90,38,0.4)", ...sora }}
                 >
-                  Start for free
+                  Get in touch
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M3 7h8M8 4l3 3-3 3" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </a>
+                </LeadCaptureButton>
                 <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.35)", ...inter }}>No credit card required</p>
               </div>
             </div>
@@ -622,7 +617,7 @@ function SiteFooter() {
         { label: "All alternatives", href: "/alternative" },
         { label: "Freightcom alternative", href: "/alternative/freightcom" },
         { label: "ShipStation alternative", href: "/alternative/shipstation" },
-        { label: "Stallion Express alternative", href: "/alternative/stallion-express" },
+        { label: "eShipper alternative", href: "/alternative/eshipper" },
       ],
     },
     {

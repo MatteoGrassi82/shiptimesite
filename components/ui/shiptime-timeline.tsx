@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 
 const ds = {
   navy:      "#1C1E3D",
@@ -38,16 +39,20 @@ function Badge2() {
       <div className="text-[10px] font-bold mb-1.5" style={{ color: ds.navy, ...manrope }}>Carriers connected</div>
       {[
         { name: "Canada Post", dot: "#CC0000" },
-        { name: "UPS",         dot: "#FFB500" },
         { name: "FedEx",       dot: "#FF6600" },
         { name: "Purolator",   dot: "#004990" },
-      ].map(c => (
+        { name: "UPS",         dot: "#FFB500" },
+      ].map((c, i) => (
         <div key={c.name} className="flex items-center gap-1.5 py-0.5">
           <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: c.dot }} />
           <span className="text-[10px]" style={{ color: ds.navy, ...inter }}>{c.name}</span>
-          <span className="ml-auto w-3 h-3 rounded-full flex items-center justify-center" style={{ background: ds.green }}>
-            <svg width="6" height="5" viewBox="0 0 6 5" fill="none"><path d="M1 2.5l1.2 1.2L5 1" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </span>
+          {i < 3 ? (
+            <span className="ml-auto w-3 h-3 rounded-full flex items-center justify-center" style={{ background: ds.green }}>
+              <svg width="6" height="5" viewBox="0 0 6 5" fill="none"><path d="M1 2.5l1.2 1.2L5 1" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+          ) : (
+            <span className="ml-auto text-[8.5px] font-semibold" style={{ color: ds.muted, ...inter }}>Set up with us</span>
+          )}
         </div>
       ))}
     </div>
@@ -59,9 +64,9 @@ function Badge3() {
     <div style={{ background: ds.white, borderRadius: 12, padding: "10px 12px", boxShadow: "0 8px 24px rgba(28,30,61,0.14)", minWidth: 148 }}>
       <div className="text-[10px] font-bold mb-1.5" style={{ color: ds.navy, ...manrope }}>Best rate</div>
       {[
-        { name: "UPS Ground",  price: "$8.48",  best: true  },
+        { name: "Purolator",   price: "$8.48",  best: true  },
         { name: "Canada Post", price: "$9.12",  best: false },
-        { name: "Purolator",   price: "$9.72",  best: false },
+        { name: "FedEx",       price: "$9.72",  best: false },
       ].map(r => (
         <div key={r.name} className="flex items-center gap-1.5 py-0.5">
           <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: r.best ? ds.orange : ds.border }} />
@@ -176,15 +181,13 @@ export default function ShipTimeTimeline({ background = "#F8FAFB" }: { backgroun
 
         {/* CTA */}
         <div className="mt-12 text-center">
-          <a
-            href="https://app.shiptime.com/?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=how-it-works&utm_content=cta"
-            target="_blank"
-            rel="noopener noreferrer"
+          <LeadCaptureButton
+            source="how-it-works"
             className="inline-flex items-center gap-2 text-white text-sm font-semibold px-7 py-3.5 transition-all hover:opacity-90"
             style={{ background: ds.orange, borderRadius: 999, boxShadow: "0 4px 20px rgba(236,90,38,0.25)", ...manrope }}
           >
-            Start for free — no credit card
-          </a>
+            Get in touch — no credit card
+          </LeadCaptureButton>
           <p className="mt-3 text-xs" style={{ color: ds.muted, ...inter }}>No platform fee. No contract. Cancel anytime.</p>
         </div>
 
