@@ -127,6 +127,112 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ── Two-zone semantic design tokens ──────────────────────────────
+   The shared section library (components/sections/*) reads ONLY these
+   semantic tokens — never a raw brand hex. So one section component
+   renders in whichever brand the zone layout dictates via [data-zone].
+   Core  = light canvas, navy + orange, Manrope/Inter.
+   Plus  = near-black "operating system", teal + amber, uppercase Inter. */
+:root,
+[data-zone="core"] {
+  --page: #ffffff;
+  --surface: #f8fafb;
+  --surface-2: #e3eefc;
+  --card: #ffffff;
+  --ink: #1c1e3d;
+  --ink-2: #6e728a;
+  --ink-3: #9aa0b5;
+  --line: #e8e8e8;
+  --brand: #ec5a26;
+  --brand-2: #f0845b;
+  --on-brand: #ffffff;
+  --contrast: #1c1e3d;
+  --on-contrast: #ffffff;
+  --contrast-line: rgba(255, 255, 255, 0.12);
+  --font-display: var(--font-manrope), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-label: var(--font-inter), system-ui, sans-serif;
+  --display-weight: 800;
+  --display-transform: none;
+  --display-tracking: -0.02em;
+  --label-transform: uppercase;
+  --label-tracking: 0.12em;
+  --radius-card: 16px;
+  --radius-section: 24px;
+  --radius-pill: 999px;
+}
+
+[data-zone="plus"] {
+  --page: #0a0c0d;
+  --surface: #0e1113;
+  --surface-2: #111517;
+  --card: #111517;
+  --ink: #f2f6f5;
+  --ink-2: #8c9699;
+  --ink-3: #596366;
+  --line: rgba(255, 255, 255, 0.09);
+  --brand: #33a89c;
+  --brand-2: #e3a94a;
+  --on-brand: #04211e;
+  --contrast: #05080a;
+  --on-contrast: #f2f6f5;
+  --contrast-line: rgba(255, 255, 255, 0.1);
+  --font-display: var(--font-inter), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-label: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --display-weight: 700;
+  --display-transform: uppercase;
+  --display-tracking: -0.04em;
+  --label-transform: uppercase;
+  --label-tracking: 0.2em;
+  --radius-card: 16px;
+  --radius-section: 20px;
+  --radius-pill: 999px;
+}
+
+/* Zone root fills its background so the Plus dark canvas covers the viewport. */
+[data-zone] {
+  background: var(--page);
+  color: var(--ink);
+}
+
+/* Token-driven typographic utilities used by the shared section library. Kept
+   as classes (not inline style) so the CSS-variable values resolve per zone
+   without fighting React's typed style props. */
+.st-display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  text-transform: var(--display-transform);
+  line-height: 1.08;
+  color: inherit;
+}
+.st-eyebrow {
+  font-family: var(--font-label);
+  font-weight: 600;
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-transform);
+  color: var(--brand);
+}
+.st-body {
+  font-family: var(--font-body);
+}
+.st-cta {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.st-cta:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+.st-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease;
+}
+.st-lift:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--brand) 40%, var(--line));
+}
+
 @theme inline {
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
