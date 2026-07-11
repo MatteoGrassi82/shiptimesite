@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PlusHero from "@/components/ui/plus-hero";
+import { PlusHomeHero } from "@/components/sections/plus-home-hero";
 import { PageBuilder } from "@/components/sections/page-builder";
 import { ZoneFooter, ZoneNav } from "@/components/sections/site-chrome";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 // The Plus home. If an editor has published a Plus page with slug "home" its
-// sections take over; otherwise the hand-built PlusHero is the default.
+// sections take over; otherwise the real Plus "steroids" hero is the default.
 export default async function PlusHome() {
   const [settings, page] = await Promise.all([
     sanityFetch<SiteSettings>({ query: SITE_SETTINGS_QUERY, params: { site: "plus" }, tags: ["siteSettings"] }),
@@ -32,7 +32,7 @@ export default async function PlusHome() {
           <PageBuilder sections={page.sections} />
         </main>
       ) : (
-        <PlusHero />
+        <PlusHomeHero />
       )}
       <ZoneFooter zone="plus" settings={settings} />
     </>

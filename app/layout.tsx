@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Inter } from "next/font/google";
+import { Manrope, Inter, DM_Sans, Instrument_Serif, Anton } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -17,6 +17,30 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+// ── ShipTime Plus (Hana) type system ──────────────────────────────
+// Anton for display headings (heavy condensed uppercase), DM Sans for body/UI.
+// These drive the [data-zone="plus"] token set. (Instrument Serif is retained
+// for Plus blog long-form, so it stays loaded.)
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const anton = Anton({
+  variable: "--font-anton",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "ShipTime — Your Logistics. Fully Optimized.",
   description: "ShipTime is your logistics operating system — unifying shipping, fulfillment, and carrier strategy across North America.",
@@ -30,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${inter.variable} h-full antialiased`}
+      className={`${manrope.variable} ${inter.variable} ${dmSans.variable} ${instrumentSerif.variable} ${anton.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-[var(--font-inter)]">
         {children}

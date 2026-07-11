@@ -6,7 +6,7 @@ One Next.js app, one Sanity project, one Vercel project → **two brands, two bl
 Visitor ─▶ Vercel (CDN · ISR · redirects · A/B · proxy)
         ─▶ Next.js app
              ├─ (core) zone   shiptime.com/*        Core tokens  (navy + orange, Manrope)
-             └─ (plus) zone   shiptime.com/plus/*   Plus tokens  (teal + amber, uppercase Inter)
+             └─ (plus) zone   shiptime.com/plus/*   Plus tokens  (navy + orange, blue accent, Anton display)
                   └─ shared section library  (built once, wears either brand)
         ◀─ Sanity (project hgpi44x3 · dataset production · site field = core|plus)
 ```
@@ -17,7 +17,7 @@ Every shared section in [`components/sections/`](components/sections/) reads **o
 variables** — `var(--brand)`, `var(--ink)`, `var(--surface)`, `var(--font-display)`… — never a raw
 brand hex. The zone layout sets `data-zone="core"` or `data-zone="plus"` on a wrapper, and
 [`app/globals.css`](app/globals.css) resolves those tokens differently per zone. So the *same* `Hero`
-renders light navy/orange in Core and dark teal in Plus.
+renders in Manrope navy/orange in Core and in big Anton uppercase headlines in Plus.
 
 Add a section: build the component → add its schema type → add one `case` in
 [`components/sections/page-builder.tsx`](components/sections/page-builder.tsx).

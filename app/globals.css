@@ -162,31 +162,35 @@
   --radius-pill: 999px;
 }
 
+/* ShipTime Plus = the Hana design language (from the shiptime-plus repo):
+   light canvas, navy ink, orange primary, BLUE accent (no teal), Anton display
+   (heavy condensed UPPERCASE, weight 400) + DM Sans body. Distinct from Core
+   mainly through the big bold condensed headlines and the blue accent. */
 [data-zone="plus"] {
-  --page: #0a0c0d;
-  --surface: #0e1113;
-  --surface-2: #111517;
-  --card: #111517;
-  --ink: #f2f6f5;
-  --ink-2: #8c9699;
-  --ink-3: #596366;
-  --line: rgba(255, 255, 255, 0.09);
-  --brand: #33a89c;
-  --brand-2: #e3a94a;
-  --on-brand: #04211e;
-  --contrast: #05080a;
-  --on-contrast: #f2f6f5;
-  --contrast-line: rgba(255, 255, 255, 0.1);
-  --font-display: var(--font-inter), system-ui, sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-label: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --display-weight: 700;
+  --page: #ffffff;
+  --surface: #f8fafb;
+  --surface-2: #e3eefc;
+  --card: #ffffff;
+  --ink: #1c1e3d;
+  --ink-2: #475569;
+  --ink-3: #6e728a;
+  --line: #e8e8e8;
+  --brand: #ec5a26;
+  --brand-2: #2e4c8f;
+  --on-brand: #ffffff;
+  --contrast: #1c1e3d;
+  --on-contrast: #ffffff;
+  --contrast-line: rgba(255, 255, 255, 0.12);
+  --font-display: var(--font-anton), "Anton", system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+  --font-label: var(--font-dm-sans), system-ui, sans-serif;
+  --display-weight: 400;
   --display-transform: uppercase;
-  --display-tracking: -0.04em;
+  --display-tracking: -0.01em;
   --label-transform: uppercase;
-  --label-tracking: 0.2em;
+  --label-tracking: 0.08em;
   --radius-card: 16px;
-  --radius-section: 20px;
+  --radius-section: 22px;
   --radius-pill: 999px;
 }
 
