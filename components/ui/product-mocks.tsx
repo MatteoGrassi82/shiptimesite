@@ -56,11 +56,13 @@ function OffsetCard({
 // ── 1. RATE SHOPPING ────────────────────────────────────────
 // A bar chart of carrier prices (cheapest in orange) + a highlighted winner row,
 // with a second small "savings" card overlapping at the bottom.
+// Canadian carriers lead — Canada Post is the cheapest/best rate. UPS is not
+// promoted up front (it isn't enabled by default on a new account).
 const RATE_DATA = [
-  { name: "UPS", price: 11.85, best: true },
-  { name: "FedEx", price: 13.1, best: false },
-  { name: "CPC", price: 14.2, best: false },
-  { name: "Puro", price: 16.4, best: false },
+  { name: "CPC", price: 11.85, best: true },
+  { name: "Puro", price: 13.1, best: false },
+  { name: "FedEx", price: 14.2, best: false },
+  { name: "UPS", price: 16.4, best: false },
 ];
 
 export function RateShopMock() {
@@ -92,7 +94,7 @@ export function RateShopMock() {
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={{ background: "#FFF4EF", border: `1px solid ${ds.orange}` }}>
             <div className="w-7 h-7 rounded-md" style={{ background: ds.orange }} />
             <div className="flex-1">
-              <div className="text-[12px] font-bold" style={{ color: ds.navy, ...sora }}>UPS Standard</div>
+              <div className="text-[12px] font-bold" style={{ color: ds.navy, ...sora }}>Canada Post Expedited</div>
               <div className="text-[10px]" style={{ color: ds.muted, ...inter }}>2-3 business days</div>
             </div>
             <div className="text-[15px] font-extrabold" style={{ color: ds.orange, ...sora }}>$11.85</div>
@@ -207,7 +209,7 @@ export function BillingMock() {
           </ResponsiveContainer>
         </div>
         <div className="px-4 py-3 flex flex-col gap-1.5" style={{ background: ds.surface, borderTop: `1px solid ${ds.border}` }}>
-          {[["UPS", "$842.10"], ["Canada Post", "$418.55"], ["FedEx", "$291.00"]].map(([c, v]) => (
+          {[["Canada Post", "$842.10"], ["Purolator", "$418.55"], ["FedEx", "$291.00"]].map(([c, v]) => (
             <div key={c} className="flex items-center justify-between text-[11.5px]" style={{ color: ds.navy, ...inter }}>
               <span>{c}</span><span className="font-semibold">{v}</span>
             </div>

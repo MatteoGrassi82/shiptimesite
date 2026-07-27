@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Inter, DM_Sans, Instrument_Serif, Anton } from "next/font/google";
+import { Manrope, Inter, DM_Sans, Instrument_Serif, Anton, Bricolage_Grotesque } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -41,6 +41,14 @@ const anton = Anton({
   display: "swap",
 });
 
+// Distinctive heavy grotesque for Core headlines (Fluz-style display face).
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  weight: ["600", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "ShipTime — Your Logistics. Fully Optimized.",
   description: "ShipTime is your logistics operating system — unifying shipping, fulfillment, and carrier strategy across North America.",
@@ -54,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${inter.variable} ${dmSans.variable} ${instrumentSerif.variable} ${anton.variable} h-full antialiased`}
+      className={`${manrope.variable} ${inter.variable} ${dmSans.variable} ${instrumentSerif.variable} ${anton.variable} ${bricolage.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-[var(--font-inter)]">
         {children}

@@ -132,7 +132,7 @@
    semantic tokens — never a raw brand hex. So one section component
    renders in whichever brand the zone layout dictates via [data-zone].
    Core  = light canvas, navy + orange, Manrope/Inter.
-   Plus  = near-black "operating system", teal + amber, uppercase Inter. */
+   Plus  = light canvas, navy + orange with a blue accent, uppercase Anton. */
 :root,
 [data-zone="core"] {
   --page: #ffffff;
@@ -162,10 +162,10 @@
   --radius-pill: 999px;
 }
 
-/* ShipTime Plus = the Hana design language (from the shiptime-plus repo):
-   light canvas, navy ink, orange primary, BLUE accent (no teal), Anton display
-   (heavy condensed UPPERCASE, weight 400) + DM Sans body. Distinct from Core
-   mainly through the big bold condensed headlines and the blue accent. */
+/* ShipTime Plus now shares the /home-2 typography: Bricolage Grotesque for
+   headings (weight 800, tight tracking), Manrope for body/labels, and Anton for
+   the big hero headline (applied directly on the hero H1s). Light canvas, navy
+   ink, orange primary, blue accent unchanged. */
 [data-zone="plus"] {
   --page: #ffffff;
   --surface: #f8fafb;
@@ -181,17 +181,38 @@
   --contrast: #1c1e3d;
   --on-contrast: #ffffff;
   --contrast-line: rgba(255, 255, 255, 0.12);
-  --font-display: var(--font-anton), "Anton", system-ui, sans-serif;
-  --font-body: var(--font-dm-sans), system-ui, sans-serif;
-  --font-label: var(--font-dm-sans), system-ui, sans-serif;
-  --display-weight: 400;
-  --display-transform: uppercase;
-  --display-tracking: -0.01em;
+  --font-display: var(--font-bricolage), var(--font-manrope), system-ui, sans-serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
+  --font-label: var(--font-manrope), system-ui, sans-serif;
+  --display-weight: 800;
+  --display-transform: none;
+  --display-tracking: -0.02em;
   --label-transform: uppercase;
   --label-tracking: 0.08em;
   --radius-card: 16px;
   --radius-section: 22px;
   --radius-pill: 999px;
+
+  /* Hana/shadcn tokens read by the ported old-homepage sections
+     (components/plus-home/*): bg-background, text-primary, bg-accent,
+     font-serif, font-sans, var(--st-*) … scoped here so Core keeps its own
+     values. `font-serif` → Bricolage, `font-sans` → Manrope to match /home-2. */
+  --background: #ffffff;
+  --foreground: #1c1e3d;
+  --card-foreground: #1c1e3d;
+  --primary: #ec5a26;
+  --primary-foreground: #ffffff;
+  --muted: #f8fafb;
+  --muted-foreground: #6e728a;
+  --accent: #e3eefc;
+  --accent-foreground: #1c3a6e;
+  --border: #e8e8e8;
+  --st-orange-tint: #fff4ef;
+  --st-blue: #2e4c8f;
+  --st-blue-tint: #e3eefc;
+  --st-blue-deep: #1c3a6e;
+  --font-serif: var(--font-bricolage), var(--font-manrope), system-ui, sans-serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
 }
 
 /* Zone root fills its background so the Plus dark canvas covers the viewport. */

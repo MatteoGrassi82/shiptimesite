@@ -1,16 +1,19 @@
 import { blockContent, ctaLink, faqItem, feature, quote, seo, stat } from "./shared";
 import {
   bookingEmbed,
+  comparisonTable,
   ctaSection,
   faqSection,
   featureGrid,
   heroSection,
   logoMarquee,
+  mediaSplit,
   metricStats,
+  numberedSteps,
   richTextSection,
   testimonialSection,
 } from "./sections";
-import { page, post, siteSettings } from "./documents";
+import { caseStudy, page, post, resource, siteSettings, solutionPage } from "./documents";
 
 // Full schema registry for the Studio. Mirrors the model deployed to the
 // project via MCP — keep the two in sync (deploy schema changes with
@@ -34,8 +37,14 @@ export const schemaTypes = [
   testimonialSection,
   richTextSection,
   bookingEmbed,
+  numberedSteps,
+  comparisonTable,
+  mediaSplit,
   // documents
   page,
   post,
   siteSettings,
+  solutionPage,
+  caseStudy,
+  resource,
 ];

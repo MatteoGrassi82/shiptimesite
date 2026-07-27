@@ -127,7 +127,7 @@ export default function ShipTimeTimeline({ background = "#F8FAFB" }: { backgroun
               lineHeight: 1.1,
             }}
           >
-            Up and running in under an hour
+            Up and running in about 15 minutes
           </h2>
           <p className="mx-auto mt-4" style={{ ...inter, color: ds.muted, fontSize: 16, maxWidth: 440, lineHeight: 1.6 }}>
             No IT project, no rip-and-replace, no surprises.

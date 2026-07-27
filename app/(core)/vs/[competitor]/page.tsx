@@ -26,20 +26,20 @@ export async function generateMetadata({
 }
 
 // Resolve which generated photos exist (build-time fs check), pass to the
-// client component so it never touches the filesystem.
-function resolveImages(slug: string): Record<string, string | null> {
-  const keys = ["vs-hero", "vs-reason-1", "vs-reason-2"];
-  const out: Record<string, string | null> = {};
-  for (const k of keys) {
-    const rel = `generated/${slug}-${k}.png`;
-    out[k] = existsSync(join(process.cwd(), "public", rel)) ? `/${rel}` : null;
-  }
-  return out;
+// client component so it never touches the filesystem. The hero uses the shared
+// portrait photo (alt-hero.png) so the vs hero matches the alternative pages —
+// the per-competitor vs-hero images are landscape and don't fit the portrait
+// hero frame.
+function resolveImages(): Record<string, string | null> {
+  const hero = "generated/alt-hero.png";
+  return {
+    hero: existsSync(join(process.cwd(), "public", hero)) ? `/${hero}` : null,
+  };
 }
 
 export default async function Page({ params }: PageProps<"/vs/[competitor]">) {
   const { competitor } = await params;
   const data = getCompetitor(competitor);
   if (!data) notFound();
-  return <VsPage data={data} images={resolveImages(data.slug)} />;
+  return <VsPage data={data} images={resolveImages()} />;
 }

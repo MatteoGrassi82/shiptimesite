@@ -55,7 +55,7 @@ const tabs = [
     desc: "No carrier tabs, no rate spreadsheet — just the next box.",
     points: [
       { title: "Every carrier, one screen", body: "Compare courier, LTL and Canada Post side by side, then print the cheapest qualified label without leaving ShipTime.", icon: <LayoutIcon /> },
-      { title: "Your rates, ready to go", body: "Bring your own negotiated rates and they shop automatically against ours on every shipment.", icon: <TagIcon /> },
+      { title: "Your rates, ready to go", body: "Bring your own negotiated courier rates and shop them against ours on every shipment.", icon: <TagIcon /> },
     ],
   },
   {
@@ -64,7 +64,7 @@ const tabs = [
     headline: "Run the whole carrier mix from one place",
     desc: "See where every dollar goes before the package moves.",
     points: [
-      { title: "Right carrier, every time", body: "UPS, FedEx, Purolator, Canada Post and LTL freight, priced live so the cheapest qualified option is never a guess.", icon: <ShuffleIcon /> },
+      { title: "Right carrier, every time", body: "Canada Post, Purolator, GLS, FedEx and LTL freight, priced live so the cheapest qualified option is never a guess.", icon: <ShuffleIcon /> },
       { title: "Pickups on schedule", body: "Book pickups across carriers in a few clicks and stop building the day around courier cutoffs.", icon: <ClockIcon /> },
     ],
   },
@@ -187,12 +187,14 @@ function RateSliderVisual() {
   const [flashRow, setFlashRow] = useState<string | null>(null);
   const prevBestRef = useRef<string | null>(null);
 
+  // Canadian carriers lead, and Canada Post prices out cheapest — we don't put
+  // UPS forward as the default winner (it isn't enabled on a new account).
   const baseRates = [
-    { carrier: "UPS Ground",       baseRate: 6.80, perLb: 0.14, transit: "2 days" },
-    { carrier: "Canada Post Exp.", baseRate: 7.20, perLb: 0.16, transit: "2 days" },
-    { carrier: "Purolator Gnd",    baseRate: 8.10, perLb: 0.18, transit: "3 days" },
-    { carrier: "FedEx Ground",     baseRate: 8.90, perLb: 0.19, transit: "3 days" },
+    { carrier: "Canada Post Exp.", baseRate: 6.80, perLb: 0.14, transit: "2 days" },
+    { carrier: "Purolator Ground", baseRate: 7.20, perLb: 0.16, transit: "3 days" },
     { carrier: "GLS Standard",     baseRate: 7.60, perLb: 0.17, transit: "4 days" },
+    { carrier: "FedEx Ground",     baseRate: 8.10, perLb: 0.18, transit: "3 days" },
+    { carrier: "UPS Ground",       baseRate: 8.90, perLb: 0.19, transit: "2 days" },
   ];
 
   const rates = baseRates
@@ -281,10 +283,10 @@ function RateSliderVisual() {
 // ─── Visual 2: Countdown Clocks ───────────────────────────────────────────────
 function CountdownVisual() {
   const cutoffs = [
-    { carrier: "UPS",         hour: 16, minute: 0  },
-    { carrier: "FedEx",       hour: 15, minute: 30 },
-    { carrier: "Purolator",   hour: 17, minute: 0  },
     { carrier: "Canada Post", hour: 14, minute: 0  },
+    { carrier: "Purolator",   hour: 17, minute: 0  },
+    { carrier: "FedEx",       hour: 15, minute: 30 },
+    { carrier: "UPS",         hour: 16, minute: 0  },
   ];
 
   const [now, setNow] = useState(new Date());
@@ -379,12 +381,12 @@ function InvoiceScanVisual() {
   const CARD_HEIGHT = 288;
 
   const rows = [
-    { label: "UPS Ground – Jun 3",    quoted: "$8.42",  charged: "$11.60", flag: true  },
-    { label: "FedEx Exp – Jun 3",     quoted: "$14.10", charged: "$14.10", flag: false },
+    { label: "Canada Post – Jun 3",   quoted: "$9.10",  charged: "$9.10",  flag: false },
     { label: "Purolator – Jun 4",     quoted: "$10.55", charged: "$13.00", flag: true  },
-    { label: "Canada Post – Jun 4",   quoted: "$9.10",  charged: "$9.10",  flag: false },
-    { label: "UPS Express – Jun 5",   quoted: "$18.00", charged: "$18.00", flag: false },
+    { label: "Canada Post Exp – Jun 4", quoted: "$14.10", charged: "$14.10", flag: false },
     { label: "Purolator Exp – Jun 5", quoted: "$22.40", charged: "$27.80", flag: true  },
+    { label: "FedEx Exp – Jun 5",     quoted: "$18.00", charged: "$18.00", flag: false },
+    { label: "UPS Ground – Jun 6",    quoted: "$8.42",  charged: "$11.60", flag: true  },
   ];
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 
 const ds = {
@@ -9,12 +8,39 @@ const ds = {
   lightBlue: "#E3EEFC",
   surface:   "#F8FAFB",
   border:    "#E8E8E8",
-  muted:     "#6E728A",
+  muted:     "#52566C",
   white:     "#FFFFFF",
 };
 
 const manrope = { fontFamily: "var(--font-manrope), system-ui, sans-serif" };
 const inter   = { fontFamily: "var(--font-inter), system-ui, sans-serif" };
+
+// Real reviews scraped from shiptime.com/all-ecommerce (verbatim). Tone controls
+// each card's look in the masonry. Several are business names rather than a
+// person, so attribution uses an initial monogram — no stock photos.
+type Tone = "light" | "navy" | "dark" | "orange";
+const REVIEWS: { name: string; role?: string; text: string; tone: Tone }[] = [
+  { name: "Paul V.", role: "Operations Manager", tone: "light",
+    text: "So happy we switched to ShipTime! The local rates are way cheaper than the courier we were using and seeing all the options on one page (without signing into 5 different portals) is such a time saver." },
+  { name: "Sugarbomb Printing", tone: "navy",
+    text: "Good rates, simple process. ShipTime saves us money and time. It simplifies shipping processes and is key during our busy season as we get critical parts out to customers on time and at reasonable rates." },
+  { name: "Freaktography Photography", tone: "dark",
+    text: "ShipTime's Shopify integration has been a game-changer for our business. We now offer fair shipping rates for heavy items across Canada, and customers get instant carrier options at checkout. Tracking and fulfillment updates are automatic, and the invoicing is clear and easy to manage. Setup was quick, and Heroic Support made sure everything was done right." },
+  { name: "Mary", role: "Business Owner", tone: "dark",
+    text: "I recently started using ShipTime for my business and the platform is extremely user friendly. Comparing courier rates, delivery times, and pickup options all on one screen makes shipping simple, and the tracking tools are excellent. The rates are far better than what we previously received as a shipping agent." },
+  { name: "Liquid Assets of Nova Scotia", tone: "orange",
+    text: "I love it! I've tried using other platforms, but I just couldn't figure it out over there. Scheduling a courier pick up on that platform? Forget it. ShipTime is quick, easy, and so user-friendly." },
+  { name: "Annalisa V.", role: "Operations Manager", tone: "light",
+    text: "Our customers love having the option to choose their shipping method, and ShipTime makes it easy for carriers to pick up from our remote location. The team is dedicated, quick to help, and always responsive." },
+  { name: "Great West Auctions & Realty", tone: "navy",
+    text: "I've used ShipTime for years to ship photography prints and calendars, and every order has arrived safely and on time. Having all courier options, service times, and pricing on one screen makes shipping simple. The rates are always much better than shipping directly with the couriers." },
+  { name: "Canoehound Adventures", tone: "dark",
+    text: "The two things we like most are getting quotes on shipping times and the cost relative to those times, and being able to send shipping labels to our suppliers." },
+];
+
+function initials(name: string) {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+}
 
 function useReveal(delay = 0) {
   const ref = useRef<HTMLDivElement>(null);
@@ -49,26 +75,62 @@ function GridTexture() {
   );
 }
 
-function Attribution({ name, role, img, light }: { name: string; role: string; img: string; light?: boolean }) {
+function Stars({ color }: { color: string }) {
   return (
-    <div className="flex items-end justify-between pt-5">
+    <div className="flex gap-0.5" aria-hidden>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg key={i} width={15} height={15} viewBox="0 0 24 24" fill={color}>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function Attribution({ name, role, light }: { name: string; role?: string; light?: boolean }) {
+  return (
+    <div className="flex items-center gap-3 pt-1">
+      <span
+        className="flex items-center justify-center flex-shrink-0 text-[12px] font-bold"
+        style={{
+          width: 38, height: 38, borderRadius: 10, ...manrope,
+          background: light ? ds.orange : "rgba(255,255,255,0.16)",
+          color: ds.white,
+        }}
+      >
+        {initials(name)}
+      </span>
       <div>
-        <p className="font-semibold text-base" style={{ ...manrope, color: light ? ds.navy : ds.white }}>{name}</p>
-        <p className="text-sm mt-0.5" style={{ ...inter, color: light ? ds.muted : "rgba(255,255,255,0.55)" }}>{role}</p>
+        <p className="font-semibold text-[15px] leading-tight" style={{ ...manrope, color: light ? ds.navy : ds.white }}>{name}</p>
+        {role && <p className="text-[13px] mt-0.5" style={{ ...inter, color: light ? ds.muted : "rgba(255,255,255,0.6)" }}>{role}</p>}
       </div>
-      <Image src={img} alt={name} width={200} height={200} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+    </div>
+  );
+}
+
+function ReviewCard({ review, delay }: { review: (typeof REVIEWS)[number]; delay: number }) {
+  const { ref, style } = useReveal(delay);
+  const light = review.tone === "light";
+  const bg = { light: ds.lightBlue, navy: ds.navy, dark: "#111827", orange: ds.orange }[review.tone];
+  const textColor = light ? ds.navy : review.tone === "orange" ? "#FFFFFF" : "rgba(255,255,255,0.88)";
+  const starColor = review.tone === "orange" ? "#FFFFFF" : ds.orange;
+  return (
+    <div ref={ref} style={style} className="relative overflow-hidden rounded-2xl p-6">
+      <div className="absolute inset-0 rounded-2xl" style={{ background: bg, border: light ? `1px solid ${ds.border}` : undefined }} />
+      {light && <GridTexture />}
+      <div className="relative flex flex-col gap-4">
+        <Stars color={starColor} />
+        <p className="text-sm leading-relaxed" style={{ ...inter, color: textColor }}>&ldquo;{review.text}&rdquo;</p>
+        <Attribution name={review.name} role={review.role} light={light} />
+      </div>
     </div>
   );
 }
 
 export default function ShipTimeTestimonials() {
-  const r0 = useReveal(0);
-  const r1 = useReveal(120);
-  const r2 = useReveal(80);
-  const r3 = useReveal(200);
-  const r4 = useReveal(320);
-  const r5 = useReveal(160);
-  const r6 = useReveal(280);
+  // Round-robin into 3 columns so mixed card heights balance out.
+  const cols: (typeof REVIEWS)[number][][] = [[], [], []];
+  REVIEWS.forEach((r, i) => cols[i % 3].push(r));
 
   return (
     <section className="w-full py-20 md:py-28" style={{ background: ds.white }}>
@@ -82,88 +144,23 @@ export default function ShipTimeTestimonials() {
           <h2 className="mb-4" style={{ ...manrope, fontWeight: 800, fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.1, color: ds.navy }}>
             Trusted by thousands of businesses
           </h2>
-          <p className="mx-auto" style={{ ...inter, fontSize: 16, color: ds.muted, maxWidth: 480, lineHeight: 1.6 }}>
-            From solo merchants to high-volume operations, ShipTime helps businesses ship smarter every day.
-          </p>
+          <div className="flex items-center justify-center gap-2.5">
+            <Stars color={ds.orange} />
+            <span style={{ ...inter, fontSize: 14.5, color: ds.muted }}>
+              <strong style={{ color: ds.navy }}>4.5</strong> average across <strong style={{ color: ds.navy }}>1,000+</strong> reviews
+            </span>
+          </div>
         </div>
 
         {/* 3-column masonry */}
-        <div className="lg:grid lg:grid-cols-3 gap-3 flex flex-col lg:py-4">
-
-          {/* ── Column 1 ── */}
-          <div className="flex flex-col gap-3 h-full">
-
-            {/* Tall light card */}
-            <div ref={r0.ref} style={{ ...r0.style, flex: 7 }} className="relative overflow-hidden rounded-2xl p-6 flex flex-col justify-between min-h-[280px]">
-              <div className="absolute inset-0 rounded-2xl" style={{ background: ds.lightBlue, border: `1px solid ${ds.border}` }} />
-              <GridTexture />
-              <div className="relative mt-auto">
-                <p className="text-sm leading-relaxed mb-0" style={{ ...inter, color: ds.navy }}>
-                  &ldquo;I was spending 90 minutes a day on shipping across four different tools. Now it&apos;s one platform and 10 minutes. ShipTime paid for itself in week one.&rdquo;
-                </p>
-                <Attribution name="Sarah K." role="Founder, Candle Co." img="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=687&auto=format&fit=crop" light />
-              </div>
+        <div className="lg:grid lg:grid-cols-3 gap-3 flex flex-col lg:py-4 items-start">
+          {cols.map((col, ci) => (
+            <div key={ci} className="flex flex-col gap-3 w-full">
+              {col.map((review, ri) => (
+                <ReviewCard key={review.name} review={review} delay={(ci * 90) + (ri * 120)} />
+              ))}
             </div>
-
-            {/* Short navy card */}
-            <div ref={r1.ref} style={{ ...r1.style, flex: 3 }} className="relative overflow-hidden rounded-2xl p-6 flex flex-col justify-between">
-              <div className="absolute inset-0 rounded-2xl" style={{ background: ds.navy }} />
-              <div className="relative mt-auto">
-                <p className="text-sm leading-relaxed" style={{ ...inter, color: "rgba(255,255,255,0.85)" }}>
-                  &ldquo;The rate shopping alone saves us hundreds of dollars a week.&rdquo;
-                </p>
-                <Attribution name="Marcus T." role="Operations, Outdoor Gear Brand" img="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=687&auto=format&fit=crop" />
-              </div>
-            </div>
-
-          </div>
-
-          {/* ── Column 2 ── */}
-          <div className="flex flex-col gap-3">
-            {[
-              { r: r2, quote: "ShipTime handles our LTL and parcel in one place. The visibility we get on every shipment has transformed how we manage customer expectations.", name: "Priya M.", role: "Head of Logistics, D2C Brand", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=761&auto=format&fit=crop" },
-              { r: r3, quote: "Setup was under five minutes and we were printing labels the same day. The support team actually picks up the phone.", name: "James R.", role: "eCommerce Manager", img: "https://images.unsplash.com/photo-1566753323558-f4e0952af115?q=80&w=1021&auto=format&fit=crop" },
-              { r: r4, quote: "We cut our carrier spend by 40% in the first month just by using ShipTime's rate comparison. Wish we'd switched sooner.", name: "Lena B.", role: "CEO, Wellness Brand", img: "https://images.unsplash.com/photo-1615109398623-88346a601842?q=80&w=687&auto=format&fit=crop" },
-            ].map(({ r, quote, name, role, img }) => (
-              <div key={name} ref={r.ref} style={r.style} className="relative overflow-hidden rounded-2xl p-6 flex flex-col justify-between">
-                <div className="absolute inset-0 rounded-2xl" style={{ background: "#111827" }} />
-                <div className="relative mt-auto">
-                  <p className="text-sm leading-relaxed" style={{ ...inter, color: "rgba(255,255,255,0.85)" }}>
-                    &ldquo;{quote}&rdquo;
-                  </p>
-                  <Attribution name={name} role={role} img={img} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* ── Column 3 ── */}
-          <div className="flex flex-col gap-3 h-full">
-
-            {/* Short orange-accent card */}
-            <div ref={r5.ref} style={{ ...r5.style, flex: 3 }} className="relative overflow-hidden rounded-2xl p-6 flex flex-col justify-between">
-              <div className="absolute inset-0 rounded-2xl" style={{ background: ds.orange }} />
-              <div className="relative mt-auto">
-                <p className="text-sm leading-relaxed" style={{ ...inter, color: "rgba(255,255,255,0.9)" }}>
-                  &ldquo;Finally a platform that respects our time. ShipTime does what it says on the tin.&rdquo;
-                </p>
-                <Attribution name="Derek W." role="Owner, Electronics Retailer" img="https://images.unsplash.com/photo-1563237023-b1e970526dcb?q=80&w=765&auto=format&fit=crop" />
-              </div>
-            </div>
-
-            {/* Tall light card */}
-            <div ref={r6.ref} style={{ ...r6.style, flex: 7 }} className="relative overflow-hidden rounded-2xl p-6 flex flex-col justify-between min-h-[280px]">
-              <div className="absolute inset-0 rounded-2xl" style={{ background: ds.lightBlue, border: `1px solid ${ds.border}` }} />
-              <GridTexture />
-              <div className="relative mt-auto">
-                <p className="text-sm leading-relaxed" style={{ ...inter, color: ds.navy }}>
-                  &ldquo;We run a high-volume Shopify store and ShipTime has been bulletproof. Multi-carrier, automated rules, real support. It scales with us.&rdquo;
-                </p>
-                <Attribution name="Natalie C." role="CTO, Fashion Brand" img="https://images.unsplash.com/photo-1590086782957-93c06ef21604?q=80&w=687&auto=format&fit=crop" light />
-              </div>
-            </div>
-
-          </div>
+          ))}
         </div>
       </div>
     </section>

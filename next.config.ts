@@ -12,20 +12,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return redirects;
   },
-  // Multi-zone compose: /plus/* is served by the standalone ShipTime Plus app
-  // (deployed separately with basePath /plus). beforeFiles makes this win over
-  // any local /plus route. Its assets live under /plus/_next, also proxied here.
-  async rewrites() {
-    const PLUS = "https://shiptime-plus.vercel.app";
-    return {
-      beforeFiles: [
-        { source: "/plus", destination: `${PLUS}/plus` },
-        { source: "/plus/:path*", destination: `${PLUS}/plus/:path*` },
-      ],
-      afterFiles: [],
-      fallback: [],
-    };
-  },
+  // NOTE: /plus/* used to be multi-zone-composed from the standalone
+  // shiptime-plus.vercel.app deployment via a beforeFiles rewrite. That's gone —
+  // since the two-zone unification (see ARCHITECTURE.md), /plus/* is served
+  // locally by app/(plus)/plus/*. Re-adding a /plus rewrite here would shadow
+  // every local Plus route again.
 };
 
 export default nextConfig;

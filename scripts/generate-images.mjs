@@ -170,13 +170,162 @@ ASSETS.push({
   sceneStyle: true,
 });
 
-// Model + default quality. gpt-image-2 is the latest (better composition control
-// and quality). `quality` is the biggest lever: "high" for hero/marketing photos.
-const MODEL = process.env.GEN_MODEL || "gpt-image-2";
-const DEFAULT_QUALITY = process.env.GEN_QUALITY || "high";
+// ── ShipTime Plus assets ────────────────────────────────────────────
+// Same flat-vector STYLE (navy/orange/light-blue) as Core — the Plus zone
+// evolves the current light theme rather than introducing a new palette, so
+// these placeholders reuse STYLE/PHOTO_STYLE directly. Swap for on-brand
+// photography later; the image fields (mediaSplit, solutionPage.heroImage,
+// caseStudy.coverImage) are the same either way.
+ASSETS.push(
+  {
+    name: "plus-hero-network",
+    size: "1536x1024",
+    prompt:
+      "An abstract illustration of a network of connected nodes — parcels, a warehouse icon, a ship, a truck, and a document icon — all linked by clean flowing lines converging toward a single glowing central point, conveying many logistics modes orchestrated into one system.",
+  },
+  {
+    name: "plus-phase-unify",
+    size: "1024x1024",
+    prompt:
+      "An abstract illustration of scattered, disconnected data streams and icons (spreadsheet, warehouse, truck, document) flowing together and merging into a single unified stream, conveying fragmented systems becoming one data layer.",
+  },
+  {
+    name: "plus-phase-intelligence",
+    size: "1024x1024",
+    prompt:
+      "An abstract illustration of a single stream of data passing through a stylized geometric processing node that highlights and sorts specific glowing elements, conveying custom intelligence analyzing an operation and surfacing priorities.",
+  },
+  {
+    name: "plus-phase-autopilot",
+    size: "1024x1024",
+    prompt:
+      "An abstract illustration of parcels and documents moving smoothly along an automated conveyor-like path with no hands or people, gears subtly integrated into the line, conveying logistics workflows running by themselves in the background.",
+  },
+  {
+    name: "plus-embedded-team",
+    size: "1024x1024",
+    photo: true,
+    prompt:
+      "Two professionals — one visiting consultant with a laptop, one warehouse operations manager — reviewing a logistics dashboard together at a warehouse office desk, collaborative and warm, shelves of parcels visible in the background.",
+  },
+  {
+    name: "plus-fulfillment-warehouse",
+    size: "1024x1024",
+    prompt:
+      "An abstract illustration of a warehouse cross-section showing organized shelving with parcels, a small forklift, and an outgoing conveyor belt leading to a delivery truck, conveying orchestrated fulfillment and distribution.",
+  },
+  {
+    name: "plus-market-entry",
+    size: "1024x1024",
+    prompt:
+      "An abstract illustration of parcels flowing along a route line that crosses a simple stylized border marker between two shaded regions, one representing the US and one Canada, conveying smooth cross-border market entry.",
+  },
+  {
+    name: "plus-platform-multimodal",
+    size: "1536x1024",
+    prompt:
+      "An abstract illustration showing four transport modes in one clean composition: a small parcel, an LTL pallet, a truck, and a cargo ship, arranged along a single connecting route line, conveying one platform spanning every shipping mode.",
+  },
+);
 
-async function generateOne({ name, size, prompt, photo, sceneStyle, quality }) {
-  const stylePrefix = sceneStyle ? SCENE_STYLE : photo ? PHOTO_STYLE : STYLE;
+// ── ShipTime Plus — isometric IoT/AI logistics set ───────────────────
+// The real imagery for the Plus interior-page split sections. Style derived
+// from the reference isometric logistics diagram Matteo shared: 30° axonometric
+// flat-vector look, ShipTime palette (light blues + navy + sparing orange),
+// white ground with a faint iso grid, small orange IoT wifi arcs + dashed
+// orange network lines. One asset per ImageSlot label (see plus-content.tsx /
+// the coded pages). These fill public/generated/ and get wired into ImageSlot.
+const ISO_STYLE =
+  "Isometric vector illustration in true 30-degree axonometric projection. Flat design with smooth subtle shading on faces and soft ambient occlusion, clean thin dark-navy outline strokes — an editable-vector look, NOT a 3D render and NOT photorealistic. Pure white background with a faint light-blue isometric grid on the ground plane. Color palette STRICTLY limited to: pale sky blue #D6E6F5, light blue #8FB4DD, medium steel blue #4A6FA5, deep navy #12294A, and warm orange #EC5A26 used ONLY as a sparing accent — small orange wifi/IoT signal arcs above smart objects, thin dashed orange lines linking things into a network, and the occasional box strap or highlight. Logistics and supply-chain subject with Internet-of-Things and AI motifs. Modern, clean, trustworthy enterprise aesthetic, generous negative space, centered composition. No text, no words, no numbers, no logos, no watermark.";
+
+const ISO = [
+  { name: "plus-iso-multimodal", prompt: "A wide supply-chain network scene arranged around one central modern distribution warehouse with solar panels: a container ship, a cargo plane, a freight train, and two box trucks positioned around it, all linked by thin dashed orange network lines with small orange wifi signal arcs above them — conveying every shipping mode connected on one platform." },
+  { name: "plus-iso-unify", prompt: "One central distribution warehouse hub with a small rooftop antenna emitting orange wifi arcs, surrounded by several separate source systems shown as small isometric objects — a server stack, a laptop, a delivery van, a forklift, a shopping cart — each linked to the central hub by thin dashed orange lines converging inward, conveying many fragmented systems unified into one data layer." },
+  { name: "plus-iso-intelligence", prompt: "A glowing central node shaped like a small stacked server with an orange AI signal arc above it, connected by thin dashed orange lines to three alternate routes drawn between miniature warehouses, with one route clearly highlighted in orange as the best option — conveying custom AI analyzing an operation and recommending the optimal lane." },
+  { name: "plus-iso-autopilot", prompt: "A scene of autonomous logistics running by itself with no human operators: two self-driving AGV robot carts carrying orange-strapped pallets, a small delivery drone with an orange signal arc above it, and a short conveyor belt moving boxes, with faint dashed orange guide lines on the floor — conveying workflows running on autopilot." },
+  { name: "plus-iso-rateshop", prompt: "Four shipping options lined up left to right — a small parcel box, a stacked LTL pallet, a box truck, and a small container ship — each with a simple blank floating price-tag shape above it, the lowest tag highlighted in orange, conveying multi-carrier multimodal rate shopping." },
+  { name: "plus-iso-spot", prompt: "Three delivery trucks lined up in front of a small warehouse, each with a blank floating price-tag panel above it and thin dashed orange lines connecting them to the warehouse, the lowest tag highlighted orange — conveying a freight spot-market bidding board." },
+  { name: "plus-iso-analytics", prompt: "A small warehouse beside a large floating dashboard panel showing simple blank bar-chart and line-chart shapes and a small route map, with one key metric block accented in orange — conveying operational cost and lane analytics on your own data. No readable text or numbers, only abstract chart shapes." },
+  { name: "plus-iso-orchestration", prompt: "A central hub server on a small platform connected by thin dashed orange lines to a surrounding ring of small isometric systems — an ERP server, a shopping-cart icon, a warehouse, a box truck, a barcode scanner, a cloud — conveying up to thirty existing systems orchestrated into one operational layer." },
+  { name: "plus-iso-techlayer", prompt: "A horizontal glowing platform plane floating in the middle, with small orange AI signal nodes and abstract data-flow lines above it, and miniature warehouses and box trucks on the ground below connected up to the plane by thin dashed orange lines — conveying an intelligence layer sitting under the whole logistics operation." },
+  { name: "plus-iso-dock", prompt: "A modern distribution-center building exterior with several loading-dock doors, two box trucks backed into the docks, solar panels on the flat roof, a few orange-strapped pallets on the concrete apron, and small orange wifi arcs above it — conveying a fulfillment network node." },
+  { name: "plus-iso-fulfillment", prompt: "A cutaway view of a fulfillment warehouse interior: tall storage racks filled with orange-strapped boxes, a forklift lifting a pallet, a conveyor belt of boxes, and an outbound box truck at a loading dock — conveying orchestrated warehousing and fulfillment." },
+  { name: "plus-iso-inventory", prompt: "Three separate warehouse buildings of different sizes connected to each other by thin dashed orange lines, each containing a visible stack of orange-strapped boxes, with a small orange circular badge floating above one — conveying one SKU tracked in sync across every location." },
+];
+for (const a of ISO) ASSETS.push({ ...a, size: "1536x1024", iso: true });
+
+// ── Core "Every ShipTime Account Includes" — retro painted-backdrop portraits ──
+// Style analyzed from Matteo's reference set: hyperreal studio-photo subject in
+// crisp beauty lighting, composited against an OBVIOUSLY hand-painted theatrical
+// backdrop (vintage photo-studio scenic canvas): airbrushed pastel gradient sky,
+// flat stylized painted clouds, a thin strip of painted scenery along the bottom
+// edge, tiny four-point sparkle stars. Playful, warm, kitsch-retro editorial —
+// modern brand campaign meets vintage painted backdrop.
+const PORTRAIT_STYLE =
+  "Editorial studio close-up portrait photograph of a real person against a soft hand-painted " +
+  "airbrushed pastel gradient backdrop, like a vintage photo-studio scenic canvas. The person is " +
+  "photorealistic and sharp with crisp, flattering studio beauty lighting; the background is clearly " +
+  "a smooth retro airbrushed painting with soft pastel color bands, optionally a faint flat painted " +
+  "cloud or a tiny four-point sparkle star. Playful, warm, slightly kitsch retro editorial vibe. " +
+  "Subject wears solid-colored wardrobe that complements the backdrop. Relaxed head-and-shoulders / " +
+  "chest-up medium portrait with comfortable headroom above the head and visible shoulders — NOT a " +
+  "tight face-filling crop; leave calm negative space around the subject so the painted backdrop reads. " +
+  "Shot on a short portrait lens, shallow depth of field. Vertical portrait orientation. No text, no logos, no watermarks.";
+
+const INCLUDE_PORTRAITS = [
+  {
+    name: "core-include-rate",
+    prompt:
+      "Tight face-filling close-up of a confident woman small-business owner in a rust-orange blouse, warm " +
+      "genuine smile. Backdrop: airbrushed sunset gradient from soft sky blue at the top through candy pink " +
+      "to a warm orange-yellow glow.",
+  },
+  {
+    name: "core-include-byor",
+    prompt:
+      "Close-up of a bearded man in a navy denim work apron over a white tee, relaxed proud expression. " +
+      "Backdrop: airbrushed gradient from pale light blue at the top to soft peach at the bottom, one faint " +
+      "flat painted cloud.",
+  },
+  {
+    name: "core-include-pickup",
+    prompt:
+      "Close-up of a friendly courier in a mustard-yellow tee and matching mustard canvas cap, cheerful open " +
+      "smile. Backdrop: airbrushed gradient from minty green at the top through soft pink to pale yellow, one " +
+      "tiny four-point sparkle star.",
+  },
+  {
+    name: "core-include-audit",
+    prompt:
+      "Close-up of a woman in a bold red turtleneck looking pleasantly surprised, eyebrows raised with a " +
+      "slight smile. Backdrop: saturated periwinkle-purple airbrushed sky with one flat white stylized " +
+      "painted cloud and a tiny sparkle star.",
+  },
+  {
+    name: "core-include-tracking",
+    prompt:
+      "Tight face-filling close-up of a person in a fuchsia-magenta shirt with a satisfied smile. Backdrop: " +
+      "airbrushed dawn gradient from soft blue at the top through pink bands to pale yellow.",
+  },
+  {
+    name: "core-include-freight",
+    prompt:
+      "Close-up of a warehouse worker in a clean orange hi-vis vest over a navy tee, confident easy smile. " +
+      "Backdrop: airbrushed dusk gradient from deep navy blue at the top through violet to a warm " +
+      "amber-orange glow, one tiny sparkle star.",
+  },
+];
+for (const p of INCLUDE_PORTRAITS) ASSETS.push({ ...p, size: "1024x1536", portrait: true });
+
+// Model + default quality. Default is gpt-image-1 at medium quality to keep
+// costs down (Matteo's call, 2026-07-11). For hero/marketing shots that need
+// better composition control, override per run:
+//   GEN_MODEL=gpt-image-2 GEN_QUALITY=high npm run gen:images
+const MODEL = process.env.GEN_MODEL || "gpt-image-1";
+const DEFAULT_QUALITY = process.env.GEN_QUALITY || "medium";
+
+async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrait, quality }) {
+  const stylePrefix = portrait ? PORTRAIT_STYLE : iso ? ISO_STYLE : sceneStyle ? SCENE_STYLE : photo ? PHOTO_STYLE : STYLE;
   const res = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
     headers: {

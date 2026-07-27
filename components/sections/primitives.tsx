@@ -9,12 +9,14 @@ import type { Cta } from "./types";
 export function Container({
   children,
   style,
+  className,
 }: {
   children: ReactNode;
   style?: CSSProperties;
+  className?: string;
 }) {
   return (
-    <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px", ...style }}>
+    <div className={className} style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px", ...style }}>
       {children}
     </div>
   );

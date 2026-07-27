@@ -8,6 +8,9 @@ import { Faq } from "./Faq";
 import { Cta } from "./Cta";
 import { RichText } from "./RichText";
 import { Booking } from "./Booking";
+import { NumberedSteps } from "./NumberedSteps";
+import { ComparisonTable } from "./ComparisonTable";
+import { MediaSplit } from "./MediaSplit";
 
 // The registry: maps a Sanity block `_type` to its React section. This is the
 // heart of "every other page is assembled from sections" — the [slug] route
@@ -38,6 +41,12 @@ export function PageBuilder({ sections }: { sections?: Block[] }) {
             return <RichText key={block._key} {...block} />;
           case "bookingEmbed":
             return <Booking key={block._key} {...block} />;
+          case "numberedSteps":
+            return <NumberedSteps key={block._key} {...block} />;
+          case "comparisonTable":
+            return <ComparisonTable key={block._key} {...block} />;
+          case "mediaSplit":
+            return <MediaSplit key={block._key} {...block} />;
           default:
             return null;
         }

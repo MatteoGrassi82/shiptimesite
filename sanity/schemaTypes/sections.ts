@@ -1,15 +1,16 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import {
-  BlockContentIcon,
-  ComponentIcon,
-  HelpCircleIcon,
-  ImagesIcon,
-  RocketIcon,
-  StarIcon,
-  ThLargeIcon,
-  TrendUpwardIcon,
-  CalendarIcon,
-} from "@sanity/icons";
+// @sanity/icons v5 dropped the barrel export — each icon is its own subpath.
+import { BlockContentIcon } from "@sanity/icons/BlockContent";
+import { CalendarIcon } from "@sanity/icons/Calendar";
+import { ComponentIcon } from "@sanity/icons/Component";
+import { HelpCircleIcon } from "@sanity/icons/HelpCircle";
+import { ImagesIcon } from "@sanity/icons/Images";
+import { OlistIcon } from "@sanity/icons/Olist";
+import { RocketIcon } from "@sanity/icons/Rocket";
+import { StarIcon } from "@sanity/icons/Star";
+import { ThLargeIcon } from "@sanity/icons/ThLarge";
+import { ThListIcon } from "@sanity/icons/ThList";
+import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
 
 // Page-builder section blocks. Names describe WHAT the content is, not what it
 // looks like — the look comes from the zone tokens on the frontend.
@@ -136,4 +137,117 @@ export const bookingEmbed = defineType({
     defineField({ name: "contactName", title: "Routes to", type: "string" }),
   ],
   preview: { select: { title: "heading" }, prepare: ({ title }) => ({ title: title || "Booking embed", subtitle: "Booking" }) },
+});
+
+export const mediaSplit = defineType({
+  name: "mediaSplit",
+  title: "Media + text split",
+  type: "object",
+  icon: ImagesIcon,
+  description: "A real photo/illustration alongside a block of copy — for narrative sections that shouldn't be icon-only.",
+  fields: [
+    defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+    defineField({ name: "heading", title: "Heading", type: "string" }),
+    defineField({ name: "body", title: "Body", type: "text", rows: 4 }),
+    defineField({
+      name: "bullets",
+      title: "Bullet list (optional)",
+      description: "The Relume 'Layout 18/21' variant — a short list under the body instead of (or in addition to) prose.",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+    }),
+    defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [defineField({ name: "alt", title: "Alt text", type: "string" })],
+    }),
+    defineField({
+      name: "imageSide",
+      title: "Image side",
+      type: "string",
+      options: { list: [{ title: "Right", value: "right" }, { title: "Left", value: "left" }], layout: "radio" },
+      initialValue: "right",
+    }),
+    defineField({
+      name: "tone",
+      title: "Background",
+      type: "string",
+      options: { list: [{ title: "Page", value: "page" }, { title: "Surface", value: "surface" }], layout: "radio" },
+      initialValue: "page",
+    }),
+    defineField({ name: "cta", title: "Primary button", type: "ctaLink" }),
+    defineField({ name: "secondaryCta", title: "Secondary button", description: "The classic pattern pairs a solid primary button with a plain-text link — set style to Ghost.", type: "ctaLink" }),
+  ],
+  preview: { select: { title: "heading", media: "image" }, prepare: ({ title, media }) => ({ title: title || "Media + text split", subtitle: "Media split", media }) },
+});
+
+export const numberedSteps = defineType({
+  name: "numberedSteps",
+  title: "Numbered steps",
+  type: "object",
+  icon: OlistIcon,
+  description: "A phased walkthrough or engagement model — e.g. 'three phases', 'how an engagement works'.",
+  fields: [
+    defineField({ name: "heading", title: "Heading", type: "string" }),
+    defineField({ name: "intro", title: "Intro", type: "text", rows: 2 }),
+    defineField({
+      name: "steps",
+      title: "Steps",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "step",
+          fields: [
+            defineField({ name: "label", title: "Step label", type: "string", description: "e.g. 'Phase 1 — Unify' or 'Discovery call'" }),
+            defineField({ name: "body", title: "Body", type: "text", rows: 3 }),
+          ],
+          preview: { select: { title: "label" } },
+        }),
+      ],
+    }),
+  ],
+  preview: { select: { title: "heading" }, prepare: ({ title }) => ({ title: title || "Numbered steps", subtitle: "Steps" }) },
+});
+
+export const comparisonTable = defineType({
+  name: "comparisonTable",
+  title: "Comparison table",
+  type: "object",
+  icon: ThListIcon,
+  description: "A row-per-aspect table comparing several approaches side by side (e.g. Plus vs 3PL vs TMS vs broker).",
+  fields: [
+    defineField({ name: "heading", title: "Heading", type: "string" }),
+    defineField({ name: "intro", title: "Intro", type: "text", rows: 2 }),
+    defineField({
+      name: "approaches",
+      title: "Approaches (column headers)",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+    }),
+    defineField({
+      name: "rows",
+      title: "Rows",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "row",
+          fields: [
+            defineField({ name: "aspect", title: "Aspect", type: "string", description: "Row label, e.g. 'What it is' or 'Great when'" }),
+            defineField({
+              name: "values",
+              title: "Values (one per approach, in order)",
+              type: "array",
+              of: [defineArrayMember({ type: "text", rows: 2 })],
+            }),
+          ],
+          preview: { select: { title: "aspect" } },
+        }),
+      ],
+    }),
+  ],
+  preview: { select: { title: "heading" }, prepare: ({ title }) => ({ title: title || "Comparison table", subtitle: "Table" }) },
 });

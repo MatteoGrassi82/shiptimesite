@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { competitors } from "@/lib/competitors";
+import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 
 const ds = {
   navy: "#1C1E3D",
@@ -24,12 +25,16 @@ type SiteNavProps = {
   // CTA on the right. Defaults to the ShipTime signup.
   ctaHref?: string;
   ctaLabel?: string;
+  // When true, the CTA opens the on-page lead-capture modal instead of
+  // redirecting to signup (used on the comparison/alternative landing pages,
+  // where we capture the lead rather than push a high-commitment sign-up).
+  leadCapture?: boolean;
 };
 
 const SIGNUP =
   "https://app.shiptime.com/?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=signup&utm_content=nav";
 
-export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free" }: SiteNavProps) {
+export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", leadCapture = false }: SiteNavProps) {
   const [open, setOpen] = useState(false);     // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(false); // mobile menu
 
@@ -103,28 +108,48 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free" }:
             )}
           </div>
 
-          <a
-            href={ctaHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
-            style={{ background: ds.orange, borderRadius: 999, ...sora }}
-          >
-            {ctaLabel}
-          </a>
+          {leadCapture ? (
+            <LeadCaptureButton
+              source="nav"
+              className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
+              style={{ background: ds.orange, borderRadius: 999, ...sora }}
+            >
+              {ctaLabel}
+            </LeadCaptureButton>
+          ) : (
+            <a
+              href={ctaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
+              style={{ background: ds.orange, borderRadius: 999, ...sora }}
+            >
+              {ctaLabel}
+            </a>
+          )}
         </div>
 
         {/* Mobile: CTA + hamburger */}
         <div className="flex md:hidden items-center gap-3">
-          <a
-            href={ctaHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
-            style={{ background: ds.orange, borderRadius: 999, ...sora }}
-          >
-            {ctaLabel}
-          </a>
+          {leadCapture ? (
+            <LeadCaptureButton
+              source="nav"
+              className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
+              style={{ background: ds.orange, borderRadius: 999, ...sora }}
+            >
+              {ctaLabel}
+            </LeadCaptureButton>
+          ) : (
+            <a
+              href={ctaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
+              style={{ background: ds.orange, borderRadius: 999, ...sora }}
+            >
+              {ctaLabel}
+            </a>
+          )}
           <button
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"

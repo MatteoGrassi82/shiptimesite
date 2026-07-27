@@ -1,12 +1,13 @@
 "use client";
 
+import type React from "react";
 import Image from "next/image";
 import { Icon } from "@/components/ui/icons";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 
 const NAVY    = "#1C1E3D";
 const ORANGE  = "#EC5A26";
-const MUTED   = "#6E728A";
+const MUTED   = "#52566C";
 const BORDER  = "#E8E8E8";
 const SURFACE = "#F8FAFB";
 
@@ -30,7 +31,7 @@ function Stars() {
   );
 }
 
-// Floating pill chip — same as original alternative page
+// Floating pill chip that overlaps the hero photo.
 function PillChip({ label, accent = "#E3EEFC" }: { label: string; accent?: string }) {
   return (
     <div
@@ -45,8 +46,8 @@ function PillChip({ label, accent = "#E3EEFC" }: { label: string; accent?: strin
   );
 }
 
-// The original photo-right visual from the alternative page
-function HeroVisual({ photo }: { photo: string | null }) {
+// Photo-right visual with floating pills + a stacked notifications card.
+function HeroVisual({ photo, chipTop, chipBottom }: { photo: string | null; chipTop: string; chipBottom: string }) {
   return (
     <div className="relative" style={{ paddingTop: 8, paddingBottom: 8 }}>
       <div className="relative overflow-hidden mx-auto" style={{ borderRadius: 22, maxWidth: 380, boxShadow: "0 20px 60px rgba(28,30,61,0.16)" }}>
@@ -61,7 +62,7 @@ function HeroVisual({ photo }: { photo: string | null }) {
 
       {/* Top-right pill */}
       <div className="absolute" style={{ top: 24, right: -8 }}>
-        <PillChip label="Best rate found" accent="#E3EEFC" />
+        <PillChip label={chipTop} accent="#E3EEFC" />
       </div>
 
       {/* Mid-right stacked notifications card */}
@@ -89,40 +90,61 @@ function HeroVisual({ photo }: { photo: string | null }) {
 
       {/* Bottom pill */}
       <div className="absolute" style={{ bottom: 28, left: 0 }}>
-        <PillChip label="Canada Post ready" accent="#FAF0EB" />
+        <PillChip label={chipBottom} accent="#FAF0EB" />
       </div>
     </div>
   );
 }
 
 type Props = {
-  competitorName: string;
   photo: string | null;
+  // Small pill above the headline (e.g. "ShipStation Alternative" or "ShipTime vs Freightcom").
+  eyebrow?: string;
+  // Headline + subhead render as-is, so callers can weave in <em> etc.
+  headline: React.ReactNode;
+  subhead: React.ReactNode;
+  ctaLabel?: string;
+  ctaSource?: string;
+  reassurance?: string;
+  chipTop?: string;
+  chipBottom?: string;
 };
 
-export default function AlternativeHero({ competitorName, photo }: Props) {
+// Shared, high-conviction hero used on both the /vs and /alternative landing
+// pages: white ground, trust pill, big headline, avatar + star social proof,
+// dark CTA, and a floating-pill product photo on the right.
+export default function LandingHero({
+  photo,
+  eyebrow,
+  headline,
+  subhead,
+  ctaLabel = "Get in touch",
+  ctaSource = "hero",
+  reassurance = "No platform fee · No contract · Connect your store in minutes",
+  chipTop = "Best rate found",
+  chipBottom = "Canada Post ready",
+}: Props) {
   return (
-    <section
-      className="w-full px-6 md:px-10 pt-28 pb-16 md:pt-36 md:pb-24"
-      style={{ background: "#fff" }}
-    >
+    <section className="w-full px-6 md:px-10 pt-28 pb-16 md:pt-36 md:pb-24" style={{ background: "#fff" }}>
       <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center" style={{ maxWidth: 1100 }}>
-
         {/* ── LEFT: Copy ── */}
         <div>
-          {/* Trust badge */}
+          {/* Eyebrow / trust pill */}
           <div className="flex items-center gap-2 mb-7">
-            <div
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
-              style={{ background: SURFACE, border: `1px solid ${BORDER}` }}
-            >
-              <svg width={14} height={14} viewBox="0 0 24 24" fill={ORANGE}>
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-              <span style={{ fontSize: 12, fontWeight: 700, color: NAVY, fontFamily: "var(--font-manrope), sans-serif" }}>
-                1,000+ five-star reviews
+            {eyebrow ? (
+              <span className="inline-block text-[11px] font-bold uppercase tracking-[0.16em] px-3 py-1.5 rounded-full" style={{ background: "#FBEEE9", color: ORANGE, fontFamily: "var(--font-manrope), sans-serif" }}>
+                {eyebrow}
               </span>
-            </div>
+            ) : (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: SURFACE, border: `1px solid ${BORDER}` }}>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill={ORANGE}>
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span style={{ fontSize: 12, fontWeight: 700, color: NAVY, fontFamily: "var(--font-manrope), sans-serif" }}>
+                  1,000+ five-star reviews
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Headline */}
@@ -137,9 +159,7 @@ export default function AlternativeHero({ competitorName, photo }: Props) {
               marginBottom: "1.2rem",
             }}
           >
-            The Best{" "}
-            <em style={{ fontStyle: "italic", fontWeight: 300, color: "#8B90A8" }}>{competitorName}</em>{" "}
-            Alternative.
+            {headline}
           </h1>
 
           {/* Sub-headline */}
@@ -150,10 +170,10 @@ export default function AlternativeHero({ competitorName, photo }: Props) {
               lineHeight: 1.65,
               color: MUTED,
               marginBottom: "2rem",
-              maxWidth: 440,
+              maxWidth: 460,
             }}
           >
-            ShipTime brings <strong style={{ color: NAVY, fontWeight: 600 }}>every carrier, one screen</strong> — compare rates, print labels, manage freight, and track every package from one platform.
+            {subhead}
           </p>
 
           {/* Avatar stack + social proof */}
@@ -186,26 +206,25 @@ export default function AlternativeHero({ competitorName, photo }: Props) {
           {/* CTA */}
           <div className="flex flex-col gap-3">
             <LeadCaptureButton
-              source="alt-hero"
+              source={ctaSource}
               className="inline-flex items-center gap-2 self-start px-7 py-3.5 rounded-full text-white text-sm font-bold transition-opacity hover:opacity-90"
               style={{ background: NAVY, fontFamily: "var(--font-manrope), sans-serif", letterSpacing: "0.01em" }}
             >
-              Get in Touch
+              {ctaLabel}
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
               </svg>
             </LeadCaptureButton>
             <p style={{ fontSize: 12, color: MUTED, fontFamily: "var(--font-inter), sans-serif" }}>
-              No platform fee · No contract · Connect your store in minutes
+              {reassurance}
             </p>
           </div>
         </div>
 
-        {/* ── RIGHT: original photo visual ── */}
+        {/* ── RIGHT: photo visual ── */}
         <div className="hidden md:block">
-          <HeroVisual photo={photo} />
+          <HeroVisual photo={photo} chipTop={chipTop} chipBottom={chipBottom} />
         </div>
-
       </div>
     </section>
   );

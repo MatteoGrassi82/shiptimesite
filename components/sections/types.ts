@@ -94,6 +94,37 @@ export type BookingBlock = {
   contactName?: string;
 };
 
+export type NumberedStepsBlock = {
+  _type: "numberedSteps";
+  _key: string;
+  heading?: string;
+  intro?: string;
+  steps?: { _key?: string; label?: string; body?: string }[];
+};
+
+export type ComparisonTableBlock = {
+  _type: "comparisonTable";
+  _key: string;
+  heading?: string;
+  intro?: string;
+  approaches?: string[];
+  rows?: { _key?: string; aspect?: string; values?: string[] }[];
+};
+
+export type MediaSplitBlock = {
+  _type: "mediaSplit";
+  _key: string;
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  bullets?: string[];
+  image?: SanityImage;
+  imageSide?: "left" | "right";
+  tone?: "page" | "surface";
+  cta?: Cta;
+  secondaryCta?: Cta;
+};
+
 export type Block =
   | HeroBlock
   | FeatureGridBlock
@@ -103,7 +134,66 @@ export type Block =
   | MetricStatsBlock
   | TestimonialsBlock
   | RichTextBlock
-  | BookingBlock;
+  | BookingBlock
+  | NumberedStepsBlock
+  | ComparisonTableBlock
+  | MediaSplitBlock;
+
+// ── P-T1/P-T2/P-T4 document shapes (used outside the generic PageBuilder) ──
+
+export type FeatureItem = { _key?: string; icon?: string; title?: string; body?: string };
+export type StatItem = { _key?: string; value?: string; label?: string; caption?: string };
+
+export type SolutionPage = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  heroHeadline?: string;
+  heroSubline?: string;
+  heroImage?: SanityImage;
+  hidden?: boolean;
+  pains?: FeatureItem[];
+  capabilities?: FeatureItem[];
+  proofStat?: StatItem;
+  relatedCaseStudy?: CaseStudyCard | null;
+  relatedResources?: ResourceCard[];
+  cta?: Cta;
+  seo?: { metaTitle?: string; metaDescription?: string; canonicalUrl?: string };
+};
+
+export type CaseStudyCard = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  headerStat?: string;
+  coverImage?: SanityImage;
+  operation?: string;
+};
+
+export type CaseStudyDoc = CaseStudyCard & {
+  problem?: string;
+  system?: unknown[];
+  results?: StatItem[];
+  anonymized?: boolean;
+  quote?: { quote?: string; author?: string; role?: string };
+  seo?: { metaTitle?: string; metaDescription?: string; canonicalUrl?: string };
+};
+
+export type ResourceCard = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  resourceType?: "guide" | "whitepaper" | "webinar" | "teardown";
+  summary?: string;
+  coverImage?: SanityImage;
+};
+
+export type ResourceDoc = ResourceCard & {
+  learnBullets?: string[];
+  gated?: boolean;
+  ctaLabel?: string;
+  seo?: { metaTitle?: string; metaDescription?: string; canonicalUrl?: string };
+};
 
 export type SiteSettings = {
   title?: string;
