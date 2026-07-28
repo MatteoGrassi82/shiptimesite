@@ -25,6 +25,31 @@ type Section = {
 
 const sections: Section[] = [
   {
+    label: "ShipTime Plus",
+    pages: [
+      {
+        href: "/plus",
+        title: "Plus — Homepage",
+        desc: "The Hana build: globe hero, proof bento, Remotion feature films, capabilities scroll, ops dashboard.",
+      },
+      {
+        href: "/plus/v2",
+        title: "Plus — Homepage V2",
+        desc: "Federato-style editorial build: centered hero over an ambient loop, conceptual shape art, maturity ladder, platform diagram.",
+        tag: "V2",
+      },
+      { href: "/plus/los", title: "Logistics Operating System", desc: "The three-phase system story: unify, apply intelligence, autopilot." },
+      { href: "/plus/platform", title: "Platform", desc: "Every mode and carrier, freight brokerage spot board, analytics." },
+      { href: "/plus/fulfillment", title: "Fulfillment", desc: "Warehousing, inventory, zone skipping, the certified partner network." },
+      { href: "/plus/technology", title: "Technology", desc: "Orchestration, custom AI, earned autonomy, security posture." },
+      { href: "/plus/solutions", title: "Solutions", desc: "Persona pages: DTC, 3PLs, enterprise shippers, US brands entering Canada." },
+      { href: "/plus/case-studies", title: "Case Studies", desc: "Proof, not promises — the designed-system results." },
+      { href: "/plus/compare", title: "Compare", desc: "Plus vs a 3PL vs a TMS vs a broker." },
+      { href: "/plus/assessment", title: "Assessment", desc: "The 12-question logistics maturity quiz with scoring." },
+      { href: "/plus/book-a-call", title: "Book a call", desc: "The conversion page every outbound sequence lands on." },
+    ],
+  },
+  {
     label: "Comparison (vs)",
     pages: competitors.map((c) => ({
       href: `/vs/${c.slug}`,

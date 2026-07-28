@@ -8,7 +8,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import createGlobe, { type COBEOptions } from "cobe";
-import { AutopilotMock, IntelligenceMock, UnifyMock } from "./plus-mocks";
+import { ImageSlot } from "./plus-mocks";
 
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
@@ -175,19 +175,19 @@ const PHASES = [
     label: "Phase 1",
     title: "Unify",
     body: "We combine your fragmented data into one foundational layer. Your ERP, your stores, your carrier accounts, your WMS — up to 30 systems, orchestrated. Then we sit down with your team and capture what's never been written down.",
-    visual: <UnifyMock />,
+    visual: <ImageSlot src="/generated/plus-iso-unify.png" label="Unify — one data layer" />,
   },
   {
     label: "Phase 2",
     title: "Apply intelligence",
     body: "Custom AI built on the context of your operation — not generic software. We target your highest-pressure problems first: the lanes bleeding money, the mode decisions nobody's revisited, the exceptions that eat your team's week.",
-    visual: <IntelligenceMock />,
+    visual: <ImageSlot src="/generated/plus-iso-intelligence.png" label="Intelligence — recommendations" />,
   },
   {
     label: "Phase 3",
     title: "Autopilot",
     body: "Workflow by workflow, your logistics starts running itself in the background — booking, routing, exception handling. We stay embedded until every automation is solid.",
-    visual: <AutopilotMock />,
+    visual: <ImageSlot src="/generated/plus-iso-autopilot.png" label="Autopilot — running workflows" />,
   },
 ];
 

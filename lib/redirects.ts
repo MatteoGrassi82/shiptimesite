@@ -13,9 +13,29 @@ export type Redirect = {
   source: string;
   destination: string;
   permanent: boolean;
+  // Optional match conditions (e.g. scope a rule to one hostname). Shape must
+  // match Next's RouteHas: `host` carries only a value, the others need a key.
+  // https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects
+  has?: (
+    | { type: "host"; value: string }
+    | { type: "header" | "cookie" | "query"; key: string; value?: string }
+  )[];
 };
 
 export const redirects: Redirect[] = [
+  // ── lp subdomain: only the bare root goes to the marketing site ──
+  // `source: "/"` matches the homepage EXACTLY, so every landing page
+  // (/vs/*, /alternative/*, /landing) is untouched and keeps serving here.
+  // Scoped by host so shiptime.vercel.app still shows the internal page picker.
+  // 307 (permanent: false) on purpose — browsers cache a 308 hard, which is
+  // painful to undo if the root is ever given a real page.
+  {
+    source: "/",
+    has: [{ type: "host", value: "lp.shiptime.com" }],
+    destination: "https://shiptime.com/",
+    permanent: false,
+  },
+
   // ── Legacy marketing paths → new structure ──────────────────────
   { source: "/features", destination: "/", permanent: true },
   { source: "/shipping-software", destination: "/", permanent: true },

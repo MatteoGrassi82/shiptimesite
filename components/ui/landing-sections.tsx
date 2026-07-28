@@ -260,6 +260,36 @@ export function FeatureDeepDives({
   );
 }
 
+// ── Minimal landing-page footer ───────────────────────────────────────────────
+// Conversion pages keep exits to a minimum, so this is a slim bar rather than
+// the multi-column sitemap: mark, one line, and the legal link.
+export function LandingFooter() {
+  return (
+    <footer className="px-5 md:px-10 py-8" style={{ background: ds.navy }}>
+      <div
+        className="flex flex-col sm:flex-row items-center justify-between gap-4"
+        style={{ maxWidth: 1240, margin: "0 auto" }}
+      >
+        <Image src="/shiptime-logo.svg" alt="ShipTime" width={130} height={40} className="h-7 w-auto opacity-90" />
+        <div className="flex items-center gap-5">
+          <a
+            href="https://shiptime.com/privacy-policy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[13px] transition-colors hover:text-white"
+            style={{ color: "rgba(255,255,255,0.55)", ...inter }}
+          >
+            Privacy
+          </a>
+          <span style={{ ...inter, color: "rgba(255,255,255,0.4)", fontSize: 13 }}>
+            © {new Date().getFullYear()} ShipTime
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 // ── FAQ (card style) ──────────────────────────────────────────────────────────
 export function LandingFaq({
   faq,

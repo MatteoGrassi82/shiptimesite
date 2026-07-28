@@ -1,8 +1,6 @@
 import type React from "react";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import Image from "next/image";
-import Link from "next/link";
 import SiteNav from "@/components/ui/site-nav";
 import LandingHero from "@/components/ui/landing-hero";
 import DashboardSection from "@/components/ui/feature-showcase";
@@ -10,7 +8,7 @@ import ShipTimeTimeline from "@/components/ui/shiptime-timeline";
 import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials";
 import ShipTimeSceneDivider from "@/components/ui/shiptime-scene-divider";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
-import { CompareTable, WhyTeamsSwitch, FeatureDeepDives, LandingFaq } from "@/components/ui/landing-sections";
+import { CompareTable, WhyTeamsSwitch, FeatureDeepDives, LandingFaq, LandingFooter } from "@/components/ui/landing-sections";
 import type { Competitor } from "@/lib/competitors";
 
 // Server-side check (runs at build/prerender time): does a generated PNG exist
@@ -45,14 +43,13 @@ const body: React.CSSProperties = {
 };
 const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 const inter = { fontFamily: "var(--font-inter), sans-serif" };
-const YEAR = 2026;
 
 export default function AlternativePage({ data }: { data: Competitor }) {
   const alt = data.alternative;
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: ds.white, ...body }}>
-      <SiteNav leadCapture ctaLabel="Get in touch" />
+      <SiteNav leadCapture minimal ctaLabel="Get in touch" />
 
       {/* ── HERO ── */}
       <LandingHero
@@ -168,80 +165,7 @@ export default function AlternativePage({ data }: { data: Competitor }) {
       <ShipTimeSceneDivider />
 
       {/* ── FOOTER ── */}
-      <SiteFooter />
+      <LandingFooter />
     </div>
-  );
-}
-
-// ── Rich multi-column footer (shared shape across the landing pages) ──
-function SiteFooter() {
-  const cols: { title: string; links: { label: string; href: string }[] }[] = [
-    {
-      title: "Platform",
-      links: [
-        { label: "Rate shopping", href: "lead:footer" },
-        { label: "Courier & LTL", href: "lead:footer" },
-        { label: "Bring your own rates", href: "lead:footer" },
-        { label: "Tracking & analytics", href: "lead:footer" },
-      ],
-    },
-    {
-      title: "Compare",
-      links: [
-        { label: "All alternatives", href: "/alternative" },
-        { label: "Freightcom alternative", href: "/alternative/freightcom" },
-        { label: "ShipStation alternative", href: "/alternative/shipstation" },
-        { label: "eShipper alternative", href: "/alternative/eshipper" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "Home", href: "/" },
-        { label: "Get in touch", href: "lead:footer" },
-      ],
-    },
-  ];
-
-  return (
-    <footer className="px-5 md:px-10 pt-16 pb-10" style={{ background: ds.navy, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-          <div>
-            <Image src="/shiptime-logo.svg" alt="ShipTime" width={150} height={46} className="h-9 w-auto opacity-90 mb-4" />
-            <p style={{ ...body, color: "rgba(255,255,255,0.55)", fontSize: 14, maxWidth: 260 }}>
-              Your logistics, fully optimized. One platform for parcel, freight, and everything in between.
-            </p>
-          </div>
-          {cols.map((col) => (
-            <div key={col.title}>
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.4)", ...sora }}>
-                {col.title}
-              </p>
-              <ul className="flex flex-col gap-2.5">
-                {col.links.map((l) => (
-                  <li key={l.label}>
-                    {l.href.startsWith("lead:") ? (
-                      <LeadCaptureButton source={l.href.slice(5)} className="text-sm transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.6)", ...inter }}>
-                        {l.label}
-                      </LeadCaptureButton>
-                    ) : (
-                      <Link href={l.href} className="text-sm transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.6)", ...inter }}>
-                        {l.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div className="mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          <p style={{ ...body, color: "rgba(255,255,255,0.4)", fontSize: 13 }}>
-            © {YEAR} ShipTime. Ship Smarter Today.
-          </p>
-        </div>
-      </div>
-    </footer>
   );
 }

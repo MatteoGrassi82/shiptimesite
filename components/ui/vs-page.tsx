@@ -1,8 +1,6 @@
 "use client";
 
 import type React from "react";
-import Image from "next/image";
-import Link from "next/link";
 import SiteNav from "@/components/ui/site-nav";
 import LandingHero from "@/components/ui/landing-hero";
 import DashboardSection from "@/components/ui/feature-showcase";
@@ -10,7 +8,7 @@ import ShipTimeTimeline from "@/components/ui/shiptime-timeline";
 import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials";
 import ShipTimeSceneDivider from "@/components/ui/shiptime-scene-divider";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
-import { CompareTable, WhyTeamsSwitch, FeatureDeepDives, LandingFaq } from "@/components/ui/landing-sections";
+import { CompareTable, WhyTeamsSwitch, FeatureDeepDives, LandingFaq, LandingFooter } from "@/components/ui/landing-sections";
 import type { Competitor } from "@/lib/competitors";
 
 const ds = {
@@ -130,7 +128,7 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: ds.white, ...body, color: ds.navy }}>
-      <SiteNav leadCapture ctaLabel="Get in touch" />
+      <SiteNav leadCapture minimal ctaLabel="Get in touch" />
 
       {/* ── HERO ── */}
       <LandingHero
@@ -243,43 +241,7 @@ export default function VsPage({ data, images }: { data: Competitor; images: Rec
       <ShipTimeSceneDivider />
 
       {/* ── FOOTER ── */}
-      <footer className="px-5 md:px-10 pt-16 pb-10" style={{ background: ds.navy }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-            <div>
-              <Image src="/shiptime-logo.svg" alt="ShipTime" width={150} height={46} className="h-9 w-auto opacity-90 mb-4" />
-              <p style={{ ...body, color: "rgba(255,255,255,0.55)", fontSize: 14, maxWidth: 260 }}>
-                Your logistics, fully optimized. One platform for parcel, freight, and everything in between.
-              </p>
-            </div>
-            {[
-              { title: "Compare", links: [["All comparisons", "/vs"], ["Freightcom", "/vs/freightcom"], ["ShipStation", "/vs/shipstation"], ["eShipper", "/vs/eshipper"]] },
-              { title: "Alternatives", links: [["All alternatives", "/alternative"], ["ShipStation alternative", "/alternative/shipstation"], ["Freightcom alternative", "/alternative/freightcom"]] },
-              { title: "Company", links: [["Home", "/"], ["Get in touch", "lead:footer"]] },
-            ].map((col) => (
-              <div key={col.title}>
-                <p className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.4)", ...sora }}>{col.title}</p>
-                <ul className="flex flex-col gap-2.5">
-                  {col.links.map(([label, href]) => (
-                    <li key={label}>
-                      {href.startsWith("lead:") ? (
-                        <LeadCaptureButton source={href.slice(5)} className="text-sm transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.6)", ...inter }}>{label}</LeadCaptureButton>
-                      ) : href.startsWith("/") ? (
-                        <Link href={href} className="text-sm transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.6)", ...inter }}>{label}</Link>
-                      ) : (
-                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.6)", ...inter }}>{label}</a>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="mt-12 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-            <p style={{ ...body, color: "rgba(255,255,255,0.4)", fontSize: 13 }}>© 2026 ShipTime. Ship Smarter Today.</p>
-          </div>
-        </div>
-      </footer>
+      <LandingFooter />
     </div>
   );
 }

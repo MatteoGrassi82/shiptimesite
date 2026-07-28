@@ -21,6 +21,9 @@ const PLUS_NAV: { label: string; href?: string; items?: { label: string; href: s
   },
   { label: "Solutions", href: "/plus/solutions" },
   { label: "How We Work", href: "/plus/how-we-work" },
+  // Design variant under review — sits in the nav so it's reachable from any
+  // Plus page. Drop this entry once one of the two homepages wins.
+  { label: "V2", href: "/plus/v2" },
   {
     label: "Resources",
     items: [

@@ -29,12 +29,15 @@ type SiteNavProps = {
   // redirecting to signup (used on the comparison/alternative landing pages,
   // where we capture the lead rather than push a high-commitment sign-up).
   leadCapture?: boolean;
+  // Conversion-page chrome: logo + CTA only, no nav links or mobile menu, so
+  // there's nothing competing with the one action we want.
+  minimal?: boolean;
 };
 
 const SIGNUP =
   "https://app.shiptime.com/?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=signup&utm_content=nav";
 
-export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", leadCapture = false }: SiteNavProps) {
+export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", leadCapture = false, minimal = false }: SiteNavProps) {
   const [open, setOpen] = useState(false);     // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(false); // mobile menu
 
@@ -43,13 +46,16 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
       className="fixed top-0 left-0 right-0 z-50 px-5 md:px-10 py-3.5"
       style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(12px)", borderBottom: "1px solid #E8E8E8" }}
     >
-      <div className="flex items-center justify-between">
+      {/* Constrained so the logo lines up with page content instead of hugging
+          the screen edge on wide displays. */}
+      <div className="flex items-center justify-between" style={{ maxWidth: 1240, margin: "0 auto" }}>
         <Link href="/" className="flex-shrink-0">
           <Image src="/shiptime-logo.svg" alt="ShipTime" width={160} height={50} className="h-10 w-auto" priority />
         </Link>
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-7">
+          {!minimal && (
           <a
             href="#how-it-works"
             className="text-sm font-semibold transition-colors hover:opacity-70"
@@ -57,6 +63,8 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
           >
             How it works
           </a>
+          )}
+          {!minimal && (
           <div
             className="relative"
             onMouseEnter={() => setOpen(true)}
@@ -107,6 +115,7 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
               </div>
             )}
           </div>
+          )}
 
           {leadCapture ? (
             <LeadCaptureButton
@@ -150,6 +159,7 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
               {ctaLabel}
             </a>
           )}
+          {!minimal && (
           <button
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
@@ -161,11 +171,12 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
               {mobileOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M3 12h18M3 6h18M3 18h18" />}
             </svg>
           </button>
+          )}
         </div>
       </div>
 
       {/* Mobile dropdown panel */}
-      {mobileOpen && (
+      {!minimal && mobileOpen && (
         <div className="md:hidden mt-3 pb-2">
           <div className="p-3" style={{ background: ds.white, borderRadius: 14, border: `1px solid ${ds.border}` }}>
             <Link href="/vs" onClick={() => setMobileOpen(false)} className="block px-2 py-2 text-[11px] font-bold uppercase tracking-widest" style={{ color: ds.orange, ...sora }}>

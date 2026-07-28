@@ -80,7 +80,7 @@ export default function RootLayout({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${GA_MEASUREMENT_ID}', {
-              linker: { domains: ['shiptime.com', 'shiptimelandin.com'] }
+              linker: { domains: ['shiptime.com', 'lp.shiptime.com', 'shiptimelandin.com'] }
             });
           `}
         </Script>
