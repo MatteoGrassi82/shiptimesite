@@ -40,6 +40,7 @@ const sections: Section[] = [
       },
       { href: "/plus/los", title: "Logistics Operating System", desc: "The three-phase system story: unify, apply intelligence, autopilot." },
       { href: "/plus/platform", title: "Platform", desc: "Every mode and carrier, freight brokerage spot board, analytics." },
+      { href: "/plus/shiplets", title: "Shiplets", desc: "The micro-app layer — 15 shiplets on a scrolling parallax wall.", tag: "New" },
       { href: "/plus/fulfillment", title: "Fulfillment", desc: "Warehousing, inventory, zone skipping, the certified partner network." },
       { href: "/plus/technology", title: "Technology", desc: "Orchestration, custom AI, earned autonomy, security posture." },
       { href: "/plus/solutions", title: "Solutions", desc: "Persona pages: DTC, 3PLs, enterprise shippers, US brands entering Canada." },

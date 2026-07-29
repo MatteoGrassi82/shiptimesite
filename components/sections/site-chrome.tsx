@@ -15,6 +15,7 @@ const PLUS_NAV: { label: string; href?: string; items?: { label: string; href: s
     label: "Platform",
     items: [
       { label: "Platform", href: "/plus/platform" },
+      { label: "Shiplets", href: "/plus/shiplets" },
       { label: "Fulfillment", href: "/plus/fulfillment" },
       { label: "Technology", href: "/plus/technology" },
     ],

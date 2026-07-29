@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { ClientFeedback } from "@/components/plus-home/testimonial";
+import { ShipletsSection } from "./plus-shiplets";
 
 // ── /plus/v2 — Federato-inspired editorial build ─────────────────────────────
 // Direction from Matteo (2026-07-12): copy the Federato section language —
@@ -954,6 +955,9 @@ export async function PlusHomeV2() {
   return (
     <div style={{ background: P.gutter, padding: "10px 0 16px", fontFamily: "var(--font-manrope), system-ui, sans-serif" }}>
       <HeroFed />
+      {/* shiplets wall sits directly under the hero; the old ShipTime Plus
+          proof bento follows it */}
+      <ShipletsSection background={P.panel} />
       <ProofBento />
       <ProblemBand />
       <ContrastCards />

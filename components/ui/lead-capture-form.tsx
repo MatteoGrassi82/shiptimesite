@@ -91,7 +91,7 @@ function pageCampaign(): string {
   return seg ? seg.replace(/[/-]+/g, "_").toLowerCase() : "home";
 }
 
-function readAttribution(): Record<string, string> {
+export function readAttribution(): Record<string, string> {
   if (typeof window === "undefined") return {};
   let stored: Record<string, string> = {};
   try {
@@ -112,7 +112,7 @@ function readAttribution(): Record<string, string> {
   return merged;
 }
 
-async function submitLead(payload: Record<string, unknown>) {
+export async function submitLead(payload: Record<string, unknown>) {
   // Posts to the shared lead sink (/api/lead → HubSpot). In dev, before the
   // HUBSPOT_* env vars are set, the route accepts and echoes so the form still
   // works end-to-end.

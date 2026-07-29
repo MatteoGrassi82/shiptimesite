@@ -21,6 +21,8 @@ const PROP_KEYS = [
   "lastname",
   "company",
   "lead_source",
+  "partner_source",
+  "grommet_offer",
   "shipping_industry",
   "parcel_volume",
   "ltl_volume",
@@ -55,8 +57,12 @@ function buildNoteBody(b: LeadBody, referer: string | null): string {
     .filter(Boolean)
     .join(" / ");
 
+  const partner = v("partner_source");
+
   return [
-    "<strong>Landing page lead</strong><br><br>",
+    partner
+      ? `<strong>Landing page lead — via ${partner}</strong><br><br>`
+      : "<strong>Landing page lead</strong><br><br>",
     "<strong>Contact</strong><br>",
     line("Name", name || null),
     line("Company", v("company")),
@@ -68,6 +74,8 @@ function buildNoteBody(b: LeadBody, referer: string | null): string {
       : "Volumes: not provided<br>",
     "<br><strong>Attribution</strong><br>",
     line("Source / Medium / Campaign", attribution || null),
+    line("Partner", partner),
+    line("Offer shown", v("grommet_offer")),
     line("Clicked from", v("lead_source")),
     line("Page", referer),
   ].join("");

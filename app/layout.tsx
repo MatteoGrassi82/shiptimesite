@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, DM_Sans, Instrument_Serif, Anton, Bricolage_Grotesque } from "next/font/google";
-import Script from "next/script";
+import { Tracking, TrackingNoScript } from "@/components/tracking";
 import "./globals.css";
-
-const GA_MEASUREMENT_ID = "G-Y984M16EL7";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -65,25 +63,9 @@ export default function RootLayout({
       className={`${manrope.variable} ${inter.variable} ${dmSans.variable} ${instrumentSerif.variable} ${anton.variable} ${bricolage.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-[var(--font-inter)]">
+        <TrackingNoScript />
         {children}
-        <Script
-          src="https://cdn.rlets.com/capture_configs/d9b/289/64b/6c8419f97e667fb5aea755e.js"
-          strategy="afterInteractive"
-        />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              linker: { domains: ['shiptime.com', 'lp.shiptime.com', 'shiptimelandin.com'] }
-            });
-          `}
-        </Script>
+        <Tracking />
       </body>
     </html>
   );

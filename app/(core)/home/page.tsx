@@ -21,11 +21,9 @@ const ds = {
 type Box = { href: string; title: string; desc: string; external?: boolean };
 
 const boxes: Box[] = [
-  { href: "/",        title: "Home",           desc: "This navigation page." },
-  { href: "/core",    title: "Core 1",         desc: "ShipTime Core — the current homepage design." },
-  { href: "/home-2",  title: "Core 2",         desc: "The A/B variant — Fluz-style redesign we're testing." },
-  { href: "/plus",    title: "ShipTime Plus",  desc: "The ShipTime Plus (managed logistics) experience." },
-  { href: "/landing", title: "Landing Pages",  desc: "Index of comparison and alternative landing pages." },
+  { href: "/plus/v2", title: "Plus v2",       desc: "The ShipTime Plus (managed logistics) experience." },
+  { href: "/home-2",  title: "Core v2",       desc: "The ShipTime Core homepage." },
+  { href: "/landing", title: "Landing Pages", desc: "Index of comparison and alternative landing pages." },
 ];
 
 export default function ChoosePage() {
