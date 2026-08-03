@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, DM_Sans, Instrument_Serif, Anton, Bricolage_Grotesque } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Tracking, TrackingNoScript } from "@/components/tracking";
 import "./globals.css";
 
@@ -66,6 +67,7 @@ export default function RootLayout({
         <TrackingNoScript />
         {children}
         <Tracking />
+        <Analytics />
       </body>
     </html>
   );
