@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, DM_Sans, Instrument_Serif, Anton, Bricolage_Grotesque } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Tracking, TrackingNoScript } from "@/components/tracking";
 import "./globals.css";
 
@@ -66,6 +67,10 @@ export default function RootLayout({
         <TrackingNoScript />
         {children}
         <Tracking />
+        {/* Vercel Analytics — first-party pageviews, no cookies, not blocked by
+            most content blockers (unlike GA4). Useful as a sanity check when
+            GA and HubSpot disagree. */}
+        <Analytics />
       </body>
     </html>
   );

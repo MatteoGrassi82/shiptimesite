@@ -111,6 +111,54 @@ for (const p of TIMELINE_PHOTOS) {
   ASSETS.push({ name: p.key, size: p.size, prompt: p.prompt, photo: true });
 }
 
+// ── Grommet co-marketing lander (/grommet) ─────────────────────
+// Bespoke set so the page doesn't reuse the timeline photos that already appear
+// on the comparison pages. Audience is deliberately earlier-stage than our own
+// pages: Grommet brands are sub-$2M, shipping their first orders, often from a
+// spare room or small studio rather than a warehouse.
+const GROMMET_PHOTOS = [
+  {
+    key: "grommet-hero",
+    size: "1024x1536",
+    prompt:
+      "A young founder of a brand-new small product company packing their very first customer orders " +
+      "at a table in a bright home studio, a modest stack of small cardboard boxes and a roll of " +
+      "packing tape beside them, quietly proud and excited. Vertical portrait composition, person " +
+      "centered, warm morning light.",
+  },
+  {
+    key: "grommet-step-1",
+    size: "1024x1024",
+    prompt:
+      "A founder sitting on the floor of a sunlit living room with a laptop on a low table, thinking " +
+      "carefully while answering a few short questions, two or three small parcels nearby, calm and unhurried.",
+  },
+  {
+    key: "grommet-step-2",
+    size: "1024x1024",
+    prompt:
+      "Close-up over the shoulder of a person reading a printed checklist on paper beside a laptop at a " +
+      "wooden table, pen in hand, ticking items off, a small stack of shipping boxes at the edge of frame.",
+  },
+  {
+    key: "grommet-step-3",
+    size: "1024x1024",
+    prompt:
+      "Close-up of hands smoothing a freshly printed shipping label onto a small cardboard box on a table, " +
+      "a few more finished parcels lined up ready for pickup, bright natural side light.",
+  },
+  {
+    key: "grommet-why",
+    size: "1024x1024",
+    prompt:
+      "A small brand owner standing beside a neat stack of outgoing parcels by a front door, arms relaxed, " +
+      "smiling at the camera, looking like someone whose shipping is finally under control. Bright airy home setting.",
+  },
+];
+for (const p of GROMMET_PHOTOS) {
+  ASSETS.push({ name: p.key, size: p.size, prompt: p.prompt, photo: true });
+}
+
 // Hero photo for the /alternative pages (classic text-left / photo-right hero).
 // Portrait orientation to suit the tall hero card.
 ASSETS.push({
