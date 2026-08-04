@@ -181,8 +181,10 @@ export const competitors: Competitor[] = [
       { feature: "Discounted shipping insurance", shiptime: "Yes", competitor: "Yes", competitorWin: true },
       { feature: "Insure without a forced signature", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "Courier + LTL in one platform", shiptime: "Yes", competitor: "Yes", competitorWin: true },
-      { feature: "Live phone, email & chat support", shiptime: "Yes", shiptimeWin: true, competitor: "Limited" },
-      { feature: "Shipment audit on your BYOR invoices", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Branded returns portal", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "US and cross-border services", shiptime: "Yes", shiptimeWin: true, competitor: "More limited" },
+      { feature: "Support 8am–8pm, bilingual, phone answered fast", shiptime: "Yes", shiptimeWin: true, competitor: "Limited" },
+      { feature: "Invoice audit for billing errors", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "Carrier dispute support", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "No monthly platform fee", shiptime: "Yes", competitor: "Yes", competitorWin: true },
     ],
@@ -239,12 +241,16 @@ export const competitors: Competitor[] = [
       switchingGuide:
         "Registration takes under a minute, and there's no sales call. Bring your own carrier rates or use ours, link your store or upload orders, and print your first label — connect a store and you can be up and running in about 15 minutes. Nothing to migrate: your Freightcom account stays exactly as it is.",
       whyTeamsSwitch: {
+        // Ordered by what actually drives switching, per our customer service
+        // team: billing surprises first, support second.
         opener:
-          "Freightcom is solid on freight. But the day you want your own rates in the mix, a backup carrier, or someone to actually answer the phone — here's where ShipTime steps up.",
+          "Freightcom is solid on freight. What tends to push people to look elsewhere is what lands afterwards — surcharges added to the invoice, billing errors nobody catches, and a phone that's hard to get answered.",
         bullets: [
+          { before: "Extra charges show up on the invoice after the fact", after: "Invoices audited for billing errors, so overcharges get caught and recovered instead of quietly costing you." },
+          { before: "Calls that go unanswered", after: "A Canadian team, 8am–8pm, bilingual, answering in 26 seconds on average — and they take the carrier disputes on for you." },
           { before: "Stuck shipping on Freightcom's book of rates", after: "Bring your own courier rates and compare them against ours on every label — parcel and LTL both." },
-          { before: "Calls that go unanswered", after: "Real people based in Canada — 26 seconds to answer on average, by phone, email, or chat." },
-          { before: "You catch carrier billing errors yourself", after: "Bring your own rates and we'll audit those carrier invoices for overbilling — set it up once and errors get caught before they cost you." },
+          { before: "Thin coverage on US and cross-border lanes", after: "US and cross-border services with duties and taxes properly calculated." },
+          { before: "No branded returns portal", after: "Your customers stay in your brand through tracking and returns." },
         ],
       },
       features: ALT_FEATURES,
@@ -255,13 +261,13 @@ export const competitors: Competitor[] = [
       answerFirst:
         "Both are free shipping platforms that support courier and LTL modes. ShipTime is built to lower your true cost of shipping — not just the cost of a label.",
       answerFirstMore:
-        "That shows up in the details: your own courier rates compared in every quote, a broader array of carriers and services to choose from, branded tracking and pickups managed in the same place you ship, a shipment audit that catches carrier overbilling on the rates you bring, and a knowledgeable Canadian support team you can actually reach and rely on. Those are the costs a label price never shows — savings missed without your own rates in the mix, overbilling nobody catches, claims that stall, and hours lost chasing support.",
+        "Mostly it's what lands after the label. Surcharges get added to the invoice after the fact, and billing errors tend to sit there until someone catches them — so we audit invoices, flag the errors, and take the dispute on ourselves. Then there's reaching a person when something goes wrong: our Canadian team answers 8am–8pm, bilingual, in 26 seconds on average. On top of that you get your own courier rates compared in every quote, a broader array of carriers and services, branded tracking and a branded returns portal, and stronger US and cross-border coverage.",
       savings: "Bring the carrier deals you've already earned — and keep them.",
       competitorPricing: "Free, but no BYOR",
       whoShouldChoose: {
         shiptime: {
           title: "Pick ShipTime if",
-          body: "You want to lower your true cost of shipping: your own courier rates compared in every quote, a broader carrier lineup for backup, branded tracking and pickups managed where you ship, a shipment audit on the invoices you bring, and a knowledgeable Canadian support team you can actually reach and rely on.",
+          body: "You're tired of surcharges appearing after the fact and billing errors nobody catches, you want a support team that actually answers, and you'd like your own courier rates in every quote, a broader carrier lineup, branded tracking and returns, and stronger US coverage.",
         },
         competitor: {
           title: "Pick Freightcom if",
@@ -487,12 +493,17 @@ export const competitors: Competitor[] = [
       { feature: "Discounted carrier rates", shiptime: "Yes", competitor: "Yes", competitorWin: true },
       { feature: "Bring Your Own Courier Rates (BYOR)", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "Compare carriers & services before you ship", shiptime: "Yes", competitor: "Yes", competitorWin: true },
-      { feature: "Branded tracking", shiptime: "Yes", competitor: "Yes", competitorWin: true },
-      { feature: "Native Canada Post support", shiptime: "Yes", shiptimeWin: true, competitor: "Yes", competitorWin: true },
+      { feature: "Branded tracking", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Branded returns portal", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      // eShipper's Canada Post is warehouse-only: you ship it out of their
+      // Brampton facility or drop off there, and pickups aren't supported.
+      { feature: "Native Canada Post support", shiptime: "Yes", shiptimeWin: true, competitor: "Warehouse only" },
+      { feature: "Canada Post pickups", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "Courier + LTL in one platform", shiptime: "Yes", competitor: "Yes", competitorWin: true },
       { feature: "3rd-party fulfillment & warehousing", shiptime: "Partner network", competitor: "Yes", competitorWin: true },
-      { feature: "Shipping audit", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Invoice audit for billing errors", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "Carrier dispute support", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
+      { feature: "Support 8am–8pm, bilingual, phone answered fast", shiptime: "Yes", shiptimeWin: true, competitor: "Limited" },
       { feature: "Duties & taxes calculated (cross-border & int'l)", shiptime: "Yes", shiptimeWin: true, competitor: "No" },
       { feature: "No monthly platform fee", shiptime: "Yes", competitor: "Yes", competitorWin: true },
     ],
@@ -548,12 +559,16 @@ export const competitors: Competitor[] = [
       switchingGuide:
         "Registration takes under a minute, no sales call. Bring your own carrier rates or use ours, link your store or upload orders, and print your first label. Your eShipper account stays active — nothing to migrate, nothing to break.",
       whyTeamsSwitch: {
+        // Ordered by what actually drives switching, per our customer service
+        // team: billing surprises first, support second. Everything else follows.
         opener:
-          "eShipper is strong on fulfillment and white-label, and it does let you compare carriers and services as you ship. But the moment you want your own pricing in that comparison, someone auditing your invoices, or a support team you can rely on — here's what changes with ShipTime.",
+          "eShipper does let you compare carriers and services as you ship. What tends to push people to look elsewhere is what shows up afterwards — surcharges on the invoice, billing errors that sit there until someone disputes them, and support that's hard to reach when it matters.",
         bullets: [
+          { before: "Extra charges appear on the invoice after the fact", after: "Every line audited for billing errors, so overcharges get caught and recovered instead of quietly costing you." },
+          { before: "Billing mistakes stay until you spot them and dispute", after: "We find them and take the dispute on for you — you don't chase the carrier." },
+          { before: "Support that's hard to reach when something goes wrong", after: "A Canadian team, 8am–8pm, bilingual, answering in 26 seconds on average." },
           { before: "You only ship with eShipper's carriers", after: "Bring your own courier rates and compare them against ours on every label." },
-          { before: "Billing errors are yours to catch", after: "Set up our audit once and it flags and recovers overcharges on the invoices you bring." },
-          { before: "Support that leaves you chasing", after: "A Canadian team that answers in 26 seconds on average — and takes the carrier disputes off your plate." },
+          { before: "No branded tracking or returns portal", after: "Your customers stay in your brand from tracking through returns." },
         ],
       },
       features: ALT_FEATURES,
@@ -564,17 +579,20 @@ export const competitors: Competitor[] = [
       answerFirst:
         "Both are free platforms with strong discounted rates, and both let you compare carriers and services as you process a shipment. ShipTime is built to lower your true cost of shipping — not just the cost of a label.",
       answerFirstMore:
-        "That shows up in what happens around the rate: your own negotiated courier rates compared against ours on every label, a shipment audit that catches carrier overbilling on the invoices you bring, branded tracking and pickups managed where you ship, and a knowledgeable Canadian support team you can actually reach and rely on — one that takes the disputes and claims off your plate. eShipper's strengths sit elsewhere: in-house fulfillment, warehousing, and white-label shipping experiences.",
+        "Mostly it's what lands after the label. Surcharges appear on the invoice after the fact, and billing errors tend to sit there until someone spots them and disputes them — so we audit every invoice, catch the errors, and take the dispute on ourselves. Then there's reaching a person when something goes wrong: our Canadian team answers 8am–8pm, bilingual, in 26 seconds on average. On top of that you get your own courier rates compared against ours on every label, branded tracking and a branded returns portal, and Canada Post with pickups — eShipper's Canada Post only runs out of their warehouse, and pickups aren't supported.",
       savings: "Bring the carrier deals you've already earned — and keep them.",
       competitorPricing: "Free, no BYOR",
       whoShouldChoose: {
         shiptime: {
           title: "Pick ShipTime if",
-          body: "You want your own negotiated rates in every quote, an audit on the carrier invoices you bring, branded tracking and pickups in one place, and a Canadian support team that handles carrier disputes for you.",
+          body: "You're tired of surcharges appearing after the fact and billing errors nobody catches, you want a support team that actually answers, and you'd like your own negotiated rates, branded tracking and returns, and Canada Post with pickups.",
         },
         competitor: {
           title: "Pick eShipper if",
-          body: "You need in-house fulfillment and warehousing under one provider, want white-label or branded shipping experiences, or lean on zone skipping and same-day at high volume and don't need your own rates in the mix.",
+          // Trimmed per customer-service feedback: their fulfillment isn't
+          // really in-house, only customer emails can be branded, and we
+          // shouldn't steer high-volume shippers toward them.
+          body: "You lean on zone skipping and same-day services and don't need your own rates in the mix.",
         },
       },
       reasons: [
