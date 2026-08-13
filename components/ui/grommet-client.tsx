@@ -9,7 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Icon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/reveal";
-import { captureAttribution, readAttribution, submitLead } from "@/components/ui/lead-capture-form";
+import { captureAttribution, readAttribution, submitLead, trackLeadConversion } from "@/components/ui/lead-capture-form";
+import { ShipTimeSignupForm } from "@/components/ui/shiptime-signup-form";
 
 const ds = {
   navy: "#1C1E3D",
@@ -67,23 +68,31 @@ const OFFERS = {
 
 export type OfferVariant = keyof typeof OFFERS;
 
-// Signup MUST go to shiptime.com/grommet, not app.shiptime.com (per David,
-// 2026-07-28): that co-branded page holds the logic that reads the UTMs onto
-// the lead and sets the Grommet affiliation. The bare app page has no branding
-// and no affiliation handling, so sending traffic there loses the attribution.
+// Signup happens HERE now, not by handing off to shiptime.com/grommet.
 //
-// Campaign differs per variant on purpose — winners get 5 x $10 coupon codes
-// issued manually, so they have to be distinguishable from the automated
-// signup reward.
-const SIGNUP_BASE = "https://shiptime.com/grommet";
-
-function signupUrl(variant: OfferVariant) {
-  const campaign = variant === "winner" ? "grommet_potw_winner" : "grommet_checklist";
-  return (
-    `${SIGNUP_BASE}?utm_source=grommet&utm_medium=web` +
-    `&utm_campaign=${campaign}&offer=${variant}`
-  );
-}
+// The old note said signup had to go to that co-branded page because it held the
+// logic that reads the UTMs and sets the Grommet affiliation, and app.shiptime.com
+// had neither (David, 2026-07-28). That constraint is gone: we call the Signup API
+// directly with membership_type=ship-grommet, verified against production
+// 2026-08-13. Three reasons this is now the better path:
+//
+//  • Their page currently declares `g_subsite = 'cfib'`, so it was tagging Grommet
+//    signups as CFIB. (Raised with David; he's fixing it overnight.)
+//  • localStorage is per-origin, so a visitor crossing from here to shiptime.com
+//    lands on a store that never saw our UTMs — that page could only recover
+//    attribution from the query string we appended. We hold the values
+//    server-side and pass them straight to the API.
+//  • One less step, and no cross-domain hop to lose people at.
+//
+// The $10 credit is unaffected: David confirmed 2026-08-13 that it's triggered by
+// the affiliation itself, "automatically regardless of source".
+//
+// Campaign still differs per variant — winners get 5 x $10 coupons issued
+// manually, so they have to stay distinguishable from the automated reward.
+const CAMPAIGN: Record<OfferVariant, string> = {
+  default: "grommet_checklist",
+  winner: "grommet_potw_winner",
+};
 
 // ── Small pieces ──────────────────────────────────────────────────────────────
 
@@ -101,7 +110,21 @@ function PillChip({ label, accent = ds.lightBlue }: { label: string; accent?: st
   );
 }
 
-function OfferBox({ variant, rounded = false }: { variant: OfferVariant; rounded?: boolean }) {
+// `cta: "form"` renders the real signup inline; `"anchor"` just points at it.
+// Only one instance carries the form so there's a single place to convert — the
+// footer block, which renders whether or not the checklist has been unlocked, so
+// the anchor always resolves.
+function OfferBox({
+  variant,
+  rounded = false,
+  cta = "anchor",
+  email,
+}: {
+  variant: OfferVariant;
+  rounded?: boolean;
+  cta?: "form" | "anchor";
+  email?: string;
+}) {
   const offer = OFFERS[variant];
   return (
     <div style={{ background: ds.navy, padding: 26, borderRadius: rounded ? 20 : 0 }}>
@@ -111,10 +134,33 @@ function OfferBox({ variant, rounded = false }: { variant: OfferVariant; rounded
       <p style={{ ...inter, margin: 0, fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}>
         {offer.body}
       </p>
-      <a href={signupUrl(variant)} target="_blank" rel="noopener noreferrer"
-        style={{ ...sora, display: "block", textAlign: "center", marginTop: 20, background: ds.orange, color: ds.white, borderRadius: 999, padding: "14px 20px", fontSize: 15, fontWeight: 700, textDecoration: "none" }}>
-        Create your free account
-      </a>
+
+      {cta === "form" ? (
+        // White panel: the form's inputs and labels are styled for a light
+        // surface and would be unreadable directly on navy.
+        <div style={{ marginTop: 20, background: ds.white, borderRadius: 16, padding: "22px 20px" }}>
+          <p style={{ ...sora, margin: "0 0 16px", fontWeight: 800, fontSize: 17, color: ds.navy }}>
+            Create your free account
+          </p>
+          <ShipTimeSignupForm
+            affiliation="grommet"
+            language="en"
+            leadSource="grommet-checklist"
+            ctaLabel="Create my free account"
+            leadFields={{ partner_source: "grommet", grommet_offer: variant }}
+            initialEmail={email}
+            campaignFallback={CAMPAIGN[variant]}
+          />
+        </div>
+      ) : (
+        <a
+          href="#create-account"
+          style={{ ...sora, display: "block", textAlign: "center", marginTop: 20, background: ds.orange, color: ds.white, borderRadius: 999, padding: "14px 20px", fontSize: 15, fontWeight: 700, textDecoration: "none" }}
+        >
+          Create your free account
+        </a>
+      )}
+
       <p style={{ ...inter, margin: "10px 0 0", fontSize: 12, color: "rgba(255,255,255,0.5)", textAlign: "center" }}>
         No platform fee. No contract.
       </p>
@@ -227,6 +273,9 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
     } catch {
       /* fail-soft: never block the visitor; step 2 writes again */
     }
+    // Fire once, here — step 1 is where the lead is captured. Firing again on
+    // step 2 would double-count.
+    trackLeadConversion({ lead_source: "grommet-checklist", partner_source: "grommet", offer: variant });
     setBusy(false);
     setStep(2);
   }
@@ -470,7 +519,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
               </div>
 
               <div style={{ marginTop: 24 }}>
-                <OfferBox variant={variant} rounded />
+                <OfferBox variant={variant} rounded email={email} />
               </div>
             </div>
           )}
@@ -541,10 +590,10 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
       </section>
 
       {/* ── 5. OFFER (repeated at the foot) ── */}
-      <section style={{ background: ds.surface, borderTop: `1px solid ${ds.border}`, padding: "68px 20px" }}>
+      <section id="create-account" style={{ background: ds.surface, borderTop: `1px solid ${ds.border}`, padding: "68px 20px", scrollMarginTop: 70 }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <Reveal>
-            <OfferBox variant={variant} rounded />
+            <OfferBox variant={variant} rounded cta="form" email={email} />
           </Reveal>
         </div>
       </section>

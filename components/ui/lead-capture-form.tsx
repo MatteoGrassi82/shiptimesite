@@ -53,7 +53,27 @@ const MODES: { key: string; label: string }[] = [
 // values are set where the links are built (and aren't uniformly lowercase — e.g.
 // Costco's "Costco Single"), so we forward exactly what the URL carries — no
 // rewriting — and let the first touch win across internal navigation.
-const SS_KEY = "st_attribution";
+//
+// Storage is localStorage, not sessionStorage, and that's the whole point: a
+// visitor who clicks an ad, leaves, and comes back days later without the UTMs
+// in the URL still converts against the campaign that brought them. This mirrors
+// what ShipTime's own signup pages do (David, 2026-08-12) — see the inline
+// writer in components/tracking.tsx, which uses this same key and shape and runs
+// on every page. These functions read what that script wrote; the write here is
+// a fallback for the (unlikely) case that a form mounts on a page without it.
+const STORE_KEY = "st_attribution";
+// Read for backwards compatibility only: visitors mid-session when this shipped
+// have their first touch in sessionStorage under the same key.
+const LEGACY_SESSION_KEY = "st_attribution";
+// The three keys ShipTime's own main.js writes, reads at signup, and clears on
+// success — copied from their source, so both sites use the same names. We keep
+// STORE_KEY alongside them because these three don't carry utm_term,
+// utm_content or gclid, which the CRM lead wants.
+const ST_KEYS = {
+  utm_source: "st_utm_source",
+  utm_medium: "st_utm_medium",
+  utm_campaign: "st_utm_campaign",
+} as const;
 
 // Read UTMs (+ gclid) from the current URL.
 function utmFromUrl(): Record<string, string> {
@@ -67,21 +87,42 @@ function utmFromUrl(): Record<string, string> {
   return out;
 }
 
-// Store first-touch attribution once, so it survives internal navigation before
-// the visitor converts (first ad click wins; we don't overwrite it).
+// Persist the campaign that brought this visitor here.
+//
+// A URL carrying UTMs is a fresh campaign touch and replaces what's stored —
+// with a persistent store, "first touch always wins" would credit a click on
+// this month's ad to an ad from months ago. Internal navigation and direct
+// return visits carry no UTMs, so they leave the stored value untouched.
 export function captureAttribution() {
   if (typeof window === "undefined") return;
   const utm = utmFromUrl();
+  if (!Object.keys(utm).length) return;
   try {
-    if (Object.keys(utm).length && !sessionStorage.getItem(SS_KEY)) {
-      sessionStorage.setItem(SS_KEY, JSON.stringify(utm));
+    for (const [param, key] of Object.entries(ST_KEYS)) {
+      if (utm[param]) localStorage.setItem(key, utm[param]);
     }
+    localStorage.setItem(STORE_KEY, JSON.stringify({ ...utm, ts: new Date().toISOString() }));
   } catch {
-    /* sessionStorage unavailable (private mode) — fall back to live URL */
+    /* storage unavailable (private mode) — readAttribution falls back to the live URL */
   }
 }
 
-// Resolve attribution at submit time: first-touch if stored, else the live URL.
+// Called after a successful ShipTime signup: the campaign has done its job, so
+// the stored triple is dropped rather than being reused for a later, unrelated
+// conversion. ShipTime's own pages clear it at exactly this point.
+export function clearAttribution() {
+  if (typeof window === "undefined") return;
+  try {
+    for (const key of Object.values(ST_KEYS)) localStorage.removeItem(key);
+    localStorage.removeItem(STORE_KEY);
+    sessionStorage.removeItem(LEGACY_SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+// Resolve attribution at submit time: the live URL if this load carries UTMs,
+// otherwise whatever the last campaign touch stored.
 // Normalize source/medium to the canonical vocabulary so Metabase can group.
 // Page slug for on-site conversions, e.g. "/vs/freightcom" -> "vs_freightcom",
 // "/alternative/shipstation" -> "alternative_shipstation", "/" -> "home".
@@ -91,25 +132,122 @@ function pageCampaign(): string {
   return seg ? seg.replace(/[/-]+/g, "_").toLowerCase() : "home";
 }
 
-export function readAttribution(): Record<string, string> {
+export function readAttribution(
+  opts: {
+    /**
+     * Campaign to use when the visit carries none. Lets a page supply something
+     * more specific than its own slug — e.g. the Grommet lander distinguishing
+     * its Product-of-the-Week offer from the standard one. A real inbound
+     * utm_campaign always wins over this.
+     */
+    fallbackCampaign?: string;
+  } = {},
+): Record<string, string> {
   if (typeof window === "undefined") return {};
   let stored: Record<string, string> = {};
   try {
-    stored = JSON.parse(sessionStorage.getItem(SS_KEY) || "{}");
+    stored = JSON.parse(
+      localStorage.getItem(STORE_KEY) || sessionStorage.getItem(LEGACY_SESSION_KEY) || "{}",
+    );
   } catch {
     /* ignore */
   }
-  // First-touch (stored) wins over the live URL; values pass through verbatim.
-  const merged = { ...utmFromUrl(), ...stored };
+  // `ts` is bookkeeping for the store, not a lead property — don't forward it.
+  delete stored.ts;
+  // Fall back to ShipTime's individual keys for anything the blob is missing, so
+  // attribution written by their script (or left behind by an older visit)
+  // still counts.
+  try {
+    for (const [param, key] of Object.entries(ST_KEYS)) {
+      if (!stored[param]) {
+        const v = localStorage.getItem(key);
+        if (v) stored[param] = v;
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  // The live URL wins over the store: if this page load carries UTMs it *is*
+  // the current touch (and the writer has already replaced the stored copy with
+  // it). The store only fills in when the URL has nothing.
+  const merged = { ...stored, ...utmFromUrl() };
   // On-site fallback: a visitor with no inbound campaign who clicks a lead
   // trigger is a "website" conversion per the UTM guideline — attribute it to
   // ShipTime, medium "website", campaign = the page they converted on.
   if (!merged.utm_source) {
     merged.utm_source = "shiptime";
     merged.utm_medium = "website";
-    merged.utm_campaign = pageCampaign();
+  }
+  if (!merged.utm_campaign) {
+    merged.utm_campaign = opts.fallbackCampaign || pageCampaign();
   }
   return merged;
+}
+
+// The same attribution, renamed for the ShipTime Signup API — it takes the
+// triple as source / medium / campaign, not utm_*. Sending it means the campaign
+// is recorded on the ShipTime account itself, not just on our CRM contact.
+export function signupAttribution(
+  opts: { fallbackCampaign?: string } = {},
+): { source: string; medium: string; campaign: string } {
+  const a = readAttribution(opts);
+  return {
+    source: a.utm_source ?? "",
+    medium: a.utm_medium ?? "",
+    campaign: a.utm_campaign ?? "",
+  };
+}
+
+// ── Conversion tracking ───────────────────────────────────────────────────────
+// Without this the ad platforms only ever see clicks, so Google Ads Smart
+// Bidding can't optimise toward leads and Meta can't build lookalikes. Fires
+// three separate signals on a successful submit:
+//
+//   gtag('event','generate_lead')  → GA4 direct (GA4 is installed via gtag)
+//   fbq('track','Lead')            → Meta standard Lead event
+//   dataLayer.push('lead_submitted') → a distinctly-named event for GTM, so
+//     whoever manages Google Ads can attach the AW- conversion tag in the
+//     container without another code change. Named differently from the GA4
+//     event on purpose, so the two can't be confused for each other.
+//
+// All calls are guarded — a blocked or absent tracker must never break the form.
+type Win = Window & {
+  gtag?: (...args: unknown[]) => void;
+  fbq?: (...args: unknown[]) => void;
+  dataLayer?: unknown[];
+};
+
+export function trackLeadConversion(detail: Record<string, unknown> = {}) {
+  if (typeof window === "undefined") return;
+  const w = window as Win;
+  try {
+    w.gtag?.("event", "generate_lead", { ...detail });
+  } catch { /* ignore */ }
+  try {
+    w.fbq?.("track", "Lead");
+  } catch { /* ignore */ }
+  try {
+    w.dataLayer = w.dataLayer || [];
+    w.dataLayer.push({ event: "lead_submitted", ...detail });
+  } catch { /* ignore */ }
+}
+
+// A completed account creation, not just an enquiry — a distinct and much
+// stronger conversion than generate_lead, so it gets its own event names rather
+// than being folded into the lead signal. Same guarded, fail-soft style.
+export function trackSignupConversion(detail: Record<string, unknown> = {}) {
+  if (typeof window === "undefined") return;
+  const w = window as Win;
+  try {
+    w.gtag?.("event", "sign_up", { method: "shiptime", ...detail });
+  } catch { /* ignore */ }
+  try {
+    w.fbq?.("track", "CompleteRegistration");
+  } catch { /* ignore */ }
+  try {
+    w.dataLayer = w.dataLayer || [];
+    w.dataLayer.push({ event: "shiptime_signup", ...detail });
+  } catch { /* ignore */ }
 }
 
 export async function submitLead(payload: Record<string, unknown>) {
@@ -169,6 +307,14 @@ function LeadCaptureModal({ source, onClose }: { source: string; onClose: () => 
     } catch {
       /* fail-soft: still advance — we'll retry the write on step 2 */
     }
+    // Fire once, here — step 1 is where the lead is actually captured. Firing
+    // again on step 2 would double-count the conversion in Ads and GA4.
+    const attr = readAttribution();
+    trackLeadConversion({
+      lead_source: source,
+      utm_source: attr.utm_source,
+      utm_campaign: attr.utm_campaign,
+    });
     setStatus("idle");
     setStep(2);
   }
