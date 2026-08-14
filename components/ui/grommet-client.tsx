@@ -168,46 +168,144 @@ function OfferBox({
   );
 }
 
-// Teased preview of the gated asset — the first few questions readable, the
-// rest blurred behind a lock. Showing what's behind the gate converts far
-// better than an unexplained form.
-function ChecklistPeek() {
-  const shown = CHECKLIST.slice(0, 3);
-  const hidden = CHECKLIST.slice(3);
+function LockGlyph({ size = 12 }: { size?: number }) {
   return (
-    <div style={{ position: "relative", background: ds.white, borderRadius: 18, boxShadow: "0 28px 70px rgba(0,0,0,0.35)", overflow: "hidden" }}>
-      <div style={{ padding: "22px 24px 16px", borderBottom: `1px solid ${ds.border}` }}>
-        <p style={{ ...sora, margin: 0, fontWeight: 800, fontSize: 14.5, color: ds.navy, lineHeight: 1.3 }}>
-          The New Brand Shipping Readiness Checklist
-        </p>
-        <p style={{ ...inter, margin: "6px 0 0", fontSize: 12.5, color: ds.muted }}>10 questions · 2 minute read</p>
-      </div>
+    <svg width={size} height={size * (14 / 12)} viewBox="0 0 12 14" fill="none" aria-hidden>
+      <rect x="1" y="6" width="10" height="7" rx="1.6" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M3.4 6V4.2a2.6 2.6 0 015.2 0V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-      <div style={{ padding: "18px 24px 0", display: "flex", flexDirection: "column", gap: 14 }}>
-        {shown.map((q, i) => (
-          <div key={i} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
-            <span style={{ ...sora, flexShrink: 0, width: 22, height: 22, borderRadius: 7, background: ds.lightBlue, color: ds.navy, fontSize: 11.5, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{i + 1}</span>
-            <span style={{ ...inter, fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</span>
-          </div>
-        ))}
-      </div>
+// The gated asset, rendered as an object rather than a list: page edges stacked
+// behind it, a branded cover, and — the part that does the work — the first
+// three questions actually tickable, scoring live out of 10.
+//
+// Ticking before the form is deliberate. It turns a vague "download a PDF" into
+// a score they've started and can't finish, so the email field arrives after
+// they've invested three answers rather than before, and the gate becomes
+// specific: not "get the checklist" but "7 questions still locked".
+//
+// The blurred rows are the real questions 4–6, so what's behind the gate reads
+// as genuine content; only three of the seven are drawn, which implies the rest
+// without turning the card into a wall of filler.
+function ChecklistDoc({ ticked, onToggle }: { ticked: number[]; onToggle: (i: number) => void }) {
+  const open = CHECKLIST.slice(0, 3);
+  const blurred = CHECKLIST.slice(3, 6);
+  const lockedCount = CHECKLIST.length - open.length;
 
-      {/* Locked remainder — blurred so it reads as real content, not filler */}
-      <div style={{ position: "relative", padding: "14px 24px 34px", display: "flex", flexDirection: "column", gap: 14 }}>
-        {hidden.map((q, i) => (
-          <div key={i} style={{ display: "flex", gap: 11, alignItems: "flex-start", filter: "blur(4.5px)", opacity: 0.55, userSelect: "none" }} aria-hidden>
-            <span style={{ ...sora, flexShrink: 0, width: 22, height: 22, borderRadius: 7, background: ds.border, color: ds.navy, fontSize: 11.5, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>{i + 4}</span>
-            <span style={{ ...inter, fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</span>
+  return (
+    <div style={{ position: "relative" }}>
+      {/* Page edges peeking out below — a stack of paper under a dark-covered
+          document shows its edges at the bottom, not above the cover, where
+          light slabs on navy just read as a stray grey bar. */}
+      <div aria-hidden style={{ position: "absolute", bottom: -16, left: 28, right: 28, height: 60, borderRadius: 18, background: "rgba(255,255,255,0.22)" }} />
+      <div aria-hidden style={{ position: "absolute", bottom: -8, left: 14, right: 14, height: 60, borderRadius: 19, background: "rgba(255,255,255,0.5)" }} />
+
+      <div style={{ position: "relative", background: ds.white, borderRadius: 20, boxShadow: "0 34px 84px rgba(0,0,0,0.46)", overflow: "hidden" }}>
+        {/* ── Cover ── */}
+        <div style={{ position: "relative", background: ds.navyDeep, padding: "19px 22px 17px", overflow: "hidden" }}>
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(125% 150% at 100% 0%, rgba(236,90,38,0.42) 0%, rgba(236,90,38,0) 62%)" }} />
+          <div style={{ position: "relative", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14 }}>
+            <div>
+              <p style={{ ...sora, margin: "0 0 8px", fontSize: 9.5, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: ds.orange }}>
+                ShipTime × Grommet
+              </p>
+              <p style={{ ...sora, margin: 0, fontWeight: 800, fontSize: 16.5, lineHeight: 1.24, color: ds.white, maxWidth: 250 }}>
+                The New Brand Shipping Readiness Checklist
+              </p>
+            </div>
+            <div style={{ textAlign: "center", flexShrink: 0 }}>
+              <span style={{ ...sora, display: "block", fontSize: 44, fontWeight: 800, lineHeight: 0.88, color: "transparent", WebkitTextStroke: "1.6px rgba(255,255,255,0.5)" }}>10</span>
+              <span style={{ ...sora, fontSize: 8.5, fontWeight: 700, letterSpacing: "0.15em", color: "rgba(255,255,255,0.55)" }}>QUESTIONS</span>
+            </div>
           </div>
-        ))}
-        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.82) 42%, ${ds.white} 78%)`, display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 22 }}>
-          <span style={{ ...sora, display: "inline-flex", alignItems: "center", gap: 8, background: ds.navy, color: ds.white, borderRadius: 999, padding: "9px 18px", fontSize: 12.5, fontWeight: 700, boxShadow: "0 8px 22px rgba(28,30,61,0.28)" }}>
-            <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden>
-              <rect x="1" y="6" width="10" height="7" rx="1.6" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M3.4 6V4.2a2.6 2.6 0 015.2 0V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            7 more questions
-          </span>
+        </div>
+
+        {/* ── The three open questions ── */}
+        <div style={{ padding: "17px 20px 0" }}>
+          <p style={{ ...inter, margin: "0 0 12px", fontSize: 12, fontWeight: 600, color: ds.muted }}>
+            Tick the ones you can already answer yes to.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {open.map((q, i) => {
+              const on = ticked.includes(i);
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => onToggle(i)}
+                  aria-pressed={on}
+                  style={{
+                    display: "flex", gap: 11, alignItems: "flex-start", textAlign: "left", width: "100%",
+                    background: on ? "#FFF6F2" : ds.white,
+                    border: `1.5px solid ${on ? "rgba(236,90,38,0.45)" : ds.border}`,
+                    borderRadius: 12, padding: "11px 12px", cursor: "pointer",
+                    transition: "background .18s, border-color .18s",
+                  }}
+                >
+                  <span style={{
+                    flexShrink: 0, width: 21, height: 21, borderRadius: 6, marginTop: 1,
+                    background: on ? ds.orange : ds.white,
+                    border: `1.5px solid ${on ? ds.orange : "#D4D6E0"}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    transition: "background .18s, border-color .18s",
+                  }}>
+                    {on && (
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={ds.white} strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                  </span>
+                  <span style={{ ...inter, fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Locked remainder — the seal is a link, so clicking the lock
+             jumps to the form that opens it ── */}
+        <div style={{ position: "relative", padding: "8px 20px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+          {blurred.map((q, i) => (
+            <div key={i} aria-hidden style={{ display: "flex", gap: 11, alignItems: "flex-start", border: `1.5px solid ${ds.border}`, borderRadius: 12, padding: "11px 12px", filter: "blur(4.5px)", opacity: 0.5, userSelect: "none" }}>
+              <span style={{ flexShrink: 0, width: 21, height: 21, borderRadius: 6, border: "1.5px solid #D4D6E0" }} />
+              <span style={{ ...inter, fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</span>
+            </div>
+          ))}
+          <a
+            href="#gm-form"
+            // Fades late on purpose: an earlier fade whited out the third row
+            // entirely and left a dead gap above the pill.
+            style={{ position: "absolute", inset: 0, textDecoration: "none", background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.94) 82%, ${ds.white} 100%)`, display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 4 }}
+          >
+            <span style={{ ...sora, display: "inline-flex", alignItems: "center", gap: 8, background: ds.navy, color: ds.white, borderRadius: 999, padding: "10px 19px", fontSize: 12.5, fontWeight: 700, boxShadow: "0 8px 22px rgba(28,30,61,0.3)" }}>
+              <LockGlyph />
+              {lockedCount} more — unlock free
+            </span>
+          </a>
+        </div>
+
+        {/* ── Live score ── */}
+        <div style={{ borderTop: `1px solid ${ds.border}`, background: ds.surface, padding: "13px 20px 15px" }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 9 }}>
+            <span style={{ ...sora, fontSize: 10.5, fontWeight: 700, letterSpacing: "0.13em", textTransform: "uppercase", color: ds.muted }}>
+              Your readiness score
+            </span>
+            <span style={{ ...sora, fontSize: 15, fontWeight: 800, color: ds.navy }}>
+              {ticked.length}<span style={{ color: "#A6ABBC" }}> / {CHECKLIST.length}</span>
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: 4 }} aria-hidden>
+            {Array.from({ length: CHECKLIST.length }).map((_, i) => (
+              <span key={i} style={{ flex: 1, height: 6, borderRadius: 999, background: i < ticked.length ? ds.orange : i < open.length ? "#DCDFE7" : "#EDEFF3", transition: "background .2s" }} />
+            ))}
+          </div>
+          <p style={{ ...inter, margin: "9px 0 0", fontSize: 11.5, color: ds.muted }}>
+            {ticked.length === 0
+              ? "Tick a question above to start scoring."
+              : `${lockedCount} questions still locked.`}
+          </p>
         </div>
       </div>
     </div>
@@ -239,7 +337,13 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
   const [parcel, setParcel] = useState("");
   const [ltl, setLtl] = useState("");
   const [busy, setBusy] = useState(false);
+  // Which of the three open questions they've ticked. Lives here rather than in
+  // ChecklistDoc so the form can reflect the score they've started.
+  const [ticked, setTicked] = useState<number[]>([]);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  const toggleTick = (i: number) =>
+    setTicked((prev) => (prev.includes(i) ? prev.filter((n) => n !== i) : [...prev, i]));
 
   // Grommet's emails carry their own UTMs; store first-touch on arrival so the
   // values survive the two-step transition and aren't lost on submit.
@@ -320,12 +424,20 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
       {/* ── Header ── */}
       <header style={{ borderBottom: `1px solid ${ds.border}`, padding: "16px 20px", background: "rgba(255,255,255,0.9)", backdropFilter: "blur(10px)", position: "sticky", top: 0, zIndex: 30 }}>
         <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-            <Image src="/shiptime-logo.svg" alt="ShipTime" width={130} height={32} style={{ height: 30, width: "auto" }} />
-            <span style={{ ...inter, fontSize: 13, color: ds.muted }}>× Grommet</span>
+          {/* Co-brand lockup. The Grommet wordmark is 128x18 with no icon or
+              tagline, so its full height is its cap height — at 14px it optically
+              matches the "ShipTime" wordmark inside a 30px-tall logo that also
+              carries an icon and a tagline. Matching the box heights instead
+              would leave Grommet looking twice the size. */}
+          <div className="gm-brand" style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
+            <Image className="gm-brand-st" src="/shiptime-logo.svg" alt="ShipTime" width={130} height={32} style={{ height: 30, width: "auto" }} />
+            <span aria-hidden style={{ ...inter, fontSize: 15, lineHeight: 1, color: "#B9BCC9" }}>×</span>
+            <Image className="gm-brand-gm" src="/grommet-logo.svg" alt="Grommet" width={128} height={18} style={{ height: "clamp(11px, 3vw, 14px)", width: "auto" }} />
           </div>
-          <a href="#get-checklist" style={{ ...sora, background: ds.orange, color: ds.white, borderRadius: 999, padding: "9px 18px", fontSize: 13.5, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}>
-            Get the checklist
+          <a href="#get-checklist" className="gm-nav-cta" style={{ ...sora, background: ds.orange, color: ds.white, borderRadius: 999, padding: "9px 18px", fontSize: 13.5, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
+            {/* Swapped by CSS, not JS, so there's no hydration flash */}
+            <span className="gm-cta-long">Get the checklist</span>
+            <span className="gm-cta-short">Get it free</span>
           </a>
         </div>
       </header>
@@ -391,15 +503,35 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
         id="get-checklist"
         ref={resultsRef}
         style={{
-          background: step === "done" ? ds.white : ds.navy,
-          padding: "68px 20px",
+          background: step === "done" ? ds.white : "linear-gradient(168deg, #1F2245 0%, #191B38 50%, #0F1124 100%)",
+          padding: "72px 20px 78px",
           scrollMarginTop: 70,
           position: "relative",
-          overflow: "hidden",
+          // Deliberately NOT overflow: hidden. An ancestor with overflow hidden
+          // becomes the sticky scrollport, which would silently kill the sticky
+          // form column below. The decorative layer clips itself instead.
         }}
       >
         {step !== "done" && (
-          <div aria-hidden style={{ position: "absolute", top: "-28%", right: "-14%", width: 620, height: 620, borderRadius: "50%", background: "radial-gradient(circle, rgba(236,90,38,0.30) 0%, rgba(236,90,38,0) 68%)", pointerEvents: "none" }} />
+          // Own clipping context so the glows can bleed past the section edges
+          // without the section itself having to clip.
+          <div aria-hidden style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+            {/* One confident glow behind the document rather than the two
+                overlapping orange washes that were here — they muddied to brown. */}
+            <div style={{ position: "absolute", top: "-34%", right: "-14%", width: 820, height: 820, borderRadius: "50%", background: "radial-gradient(circle, rgba(236,90,38,0.34) 0%, rgba(236,90,38,0) 66%)" }} />
+            <div style={{ position: "absolute", bottom: "-30%", left: "-14%", width: 620, height: 620, borderRadius: "50%", background: "radial-gradient(circle, rgba(84,110,222,0.24) 0%, rgba(84,110,222,0) 68%)" }} />
+            {/* Faint dot grid, faded out toward the bottom, so the navy has some
+                texture instead of reading as a flat block. */}
+            <div
+              style={{
+                position: "absolute", inset: 0,
+                backgroundImage: "radial-gradient(rgba(255,255,255,0.075) 1px, transparent 1px)",
+                backgroundSize: "26px 26px",
+                maskImage: "radial-gradient(90% 70% at 50% 0%, #000 0%, transparent 100%)",
+                WebkitMaskImage: "radial-gradient(90% 70% at 50% 0%, #000 0%, transparent 100%)",
+              }}
+            />
+          </div>
         )}
 
         <div style={{ maxWidth: step === "done" ? 720 : 1060, margin: "0 auto", position: "relative" }}>
@@ -407,24 +539,44 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
             <Reveal>
               <div className="gm-capture" style={{ display: "grid", gap: 40, gridTemplateColumns: "1fr", alignItems: "center" }}>
 
-                {/* LEFT — the pitch + the teased asset */}
+                {/* LEFT — the pitch + the interactive asset */}
                 <div>
-                  <span style={{ ...sora, display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: ds.orange, marginBottom: 14 }}>
-                    Free download
+                  <span style={{ ...sora, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: "0.13em", textTransform: "uppercase", color: ds.orange, background: "rgba(236,90,38,0.13)", border: "1px solid rgba(236,90,38,0.3)", borderRadius: 999, padding: "7px 14px", marginBottom: 18 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: 999, background: ds.orange }} aria-hidden />
+                    Free · 10 questions · 2 min
                   </span>
                   <h2 style={{ ...h2Style, color: ds.white }}>
-                    {step === 1 ? "Get your checklist" : "Almost there"}
+                    {step === 1 ? (
+                      <>
+                        How ready is your shipping,{" "}
+                        <em style={{ fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.52)" }}>really</em>?
+                      </>
+                    ) : (
+                      "Almost there"
+                    )}
                   </h2>
-                  <p style={{ ...inter, margin: "14px 0 26px", fontSize: 16, lineHeight: 1.65, color: "rgba(255,255,255,0.75)", maxWidth: 420 }}>
+                  <p style={{ ...inter, margin: "16px 0 0", fontSize: 16, lineHeight: 1.65, color: "rgba(255,255,255,0.76)", maxWidth: 440 }}>
                     {step === 1
-                      ? "Ten questions that surface where shipping is quietly costing you money. Free, no strings — you'll have it in about a minute."
+                      ? "Tick the questions you can confidently answer yes to. Three are open below — the other seven unlock free, right on this page."
                       : "Two quick details about your volume and the full checklist unlocks on this page."}
                   </p>
-                  <div className="gm-peek"><ChecklistPeek /></div>
+                  {step === 1 && (
+                    <p style={{ ...inter, margin: "18px 0 0", paddingLeft: 14, borderLeft: `2px solid ${ds.orange}`, fontSize: 14.5, lineHeight: 1.6, color: "rgba(255,255,255,0.62)", maxWidth: 400 }}>
+                      Most brands we talk to get to 3 or 4 of these. That&rsquo;s
+                      normal at this stage — it&rsquo;s exactly why we wrote it.
+                    </p>
+                  )}
+                  <div className="gm-peek" style={{ marginTop: 34 }}>
+                    <ChecklistDoc ticked={ticked} onToggle={toggleTick} />
+                  </div>
                 </div>
 
                 {/* RIGHT — the form */}
-                <div style={{ borderRadius: 22, background: ds.white, boxShadow: "0 24px 70px rgba(0,0,0,0.32)", padding: "30px 28px" }}>
+                <div id="gm-form" className="gm-form-col" style={{ borderRadius: 22, background: ds.white, boxShadow: "0 24px 70px rgba(0,0,0,0.34)", overflow: "hidden", scrollMarginTop: 84 }}>
+                  {/* Orange top edge — gives the form its own accent so it isn't
+                      just the second white rectangle in the row. */}
+                  <div aria-hidden style={{ height: 4, background: `linear-gradient(90deg, ${ds.orange} 0%, #F0873F 100%)` }} />
+                  <div style={{ padding: "28px 28px 30px" }}>
                   <div style={{ marginBottom: 22 }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 12 }}>
                       <p style={{ ...sora, margin: 0, fontWeight: 800, fontSize: 18, color: ds.navy }}>
@@ -439,6 +591,15 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                         <span key={n} style={{ flex: 1, height: 5, borderRadius: 999, background: n <= (step as number) ? ds.orange : ds.border, transition: "background .25s" }} />
                       ))}
                     </div>
+                    {/* Picks up whatever they ticked in the document, so the ask
+                        lands as "finish what you started" rather than cold. */}
+                    <p style={{ ...inter, margin: "13px 0 0", fontSize: 13, lineHeight: 1.55, color: ds.muted }}>
+                      {step === 1
+                        ? ticked.length > 0
+                          ? `You've ticked ${ticked.length} so far. Unlock the other ${CHECKLIST.length - 3} to finish your score.`
+                          : "Two steps. The remaining 7 questions unlock on this page."
+                        : "Last step — then the full checklist appears below."}
+                    </p>
                   </div>
 
                 {step === 1 ? (
@@ -479,6 +640,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                     </button>
                   </form>
                 )}
+                  </div>
                 </div>
               </div>
             </Reveal>
@@ -602,7 +764,19 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
       <footer style={{ background: ds.navyDeep, padding: "34px 20px" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 20, alignItems: "flex-start", justifyContent: "space-between" }}>
           <div>
-            <Image src="/shiptime-logo.svg" alt="ShipTime" width={120} height={30} style={{ height: 27, width: "auto", opacity: 0.9 }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Reversed lockup: the standard logo's wordmark is #151515, which
+                  was all but invisible on this navy — it only became obvious once
+                  a white Grommet mark sat beside it. shiptime-logo-white.svg is
+                  the same file with the 23 wordmark paths switched to white; the
+                  icon keeps its orange, so the brand colour survives. */}
+              <Image src="/shiptime-logo-white.svg" alt="ShipTime" width={120} height={30} style={{ height: 27, width: "auto", opacity: 0.92 }} />
+              <span aria-hidden style={{ ...inter, fontSize: 14, lineHeight: 1, color: "rgba(255,255,255,0.4)" }}>×</span>
+              {/* Grommet publish this wordmark as a single black path, so one
+                  asset covers both surfaces: invert() reverses it to white here
+                  rather than shipping a second file. */}
+              <Image src="/grommet-logo.svg" alt="Grommet" width={128} height={18} style={{ height: 13, width: "auto", filter: "invert(1)", opacity: 0.86 }} />
+            </div>
             <p style={{ ...inter, margin: "12px 0 0", fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,255,255,0.55)", maxWidth: 420 }}>
               ShipTime gives growing brands discounted rates across every major carrier, parcel
               and freight, from one screen — with a support team based in Canada.
@@ -626,14 +800,42 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
           .gm-hero    { grid-template-columns: 1.1fr 0.9fr !important; gap: 60px !important; }
           .gm-why     { grid-template-columns: 1fr 0.82fr !important; gap: 64px !important; }
           .gm-capture { grid-template-columns: 1fr 0.82fr !important; gap: 56px !important; align-items: start !important; }
+          /* The checklist document is roughly twice the form's height, which left
+             a large empty navy block beside it. Sticking the form keeps the CTA
+             in view the whole way down the document instead. Needs the
+             align-items: start above — a stretched grid item can't stick. */
+          .gm-form-col { position: sticky; top: 88px; }
         }
-        /* The teased preview is a nice-to-have — drop it on small screens so the
-           form stays the first thing a phone visitor sees. */
+        /* The checklist document stays on phones — it's the interactive part of
+           the section and most of this traffic is mobile email clicks, so hiding
+           it would hide the whole hook. It sits above the form, and its lock
+           seal links to #gm-form, so the form is always one tap away. Just
+           tighten it up at small sizes. */
         @media (max-width: 640px) {
-          .gm-peek { display: none; }
+          .gm-peek { margin-top: 26px !important; }
         }
         @media (max-width: 939px) {
           .gm-hero-visual { max-width: 420px; margin: 0 auto; }
+        }
+        /* Two wordmarks plus the header CTA is a lot for a narrow phone. The
+           lockup is ~20px wider than the "× Grommet" text it replaced, which is
+           enough to overflow a 320px screen, so the logos and the button shrink
+           together in two tiers. At 24px/11px the two wordmarks are both 78px
+           wide, which keeps them optically matched as they scale. */
+        .gm-cta-short { display: none; }
+        @media (max-width: 520px) {
+          .gm-brand    { gap: 8px !important; }
+          .gm-brand-st { height: 24px !important; }
+          .gm-brand-gm { height: 11px !important; }
+          .gm-nav-cta  { padding: 8px 14px !important; font-size: 12.5px !important; }
+        }
+        @media (max-width: 380px) {
+          .gm-brand     { gap: 6px !important; }
+          .gm-brand-st  { height: 21px !important; }
+          .gm-brand-gm  { height: 10px !important; }
+          .gm-nav-cta   { padding: 8px 13px !important; }
+          .gm-cta-long  { display: none !important; }
+          .gm-cta-short { display: inline !important; }
         }
       `}</style>
     </div>
