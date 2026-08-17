@@ -154,6 +154,13 @@ export async function POST(req: NextRequest) {
     // flag whether it actually saved (surfaced for diagnostics, ignored by the
     // form UI, which only checks `ok`).
     if (!res.ok) {
+      // Log it: `saved: false` travels back in the response but the forms only
+      // check `ok`, by design, so a broken token or a HubSpot outage would drop
+      // leads in total silence. This is the only trace, so keep the email in it
+      // — it's the one field that makes the lead recoverable by hand.
+      console.error("[lead] HubSpot rejected the write", {
+        email, status: res.status, response: data,
+      });
       return NextResponse.json({ ok: true, source: "hubspot", saved: false, error: data });
     }
 
@@ -166,6 +173,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true, source: "hubspot", saved: true, noted });
   } catch (e) {
+    console.error("[lead] HubSpot write threw", { email, error: (e as Error).message });
     return NextResponse.json({ ok: true, source: "hubspot", saved: false, error: (e as Error).message });
   }
 }
