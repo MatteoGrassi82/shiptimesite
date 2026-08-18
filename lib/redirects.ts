@@ -39,7 +39,6 @@ export const redirects: Redirect[] = [
   // ── Legacy marketing paths → new structure ──────────────────────
   { source: "/features", destination: "/", permanent: true },
   { source: "/shipping-software", destination: "/", permanent: true },
-  { source: "/compare", destination: "/vs", permanent: true },
   { source: "/comparisons/:slug", destination: "/vs/:slug", permanent: true },
   { source: "/alternatives/:slug", destination: "/alternative/:slug", permanent: true },
 

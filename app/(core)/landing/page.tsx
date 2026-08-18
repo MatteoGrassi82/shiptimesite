@@ -38,6 +38,12 @@ const sections: Section[] = [
         desc: "Federato-style editorial build: centered hero over an ambient loop, conceptual shape art, maturity ladder, platform diagram.",
         tag: "V2",
       },
+      {
+        href: "/plus/v3",
+        title: "Plus — Homepage V3",
+        desc: "The 'first iteration' brief: who it's for → nine problems → the solution (three pillars, six differences) → measured proof.",
+        tag: "V3",
+      },
       { href: "/plus/los", title: "Logistics Operating System", desc: "The three-phase system story: unify, apply intelligence, autopilot." },
       { href: "/plus/platform", title: "Platform", desc: "Every mode and carrier, freight brokerage spot board, analytics." },
       { href: "/plus/shiplets", title: "Shiplets", desc: "The micro-app layer — 15 shiplets on a scrolling parallax wall.", tag: "New" },

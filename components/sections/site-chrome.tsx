@@ -25,6 +25,7 @@ const PLUS_NAV: { label: string; href?: string; items?: { label: string; href: s
   // Design variant under review — sits in the nav so it's reachable from any
   // Plus page. Drop this entry once one of the two homepages wins.
   { label: "V2", href: "/plus/v2" },
+  { label: "V3", href: "/plus/v3" },
   {
     label: "Resources",
     items: [
@@ -97,7 +98,9 @@ function PlusNavGroups() {
   );
 }
 
-export function ZoneNav({ zone, settings }: { zone: Zone; settings?: SiteSettings }) {
+// `minimal` drops the nav links entirely (logo + primary CTA only) — the mode
+// for pages sent directly to prospects, where the only move is "book a call".
+export function ZoneNav({ zone, settings, minimal = false }: { zone: Zone; settings?: SiteSettings; minimal?: boolean }) {
   const home = zone === "plus" ? "/plus" : "/";
   const primaryCta =
     zone === "plus" && !settings?.primaryCta?.label
@@ -117,11 +120,6 @@ export function ZoneNav({ zone, settings }: { zone: Zone; settings?: SiteSetting
     >
       <Container style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64, padding: "0 24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {zone === "plus" && (
-            <Link href="/" className="st-body" style={{ fontSize: 12.5, color: "var(--ink-3)", textDecoration: "none", whiteSpace: "nowrap" }}>
-              ← ShipTime
-            </Link>
-          )}
           <Link href={home} style={{ textDecoration: "none", display: "inline-flex", alignItems: "baseline", gap: 8 }}>
             <span className="st-display" style={{ fontSize: 20, color: "var(--ink)", letterSpacing: "-0.02em" }}>
               ShipTime
@@ -134,7 +132,7 @@ export function ZoneNav({ zone, settings }: { zone: Zone; settings?: SiteSetting
           </Link>
         </div>
         <nav style={{ display: "flex", alignItems: "center", gap: 26 }}>
-          {zone === "plus" ? (
+          {minimal ? null : zone === "plus" ? (
             <PlusNavGroups />
           ) : (
             (settings?.nav || []).map(

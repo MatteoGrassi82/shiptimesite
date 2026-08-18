@@ -88,29 +88,37 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
                 style={{ top: "100%", width: 440 }}
               >
                 <div
-                  className="grid grid-cols-2 gap-1 p-3"
                   style={{ background: ds.white, borderRadius: 16, border: `1px solid ${ds.border}`, boxShadow: "0 16px 50px rgba(28,30,61,0.14)" }}
                 >
-                  <div className="p-2">
-                    <Link href="/vs" className="block px-2 py-1.5 text-[11px] font-bold uppercase tracking-widest mb-1 hover:opacity-70" style={{ color: ds.orange, ...sora }}>
-                      Choose ShipTime
-                    </Link>
-                    {versus.map((c) => (
-                      <Link key={c.slug} href={`/vs/${c.slug}`} className="block px-2 py-2 rounded-lg text-sm transition-colors hover:bg-[#F8FAFB]" style={{ color: ds.navy, ...inter }}>
-                        vs. {c.name}
+                  <div className="grid grid-cols-2 gap-1 p-3">
+                    <div className="p-2">
+                      <Link href="/vs" className="block px-2 py-1.5 text-[11px] font-bold uppercase tracking-widest mb-1 hover:opacity-70" style={{ color: ds.orange, ...sora }}>
+                        Choose ShipTime
                       </Link>
-                    ))}
-                  </div>
-                  <div className="p-2" style={{ borderLeft: `1px solid ${ds.border}` }}>
-                    <Link href="/alternative" className="block px-2 py-1.5 text-[11px] font-bold uppercase tracking-widest mb-1 hover:opacity-70" style={{ color: ds.orange, ...sora }}>
-                      Alternatives
-                    </Link>
-                    {versus.map((c) => (
-                      <Link key={c.slug} href={`/alternative/${c.slug}`} className="block px-2 py-2 rounded-lg text-sm transition-colors hover:bg-[#F8FAFB]" style={{ color: ds.navy, ...inter }}>
-                        {c.name} alternative
+                      {versus.map((c) => (
+                        <Link key={c.slug} href={`/vs/${c.slug}`} className="block px-2 py-2 rounded-lg text-sm transition-colors hover:bg-[#F8FAFB]" style={{ color: ds.navy, ...inter }}>
+                          vs. {c.name}
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="p-2" style={{ borderLeft: `1px solid ${ds.border}` }}>
+                      <Link href="/alternative" className="block px-2 py-1.5 text-[11px] font-bold uppercase tracking-widest mb-1 hover:opacity-70" style={{ color: ds.orange, ...sora }}>
+                        Alternatives
                       </Link>
-                    ))}
+                      {versus.map((c) => (
+                        <Link key={c.slug} href={`/alternative/${c.slug}`} className="block px-2 py-2 rounded-lg text-sm transition-colors hover:bg-[#F8FAFB]" style={{ color: ds.navy, ...inter }}>
+                          {c.name} alternative
+                        </Link>
+                      ))}
+                    </div>
                   </div>
+                  <Link
+                    href="/compare"
+                    className="block mx-3 mb-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-center transition-colors hover:opacity-90"
+                    style={{ background: ds.navy, color: ds.white, ...sora }}
+                  >
+                    Compare all four at once
+                  </Link>
                 </div>
               </div>
             )}
@@ -195,6 +203,14 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
                 {c.name} alternative
               </Link>
             ))}
+            <Link
+              href="/compare"
+              onClick={() => setMobileOpen(false)}
+              className="block mt-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-center"
+              style={{ background: ds.navy, color: ds.white, ...sora }}
+            >
+              Compare all four at once
+            </Link>
           </div>
         </div>
       )}

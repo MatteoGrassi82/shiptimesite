@@ -365,6 +365,82 @@ const INCLUDE_PORTRAITS = [
 ];
 for (const p of INCLUDE_PORTRAITS) ASSETS.push({ ...p, size: "1024x1536", portrait: true });
 
+// ── ShipTime Plus v3 — humanity pass (Retell-inspired sections) ─────────────
+// Two photo moments for /plus/v3: the "Designed by people" serif interlude tile
+// and the photo-backed LPS closing card. plus-embedded-team.png (already
+// generated) covers the operators split band.
+ASSETS.push(
+  {
+    name: "plus-people-portrait",
+    size: "1024x1024",
+    raw: true,
+    prompt:
+      "Bright abstract editorial portrait photograph, light and airy: the soft-focus blurred silhouette of " +
+      "a person in profile, no identifiable facial features, against a warm off-white and pale sky-blue " +
+      "gradient background, a gentle glow of warm orange light falling across one side of the figure, " +
+      "dreamy high-key look, light film grain, quiet and human, high-end brand campaign aesthetic. " +
+      "Square composition, figure centered. No text, no logos, no watermarks.",
+  },
+  {
+    name: "plus-cta-operator",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy, in the style of a modern tech company website hero: " +
+      "a logistics operations manager on a phone call standing by a large window in a daylight warehouse " +
+      "office, relaxed and candid, soft warm morning light, muted natural palette with a gentle warm orange " +
+      "accent, light film grain, shallow depth of field, real person, not posed at camera. Subject occupies " +
+      "the LEFT half of the frame; the right half is bright, soft, out-of-focus calm negative space. " +
+      "No text, no logos, no watermarks.",
+  },
+  {
+    name: "plus-ops-team",
+    size: "1024x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: two logistics colleagues leaning over a laptop at a desk " +
+      "by a large window in a modern warehouse office, morning daylight, reviewing a plan together, one " +
+      "pointing at the screen, candid and warm, real people, not posed at camera, soft natural tones with " +
+      "warm highlights, light film grain, shallow depth of field. High-end brand campaign aesthetic. " +
+      "Square composition. No text, no logos, no watermarks.",
+  },
+);
+
+// ── ShipTime Plus v3 — "Who we're for" Shopify-style audience cards ─────────
+// One light editorial photo per customer type from Michael's brief.
+ASSETS.push(
+  {
+    name: "plus-aud-growing",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: a small e-commerce team in a sunlit packing studio " +
+      "working through a surge of orders — one person taping a box, stacks of plain kraft cardboard boxes " +
+      "on a long table, soft morning light, candid motion, warm natural tones, light film grain, shallow " +
+      "depth of field, real people, not posed. No text, no logos, no watermarks.",
+  },
+  {
+    name: "plus-aud-growth",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: a founder and an operations lead walking through a " +
+      "large, mostly empty modern warehouse space they are about to expand into, one holding a tablet, " +
+      "gesturing at the racking, big daylight windows, warm natural tones, light film grain, shallow depth " +
+      "of field, candid, not posed. No text, no logos, no watermarks.",
+  },
+  {
+    name: "plus-aud-profit",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: a business owner at a clean desk by a window reviewing " +
+      "numbers on a laptop, calm and confident, a few parcels stacked neatly beside the desk, soft warm " +
+      "daylight, muted natural palette, light film grain, shallow depth of field, candid, not posed at " +
+      "camera. No text, no logos, no watermarks.",
+  },
+);
+
 // Model + default quality. Default is gpt-image-1 at medium quality to keep
 // costs down (Matteo's call, 2026-07-11). For hero/marketing shots that need
 // better composition control, override per run:
@@ -372,8 +448,9 @@ for (const p of INCLUDE_PORTRAITS) ASSETS.push({ ...p, size: "1024x1536", portra
 const MODEL = process.env.GEN_MODEL || "gpt-image-1";
 const DEFAULT_QUALITY = process.env.GEN_QUALITY || "medium";
 
-async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrait, quality }) {
-  const stylePrefix = portrait ? PORTRAIT_STYLE : iso ? ISO_STYLE : sceneStyle ? SCENE_STYLE : photo ? PHOTO_STYLE : STYLE;
+async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrait, raw, quality }) {
+  // raw: the prompt carries its own complete style — no shared prefix.
+  const stylePrefix = raw ? "" : portrait ? PORTRAIT_STYLE : iso ? ISO_STYLE : sceneStyle ? SCENE_STYLE : photo ? PHOTO_STYLE : STYLE;
   const res = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
     headers: {
