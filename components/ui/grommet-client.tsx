@@ -5,7 +5,7 @@
 // the page has to work for cold mobile traffic: photo-led hero, a form section
 // that saves after step 1, then the scorecard revealed in place.
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Icon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/reveal";
@@ -137,6 +137,37 @@ function verdict(score: number, answered: boolean) {
       body: "Strengthening these areas will reduce costs and improve customer satisfaction." };
   return { label: "Fundamentals first", tone: "#C2521F", bg: "#FCEDE6",
     body: "Focus on logistics fundamentals before scaling your business." };
+}
+
+// Flattens the answers into CRM fields. Nothing about the scorecard reached us
+// before this: the answers lived in localStorage and the visitor's score — the
+// only thing on the page that describes how they actually operate — was
+// invisible to sales. `scorecard_detail` keeps each item's mark so a rep can see
+// *which* of the twelve are failing, not just that the total is low.
+//
+// weakest is withheld until everything is answered: naming a "weakest area" off
+// four answers would just point at whichever group they happened to start with.
+function scoreFields(scores: Record<number, 0 | 1 | 2>) {
+  const answered = Object.keys(scores).length;
+  const total = Object.values(scores).reduce<number>((a, b) => a + b, 0);
+  const areas = GROUPS.map((g) => {
+    const max = g.items.length * MAX_PER_ITEM;
+    const got = g.items.reduce<number>((a, i) => a + (scores[i] ?? 0), 0);
+    return { label: g.label, got, max, pct: got / max };
+  });
+  const weakest =
+    answered === ESSENTIALS.length
+      ? areas.reduce((lo, r) => (r.pct < lo.pct ? r : lo), areas[0])
+      : null;
+
+  return {
+    scorecard_total: String(total),
+    scorecard_answered: String(answered),
+    scorecard_band: verdict(total, answered > 0).label,
+    scorecard_areas: areas.map((a) => `${a.label}: ${a.got}/${a.max}`).join("; "),
+    ...(weakest ? { scorecard_weakest: `${weakest.label} (${weakest.got}/${weakest.max})` } : {}),
+    scorecard_detail: ORDER.map((i, n) => `${n + 1}. [${scores[i] ?? "-"}] ${ESSENTIALS[i]}`).join("\n"),
+  };
 }
 
 // Closing line, his wording verbatim. Sits under the scorecard as the takeaway,
@@ -611,6 +642,53 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
       /* nothing to do — persistence is a convenience, not part of the flow */
     }
   }, [step, scores, email]);
+
+  // Push the score onto the contact. Same email, so the route matches and
+  // PATCHes the record step 1 created — this enriches, it never duplicates.
+  //
+  // Signature-guarded so identical state is never sent twice, which matters
+  // because two separate triggers call it.
+  const lastSent = useRef("");
+  const sendScores = useCallback(() => {
+    const addr = email.trim();
+    if (!addr || Object.keys(scores).length === 0) return;
+    const payload = {
+      email: addr,
+      ...scoreFields(scores),
+      partner_source: "grommet",
+      grommet_offer: variant,
+      lead_source: "grommet-checklist",
+      ...readAttribution(),
+    };
+    const sig = JSON.stringify(payload);
+    if (sig === lastSent.current) return;
+    lastSent.current = sig;
+    // Failure is already handled: submitLead retries and queues, so a score lost
+    // to a bad connection is re-sent on the next visit like any other lead.
+    void submitLead(payload).catch(() => {});
+  }, [email, scores, variant]);
+
+  // Debounced, so scoring twelve items in a row is one or two writes rather than
+  // twelve. Fires on the pause, which is also when they've stopped to think.
+  useEffect(() => {
+    if (step !== "done") return;
+    const id = setTimeout(sendScores, 2500);
+    return () => clearTimeout(id);
+  }, [step, sendScores]);
+
+  // Catches the visitor who scores a few items and leaves before the debounce
+  // fires. `keepalive` on the POST is what makes a send during unload survive.
+  useEffect(() => {
+    if (step !== "done") return;
+    const flush = () => sendScores();
+    const onHide = () => { if (document.visibilityState === "hidden") flush(); };
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", onHide);
+    };
+  }, [step, sendScores]);
 
   // Tags every lead as Grommet-sourced, distinct from other sources, so
   // referrals can be traced back to the partnership.

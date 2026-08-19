@@ -34,9 +34,38 @@ const PROP_KEYS = [
   "utm_term",
   "utm_content",
   "gclid",
+  // Scorecard result. These are the only fields that describe what the lead
+  // actually told us about their operation, so they're the ones sales acts on.
+  // If the matching HubSpot properties don't exist yet the write below strips
+  // them and retries, so listing them early is safe — they start populating the
+  // moment the properties are created, with no code change.
+  "scorecard_total",
+  "scorecard_answered",
+  "scorecard_band",
+  "scorecard_areas",
+  "scorecard_weakest",
+  "scorecard_detail",
 ] as const;
 
 type LeadBody = { email?: string; [key: string]: unknown };
+
+// HubSpot rejects the whole contact if any single property doesn't exist in the
+// portal, which makes one missing property indistinguishable from a lost lead.
+// Given the choice between "no lead" and "lead minus one field", take the field
+// loss: pull the names HubSpot complained about out of its error and retry
+// without them. This also covers the 14 pre-existing properties — before, one
+// rename in HubSpot would have started failing every write on the site.
+function unknownProps(data: unknown, sent: string[]): string[] {
+  const d = data as { message?: string; errors?: { message?: string }[] } | null;
+  const blob = [d?.message, ...(d?.errors ?? []).map((e) => e?.message)]
+    .filter(Boolean)
+    .join(" ");
+  if (!blob) return [];
+  // Word-boundary matched, not a substring test: plain `includes` would let a
+  // complaint about "source" strip utm_source, quietly discarding attribution
+  // that HubSpot never objected to.
+  return sent.filter((k) => new RegExp(`(^|[^a-zA-Z0-9_])${k}([^a-zA-Z0-9_]|$)`).test(blob));
+}
 
 // Everything the lead told us, as one readable block on the contact timeline.
 // Reps shouldn't have to scroll a property list to see the shipping profile.
@@ -72,6 +101,22 @@ function buildNoteBody(b: LeadBody, referer: string | null): string {
     volumes.length
       ? volumes.map(([l, val]) => `${l}: ${val}/mo<br>`).join("")
       : "Volumes: not provided<br>",
+    // The scorecard is the only part of this that says anything about how the
+    // prospect actually operates, so it goes above attribution. It's rendered
+    // from the request body rather than from HubSpot properties, which means it
+    // shows up on the timeline whether or not those properties exist yet.
+    v("scorecard_total")
+      ? [
+          "<br><strong>Logistics Readiness Scorecard</strong><br>",
+          line("Score", `${v("scorecard_total")} / 24 — ${v("scorecard_band") ?? ""}`),
+          line("Items answered", `${v("scorecard_answered") ?? "?"} of 12`),
+          line("By area", v("scorecard_areas")),
+          line("Weakest area", v("scorecard_weakest")),
+          v("scorecard_detail")
+            ? `<br>${String(v("scorecard_detail")).replace(/\n/g, "<br>")}<br>`
+            : "",
+        ].join("")
+      : "",
     "<br><strong>Attribution</strong><br>",
     line("Source / Medium / Campaign", attribution || null),
     line("Partner", partner),
@@ -146,16 +191,30 @@ export async function POST(req: NextRequest) {
     return res;
   };
 
+  const PATCH_URL = `${CONTACTS_URL}/${encodeURIComponent(email)}?idProperty=email`;
+
+  // Create the contact, or update it by email if it already exists (409).
+  const upsert = async () => {
+    let r = await send(CONTACTS_URL, "POST");
+    if (r.status === 409) r = await send(PATCH_URL, "PATCH");
+    return r;
+  };
+
   try {
-    // Create the contact…
-    let res = await send(CONTACTS_URL, "POST");
+    let res = await upsert();
+    let data = await res.json().catch(() => ({}));
 
-    // …and if it already exists (409), update it by email instead.
-    if (res.status === 409) {
-      res = await send(`${CONTACTS_URL}/${encodeURIComponent(email)}?idProperty=email`, "PATCH");
+    // One property HubSpot doesn't recognise fails the entire contact. Drop the
+    // ones it named and try again rather than losing the lead over a field.
+    if (!res.ok && res.status === 400) {
+      const bad = unknownProps(data, Object.keys(properties).filter((k) => k !== "email"));
+      if (bad.length) {
+        console.warn("[lead] dropping properties HubSpot rejected, retrying", { email, bad });
+        for (const k of bad) delete properties[k];
+        res = await upsert();
+        data = await res.json().catch(() => ({}));
+      }
     }
-
-    const data = await res.json().catch(() => ({}));
     // Fail-soft: never block the visitor on a CRM hiccup. Accept the lead but
     // report honestly whether it stored — submitLead reads `saved` and queues the
     // payload for retry when it's false, so this flag is load-bearing now, not
