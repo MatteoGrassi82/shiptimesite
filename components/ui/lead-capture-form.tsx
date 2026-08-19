@@ -318,10 +318,26 @@ async function postLead(payload: Record<string, unknown>): Promise<boolean> {
   return data?.saved !== false;
 }
 
+// Collapses the stampede. A comparison page renders one lead button per CTA —
+// eight on /vs/freightcom — and every one of them calls this on mount in the same
+// commit. Without a guard that's eight identical POSTs per page load: harmless to
+// the CRM (the route updates by email rather than duplicating) but a pointless way
+// to spend a rate limit we're specifically trying not to hit.
+let flushInFlight: Promise<void> | null = null;
+
 // Retries anything queued by an earlier visit. Safe to call on every mount:
-// it's a no-op when the queue is empty, and it never throws.
-export async function flushLeadOutbox() {
-  if (typeof window === "undefined") return;
+// concurrent callers share one pass, it's a no-op when the queue is empty, and
+// it never throws.
+export function flushLeadOutbox(): Promise<void> {
+  if (typeof window === "undefined") return Promise.resolve();
+  if (flushInFlight) return flushInFlight;
+  flushInFlight = runFlush().finally(() => {
+    flushInFlight = null;
+  });
+  return flushInFlight;
+}
+
+async function runFlush(): Promise<void> {
   const queued = readOutbox();
   if (!queued.length) return;
 
