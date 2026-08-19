@@ -3,7 +3,7 @@
 // ShipTime x Grommet co-marketing lander. Grommet links here from three
 // automated emails (pre-launch, post-launch, Product of the Week winner), so
 // the page has to work for cold mobile traffic: photo-led hero, a form section
-// that saves after step 1, then the checklist revealed in place.
+// that saves after step 1, then the scorecard revealed in place.
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -37,46 +37,78 @@ const h2Style: React.CSSProperties = {
 const PARCEL_BANDS = ["0–50", "50–250", "250+"];
 const LTL_BANDS = ["Less than 5", "5–20", "20–100"];
 
-const CHECKLIST: string[] = [
-  "Do you know your average package weight and dimensions, or are you guessing at checkout?",
-  "Have you compared parcel rates from more than one carrier in the last 6 months?",
-  "Do you know the point at which shipping from home stops being cheaper than a 3PL? (Hint: it's earlier than most brands think.)",
-  "If a carrier misses a delivery window in December, do you have a backup plan?",
-  "Do you know your return rate, and what it's costing you in reverse shipping?",
-  "Are you shipping any orders LTL (pallets, bulky items), and if so, do you know that market moves differently than parcel?",
-  "Do you have insurance or declared value coverage on shipments over a certain dollar amount?",
-  "Can you generate a shipping label in under 2 minutes, or is it still a manual, per-order process?",
-  "Do you know your carrier's Q4 cutoff dates for guaranteed delivery?",
-  "If your order volume doubled next month, would your current shipping setup hold up?",
+// ⚠️ DRAFT ITEMS — awaiting Matteo's real list (2026-08-17).
+// The scorecard title, the 0/1/2 scoring, the four bands and the closing insight
+// below are all his exact supplied wording. The twelve ESSENTIALS are NOT: his
+// message carried the frame but the list itself was missing from the paste, so
+// these are adapted from the ten questions that already cleared Michael's and
+// Stephen's review, restated as scoreable statements, plus two new ones (11 and
+// 12) covering the delivery-performance and customer-experience legs that the
+// closing insight names but the original ten never measured.
+// Replace wholesale when the real twelve arrive — nothing else here depends on
+// their wording, only on there being twelve of them.
+const ESSENTIALS: string[] = [
+  "You know your average package weight and dimensions, rather than guessing at checkout.",
+  "You've compared parcel rates from more than one carrier in the last six months.",
+  "You know the point at which shipping from home stops being cheaper than a 3PL.",
+  "You have a backup plan for when a carrier misses a delivery window in peak season.",
+  "You know your return rate, and what it costs you in reverse shipping.",
+  "If you ship pallets or bulky items, you treat LTL freight as its own market rather than an extension of parcel.",
+  "You carry insurance or declared value coverage on shipments above a set dollar amount.",
+  "You can generate a shipping label in under two minutes, rather than one order at a time by hand.",
+  "You know your carriers' Q4 cutoff dates for guaranteed delivery.",
+  "Your current shipping setup would hold up if order volume doubled next month.",
+  "You track on-time delivery performance, so you know which carriers actually deliver on your lanes.",
+  "Your customers get branded tracking and proactive delivery updates, so they aren't chasing you for them.",
 ];
 
-// The unlocked scorecard groups the ten questions into three themes rather than
-// listing them flat — ten near-identical rows read as a wall and gave the eye
-// nowhere to rest. Indices point back into CHECKLIST so tick state survives the
-// gate (which shows 0-2 open and 3-5 blurred), while the rows renumber 1..10 in
-// render order. Reordering CHECKLIST itself would change which questions the
-// gate exposes, so the grouping lives here instead.
+const MAX_PER_ITEM = 2;
+const MAX_SCORE = ESSENTIALS.length * MAX_PER_ITEM; // 24
+
+// "Score each item: 2 = Yes, we've fully addressed this / 1 = Partially in place
+// / 0 = Not yet addressed" — his wording, shortened to fit a segmented control
+// with the full phrasing kept as the accessible label.
+const SCORE_OPTIONS: { value: 0 | 1 | 2; label: string; full: string }[] = [
+  { value: 2, label: "Yes", full: "Yes, we've fully addressed this" },
+  { value: 1, label: "Partly", full: "Partially in place" },
+  { value: 0, label: "Not yet", full: "Not yet addressed" },
+];
+
+// Four themes over twelve items. Indices point back into ESSENTIALS so scores
+// survive the gate (which opens 0-2 and blurs 3-5) while rows renumber 1..12 in
+// render order. Reordering ESSENTIALS itself would change which items the gate
+// exposes, so the grouping lives here instead. The last group exists because the
+// closing insight names delivery performance and customer experience.
 const GROUPS: { label: string; blurb: string; items: number[] }[] = [
   { label: "What it's costing you", blurb: "The gaps that show up on the invoice.", items: [0, 1, 2, 4] },
-  { label: "Where the risk sits", blurb: "The things that only hurt when they go wrong.", items: [3, 6, 8] },
+  { label: "Whether it holds up", blurb: "The things that only hurt when they go wrong.", items: [3, 6, 8] },
   { label: "Whether it scales", blurb: "What breaks when the orders multiply.", items: [5, 7, 9] },
+  { label: "What your customer sees", blurb: "Cost isn't the only thing you're competing on.", items: [10, 11] },
 ];
 
-// Bands match the guidance the page already gave ("7+ means you're in good
-// shape", "most brands get to 3 or 4"), so the verdict can't contradict the copy.
-function verdict(score: number) {
-  if (score === 0)
+// Bands are his exact supplied copy, verbatim, so the page can't drift from the
+// scorecard he hands out elsewhere. Scored out of 24.
+function verdict(score: number, answered: boolean) {
+  if (!answered)
     return { label: "Not scored yet", tone: "#52566C", bg: "#F1F2F5",
-      body: "Tick the boxes you can answer yes to — your score builds as you go." };
-  if (score >= 7)
-    return { label: "You're in good shape", tone: "#2F8F55", bg: "#EAF7EE",
-      body: "Most of these are covered. The ones that aren't are usually where the remaining money leaks." };
-  if (score >= 4)
-    return { label: "A few gaps to close", tone: "#A9701A", bg: "#FDF4E4",
-      body: "Better than average for a brand at this stage. The unticked ones tend to be the cheapest to fix." };
-  return { label: "Plenty of easy wins", tone: "#C2521F", bg: "#FCEDE6",
-    body: "This is where most brands we talk to land. Each unticked box is money or risk you can take off the table fairly quickly." };
+      body: "Score each item as you go — your total builds automatically." };
+  if (score >= 20)
+    return { label: "Excellent foundation", tone: "#2F8F55", bg: "#EAF7EE",
+      body: "Your logistics are well positioned to support growth." };
+  if (score >= 15)
+    return { label: "Good start", tone: "#2F7D8F", bg: "#E6F4F7",
+      body: "Address a few gaps before order volume increases." };
+  if (score >= 10)
+    return { label: "Significant opportunities to improve", tone: "#A9701A", bg: "#FDF4E4",
+      body: "Strengthening these areas will reduce costs and improve customer satisfaction." };
+  return { label: "Fundamentals first", tone: "#C2521F", bg: "#FCEDE6",
+    body: "Focus on logistics fundamentals before scaling your business." };
 }
+
+// Closing line, his wording verbatim. Sits under the scorecard as the takeaway,
+// and is the reason group four exists at all.
+const INSIGHT =
+  "The strongest brands don't optimize for the lowest shipping cost alone. They balance cost, delivery performance and customer experience to build long-term customer loyalty and profitable growth.";
 
 // Amounts confirmed 2026-07-28 (David + Michael): every Grommet signup gets $10
 // automatically via the affiliation-based reward campaign; Product of the Week
@@ -117,7 +149,7 @@ export type OfferVariant = keyof typeof OFFERS;
 //
 // Campaign still differs per variant — winners get 5 x $10 coupons issued
 // manually, so they have to stay distinguishable from the automated reward.
-// Survives a return visit: which questions they ticked, and that they've already
+// Survives a return visit: how they scored each item, and that they've already
 // paid the email toll. Separate from st_attribution, which tracks the campaign.
 const PROGRESS_KEY = "st_grommet_progress";
 
@@ -209,30 +241,88 @@ function LockGlyph({ size = 12 }: { size?: number }) {
   );
 }
 
+// Three-way selector for one item: 2 / 1 / 0, per the scorecard's own scoring
+// key. Rendered as a segmented control rather than a dropdown so the whole scale
+// is visible at a glance — the point of a scorecard is seeing where you sit on
+// each line, which a collapsed select hides.
+//
+// `undefined` is a real state, distinct from 0: "not yet addressed" is an answer
+// worth zero, whereas unanswered means we shouldn't imply a verdict at all.
+function ScoreSelect({
+  value,
+  onPick,
+  compact = false,
+}: {
+  value: 0 | 1 | 2 | undefined;
+  onPick: (v: 0 | 1 | 2) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div style={{ display: "flex", gap: 5, flexShrink: 0 }} role="group">
+      {SCORE_OPTIONS.map((o) => {
+        const on = value === o.value;
+        return (
+          <button
+            key={o.value}
+            type="button"
+            onClick={() => onPick(o.value)}
+            aria-pressed={on}
+            aria-label={o.full}
+            title={o.full}
+            style={{
+              ...sora,
+              fontSize: compact ? 11 : 12,
+              fontWeight: 700,
+              lineHeight: 1,
+              padding: compact ? "7px 9px" : "8px 11px",
+              borderRadius: 8,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              color: on ? ds.white : ds.muted,
+              background: on ? ds.orange : ds.white,
+              border: `1.5px solid ${on ? ds.orange : ds.border}`,
+              transition: "background .15s, border-color .15s, color .15s",
+            }}
+          >
+            {o.label}
+            <span style={{ opacity: on ? 0.75 : 0.5, marginLeft: 4, fontWeight: 700 }}>{o.value}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // The gated asset, rendered as an object rather than a list: page edges stacked
 // behind it, a branded cover, and — the part that does the work — the first
-// three questions actually tickable, scoring live out of 10.
+// three items actually scoreable, totalling live out of 24.
 //
-// Ticking before the form is deliberate. It turns a vague "download a PDF" into
+// Scoring before the form is deliberate. It turns a vague "download a PDF" into
 // a score they've started and can't finish, so the email field arrives after
 // they've invested three answers rather than before, and the gate becomes
-// specific: not "get the checklist" but "7 questions still locked".
+// specific: not "get the scorecard" but "9 items still locked".
 //
-// The blurred rows are the real questions 4–6, so what's behind the gate reads
-// as genuine content; only three of the seven are drawn, which implies the rest
+// The blurred rows are real items 4–6, so what's behind the gate reads as
+// genuine content; only three of the nine are drawn, which implies the rest
 // without turning the card into a wall of filler.
-function ChecklistDoc({ ticked, onToggle }: { ticked: number[]; onToggle: (i: number) => void }) {
-  const open = CHECKLIST.slice(0, 3);
-  const blurred = CHECKLIST.slice(3, 6);
-  const lockedCount = CHECKLIST.length - open.length;
+function ChecklistDoc({
+  scores,
+  onScore,
+}: {
+  scores: Record<number, 0 | 1 | 2>;
+  onScore: (i: number, v: 0 | 1 | 2) => void;
+}) {
+  const open = ESSENTIALS.slice(0, 3);
+  const blurred = ESSENTIALS.slice(3, 6);
+  const lockedCount = ESSENTIALS.length - open.length;
+  const total = Object.values(scores).reduce<number>((a, b) => a + b, 0);
+  const answered = Object.keys(scores).length;
 
   return (
     <div style={{ position: "relative" }}>
-      {/* Page edges peeking out below — a stack of paper under a dark-covered
-          document shows its edges at the bottom, not above the cover, where
-          light slabs on navy just read as a stray grey bar. */}
-      <div aria-hidden style={{ position: "absolute", bottom: -16, left: 28, right: 28, height: 60, borderRadius: 18, background: "rgba(255,255,255,0.22)" }} />
-      <div aria-hidden style={{ position: "absolute", bottom: -8, left: 14, right: 14, height: 60, borderRadius: 19, background: "rgba(255,255,255,0.5)" }} />
+      {/* Page edges peeking out behind the top — reads as a multi-page document */}
+      <div aria-hidden style={{ position: "absolute", top: -15, left: 26, right: 26, height: 60, borderRadius: 18, background: "rgba(255,255,255,0.22)" }} />
+      <div aria-hidden style={{ position: "absolute", top: -7, left: 13, right: 13, height: 60, borderRadius: 19, background: "rgba(255,255,255,0.5)" }} />
 
       <div style={{ position: "relative", background: ds.white, borderRadius: 20, boxShadow: "0 34px 84px rgba(0,0,0,0.46)", overflow: "hidden" }}>
         {/* ── Cover ── */}
@@ -244,65 +334,56 @@ function ChecklistDoc({ ticked, onToggle }: { ticked: number[]; onToggle: (i: nu
                 ShipTime × Grommet
               </p>
               <p style={{ ...sora, margin: 0, fontWeight: 800, fontSize: 16.5, lineHeight: 1.24, color: ds.white, maxWidth: 250 }}>
-                The New Brand Shipping Readiness Checklist
+                The ShipTime Logistics Readiness Scorecard
               </p>
             </div>
             <div style={{ textAlign: "center", flexShrink: 0 }}>
-              <span style={{ ...sora, display: "block", fontSize: 44, fontWeight: 800, lineHeight: 0.88, color: "transparent", WebkitTextStroke: "1.6px rgba(255,255,255,0.5)" }}>10</span>
-              <span style={{ ...sora, fontSize: 8.5, fontWeight: 700, letterSpacing: "0.15em", color: "rgba(255,255,255,0.55)" }}>QUESTIONS</span>
+              <span style={{ ...sora, display: "block", fontSize: 44, fontWeight: 800, lineHeight: 0.88, color: "transparent", WebkitTextStroke: "1.5px rgba(255,255,255,0.34)" }}>
+                {ESSENTIALS.length}
+              </span>
+              <span style={{ ...sora, fontSize: 8.5, fontWeight: 700, letterSpacing: "0.15em", color: "rgba(255,255,255,0.44)" }}>ESSENTIALS</span>
             </div>
           </div>
         </div>
 
-        {/* ── The three open questions ── */}
+        {/* ── The three open items ── */}
         <div style={{ padding: "17px 20px 0" }}>
           <p style={{ ...inter, margin: "0 0 12px", fontSize: 12, fontWeight: 600, color: ds.muted }}>
-            Tick the ones you can already answer yes to.
+            Score each one: <strong style={{ color: ds.navy }}>2</strong> fully addressed,{" "}
+            <strong style={{ color: ds.navy }}>1</strong> partially, <strong style={{ color: ds.navy }}>0</strong> not yet.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {open.map((q, i) => {
-              const on = ticked.includes(i);
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => onToggle(i)}
-                  aria-pressed={on}
-                  style={{
-                    display: "flex", gap: 11, alignItems: "flex-start", textAlign: "left", width: "100%",
-                    background: on ? "#FFF6F2" : ds.white,
-                    border: `1.5px solid ${on ? "rgba(236,90,38,0.45)" : ds.border}`,
-                    borderRadius: 12, padding: "11px 12px", cursor: "pointer",
-                    transition: "background .18s, border-color .18s",
-                  }}
-                >
-                  <span style={{
-                    flexShrink: 0, width: 21, height: 21, borderRadius: 6, marginTop: 1,
-                    background: on ? ds.orange : ds.white,
-                    border: `1.5px solid ${on ? ds.orange : "#D4D6E0"}`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    transition: "background .18s, border-color .18s",
-                  }}>
-                    {on && (
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={ds.white} strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    )}
-                  </span>
-                  <span style={{ ...inter, fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</span>
-                </button>
-              );
-            })}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {open.map((q, i) => (
+              <div
+                key={i}
+                style={{
+                  background: scores[i] !== undefined ? "#FFF8F4" : ds.white,
+                  border: `1.5px solid ${scores[i] !== undefined ? "rgba(236,90,38,0.4)" : ds.border}`,
+                  borderRadius: 12,
+                  padding: "11px 12px",
+                  transition: "background .18s, border-color .18s",
+                }}
+              >
+                <p style={{ ...inter, margin: "0 0 10px", fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</p>
+                <ScoreSelect compact value={scores[i]} onPick={(v) => onScore(i, v)} />
+              </div>
+            ))}
           </div>
         </div>
 
         {/* ── Locked remainder — the seal is a link, so clicking the lock
              jumps to the form that opens it ── */}
-        <div style={{ position: "relative", padding: "8px 20px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ position: "relative", padding: "10px 20px 26px", display: "flex", flexDirection: "column", gap: 10 }}>
           {blurred.map((q, i) => (
-            <div key={i} aria-hidden style={{ display: "flex", gap: 11, alignItems: "flex-start", border: `1.5px solid ${ds.border}`, borderRadius: 12, padding: "11px 12px", filter: "blur(4.5px)", opacity: 0.5, userSelect: "none" }}>
-              <span style={{ flexShrink: 0, width: 21, height: 21, borderRadius: 6, border: "1.5px solid #D4D6E0" }} />
-              <span style={{ ...inter, fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</span>
+            <div key={i} aria-hidden style={{ border: `1.5px solid ${ds.border}`, borderRadius: 12, padding: "11px 12px", filter: "blur(4.5px)", opacity: 0.5, userSelect: "none" }}>
+              <p style={{ ...inter, margin: "0 0 10px", fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</p>
+              <div style={{ display: "flex", gap: 5 }}>
+                {SCORE_OPTIONS.map((o) => (
+                  <span key={o.value} style={{ ...sora, fontSize: 11, fontWeight: 700, padding: "7px 9px", borderRadius: 8, border: `1.5px solid ${ds.border}`, color: ds.muted }}>
+                    {o.label} {o.value}
+                  </span>
+                ))}
+              </div>
             </div>
           ))}
           <a
@@ -325,18 +406,18 @@ function ChecklistDoc({ ticked, onToggle }: { ticked: number[]; onToggle: (i: nu
               Your readiness score
             </span>
             <span style={{ ...sora, fontSize: 15, fontWeight: 800, color: ds.navy }}>
-              {ticked.length}<span style={{ color: "#A6ABBC" }}> / {CHECKLIST.length}</span>
+              {total}<span style={{ color: "#A6ABBC" }}> / {MAX_SCORE}</span>
             </span>
           </div>
-          <div style={{ display: "flex", gap: 4 }} aria-hidden>
-            {Array.from({ length: CHECKLIST.length }).map((_, i) => (
-              <span key={i} style={{ flex: 1, height: 6, borderRadius: 999, background: i < ticked.length ? ds.orange : i < open.length ? "#DCDFE7" : "#EDEFF3", transition: "background .2s" }} />
-            ))}
+          {/* One continuous bar, not a segment per point — 24 segments at this
+              width would be hairlines. */}
+          <div style={{ height: 7, borderRadius: 999, background: "#E4E6EC", overflow: "hidden" }} aria-hidden>
+            <div style={{ width: `${(total / MAX_SCORE) * 100}%`, height: "100%", borderRadius: 999, background: ds.orange, transition: "width .25s" }} />
           </div>
           <p style={{ ...inter, margin: "9px 0 0", fontSize: 11.5, color: ds.muted }}>
-            {ticked.length === 0
-              ? "Tick a question above to start scoring."
-              : `${lockedCount} questions still locked.`}
+            {answered === 0
+              ? "Score an item above to start."
+              : `${lockedCount} items still locked.`}
           </p>
         </div>
       </div>
@@ -349,7 +430,7 @@ const STEPS = [
   // NOTE: deliberately does not promise an email — no send is wired up yet.
   // Once a HubSpot workflow on partner_source=grommet delivers the checklist,
   // change this back to mention the emailed copy.
-  { n: "2", title: "Get your checklist and score", body: "All 10 questions and the scoring guide appear right on this page, so you can work through them straight away.", img: "/generated/grommet-step-2.png" },
+  { n: "2", title: "Score all twelve", body: "All 12 essentials and the scoring bands appear right on this page, so you can work through them straight away.", img: "/generated/grommet-step-2.png" },
   { n: "3", title: "Sign up if it's useful", body: "If shipping turns out to be one of the gaps, create a free account and claim your shipping credit.", img: "/generated/grommet-step-3.png" },
 ];
 
@@ -369,13 +450,15 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
   const [parcel, setParcel] = useState("");
   const [ltl, setLtl] = useState("");
   const [busy, setBusy] = useState(false);
-  // Which of the three open questions they've ticked. Lives here rather than in
-  // ChecklistDoc so the form can reflect the score they've started.
-  const [ticked, setTicked] = useState<number[]>([]);
+  // Score per item, keyed by index into ESSENTIALS. Lives here rather than in
+  // ChecklistDoc so the form can reflect the score they've already started.
+  // A missing key means unanswered, which is deliberately not the same as 0.
+  const [scores, setScores] = useState<Record<number, 0 | 1 | 2>>({});
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  const toggleTick = (i: number) =>
-    setTicked((prev) => (prev.includes(i) ? prev.filter((n) => n !== i) : [...prev, i]));
+  const setScore = (i: number, v: 0 | 1 | 2) => setScores((prev) => ({ ...prev, [i]: v }));
+  const total = Object.values(scores).reduce<number>((a, b) => a + b, 0);
+  const answeredCount = Object.keys(scores).length;
 
   // Grommet's emails carry their own UTMs; store first-touch on arrival so the
   // values survive the two-step transition and aren't lost on submit.
@@ -396,9 +479,27 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
     try {
       const raw = localStorage.getItem(PROGRESS_KEY);
       if (!raw) return;
-      const saved = JSON.parse(raw) as { unlocked?: boolean; ticked?: number[]; email?: string };
-      if (Array.isArray(saved.ticked)) {
-        setTicked(saved.ticked.filter((i) => Number.isInteger(i) && i >= 0 && i < CHECKLIST.length));
+      const saved = JSON.parse(raw) as {
+        unlocked?: boolean;
+        scores?: Record<string, number>;
+        ticked?: number[]; // pre-scorecard shape, still in visitors' browsers
+        email?: string;
+      };
+      const valid = (i: number) => Number.isInteger(i) && i >= 0 && i < ESSENTIALS.length;
+      if (saved.scores && typeof saved.scores === "object") {
+        const next: Record<number, 0 | 1 | 2> = {};
+        for (const [k, v] of Object.entries(saved.scores)) {
+          const i = Number(k);
+          if (valid(i) && (v === 0 || v === 1 || v === 2)) next[i] = v;
+        }
+        setScores(next);
+      } else if (Array.isArray(saved.ticked)) {
+        // Anyone who unlocked under the old binary checklist has a `ticked`
+        // array. A tick meant "yes", which is 2 on the new scale — migrate it
+        // rather than wiping the answers they already gave.
+        const next: Record<number, 0 | 1 | 2> = {};
+        for (const i of saved.ticked) if (valid(i)) next[i] = 2;
+        setScores(next);
       }
       if (saved.email) setEmail(saved.email);
       if (saved.unlocked) setStep("done");
@@ -412,11 +513,11 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
   useEffect(() => {
     if (step !== "done") return;
     try {
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: true, ticked, email }));
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify({ unlocked: true, scores, email }));
     } catch {
       /* nothing to do — persistence is a convenience, not part of the flow */
     }
-  }, [step, ticked, email]);
+  }, [step, scores, email]);
 
   // Tags every lead as Grommet-sourced, distinct from other sources, so
   // referrals can be traced back to the partnership.
@@ -468,7 +569,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
     }
     setBusy(false);
     setStep("done");
-    // Bring the revealed checklist into view rather than leaving them staring
+    // Bring the revealed scorecard into view rather than leaving them staring
     // at a form that vanished.
     requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
@@ -503,7 +604,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
           </div>
           <a href="#get-checklist" className="gm-nav-cta" style={{ ...sora, background: ds.orange, color: ds.white, borderRadius: 999, padding: "9px 18px", fontSize: 13.5, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
             {/* Swapped by CSS, not JS, so there's no hydration flash */}
-            <span className="gm-cta-long">Get the checklist</span>
+            <span className="gm-cta-long">Get the scorecard</span>
             <span className="gm-cta-short">Get it free</span>
           </a>
         </div>
@@ -517,11 +618,12 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
               ShipTime × Grommet
             </span>
             <h1 style={{ ...sora, margin: 0, fontWeight: 800, fontSize: "clamp(2.1rem, 6.4vw, 3.5rem)", lineHeight: 1.06, letterSpacing: "-0.035em", color: ds.navy }}>
-              The New Brand Shipping{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 300, color: "#8B90A8" }}>Readiness</em> Checklist
+              The ShipTime Logistics{" "}
+              <em style={{ fontStyle: "italic", fontWeight: 300, color: "#8B90A8" }}>Readiness</em> Scorecard
             </h1>
             <p style={{ ...inter, margin: "20px 0 0", fontSize: 19, lineHeight: 1.55, color: ds.navy, fontWeight: 500, maxWidth: 480 }}>
-              10 questions to answer before your first order ships.
+              12 essentials every new brand should get right before shipping their
+              first 1,000 orders.
             </p>
             <p style={{ ...inter, margin: "14px 0 0", fontSize: 15.5, lineHeight: 1.7, color: ds.muted, maxWidth: 480 }}>
               Built for Grommet brands getting their first orders out the door. Answer these
@@ -530,7 +632,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center", marginTop: 30 }}>
               <a href="#get-checklist" style={{ ...sora, background: ds.navy, color: ds.white, borderRadius: 999, padding: "15px 30px", fontSize: 15.5, fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 9 }}>
-                Get the free checklist
+                Get the free scorecard
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </a>
               <span style={{ ...inter, fontSize: 13.5, color: ds.muted }}>Free · takes a minute</span>
@@ -555,7 +657,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
             <div style={{ position: "relative", overflow: "hidden", borderRadius: 24, maxWidth: 400, margin: "0 auto", boxShadow: "0 24px 70px rgba(28,30,61,0.2)" }}>
               <Image src="/generated/grommet-hero.png" alt="A brand owner packing their first orders" width={1024} height={1536} style={{ display: "block", width: "100%", height: "auto", objectFit: "cover" }} priority />
             </div>
-            <div style={{ position: "absolute", top: 26, right: -6 }}><PillChip label="10-question checklist" /></div>
+            <div style={{ position: "absolute", top: 26, right: -6 }}><PillChip label="12-point scorecard" /></div>
             <div style={{ position: "absolute", bottom: 76, left: -8 }}><PillChip label="Free to download" accent={ds.lightPink} /></div>
             <div style={{ position: "absolute", bottom: 16, right: 6 }}><PillChip label="Shipping credit inside" accent="#D7E9D4" /></div>
           </div>
@@ -610,7 +712,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                 <div>
                   <span style={{ ...sora, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: "0.13em", textTransform: "uppercase", color: ds.orange, background: "rgba(236,90,38,0.13)", border: "1px solid rgba(236,90,38,0.3)", borderRadius: 999, padding: "7px 14px", marginBottom: 18 }}>
                     <span style={{ width: 6, height: 6, borderRadius: 999, background: ds.orange }} aria-hidden />
-                    Free · 10 questions · 2 min
+                    Free · 12 essentials · 3 min
                   </span>
                   <h2 style={{ ...h2Style, color: ds.white }}>
                     {step === 1 ? (
@@ -625,7 +727,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                   <p style={{ ...inter, margin: "16px 0 0", fontSize: 16, lineHeight: 1.65, color: "rgba(255,255,255,0.76)", maxWidth: 440 }}>
                     {step === 1
                       ? "Tick the questions you can confidently answer yes to. Three are open below — the other seven unlock free, right on this page."
-                      : "Two quick details about your volume and the full checklist unlocks on this page."}
+                      : "Two quick details about your volume and all 12 essentials unlock on this page."}
                   </p>
                   {step === 1 && (
                     <p style={{ ...inter, margin: "18px 0 0", paddingLeft: 14, borderLeft: `2px solid ${ds.orange}`, fontSize: 14.5, lineHeight: 1.6, color: "rgba(255,255,255,0.62)", maxWidth: 400 }}>
@@ -634,7 +736,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                     </p>
                   )}
                   <div className="gm-peek" style={{ marginTop: 34 }}>
-                    <ChecklistDoc ticked={ticked} onToggle={toggleTick} />
+                    <ChecklistDoc scores={scores} onScore={setScore} />
                   </div>
                 </div>
 
@@ -658,14 +760,14 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                         <span key={n} style={{ flex: 1, height: 5, borderRadius: 999, background: n <= (step as number) ? ds.orange : ds.border, transition: "background .25s" }} />
                       ))}
                     </div>
-                    {/* Picks up whatever they ticked in the document, so the ask
+                    {/* Picks up whatever they scored in the document, so the ask
                         lands as "finish what you started" rather than cold. */}
                     <p style={{ ...inter, margin: "13px 0 0", fontSize: 13, lineHeight: 1.55, color: ds.muted }}>
                       {step === 1
-                        ? ticked.length > 0
-                          ? `You've ticked ${ticked.length} so far. Unlock the other ${CHECKLIST.length - 3} to finish your score.`
-                          : "Two steps. The remaining 7 questions unlock on this page."
-                        : "Last step — then the full checklist appears below."}
+                        ? answeredCount > 0
+                          ? `You're at ${total} of ${MAX_SCORE}. Unlock the other ${ESSENTIALS.length - 3} items to finish your score.`
+                          : `Two steps. The remaining ${ESSENTIALS.length - 3} items unlock on this page.`
+                        : "Last step — then the full scorecard appears below."}
                     </p>
                   </div>
 
@@ -703,7 +805,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                       </select>
                     </div>
                     <button type="submit" disabled={busy} style={{ ...btnStyle, opacity: busy ? 0.6 : 1 }}>
-                      {busy ? "Unlocking…" : "Show me the checklist"}
+                      {busy ? "Unlocking…" : "Show me the scorecard"}
                     </button>
                   </form>
                 )}
@@ -713,13 +815,10 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
             </Reveal>
           ) : (
             /* ── Results: a scorecard they keep filling in, not a printout.
-                 The old version dropped the running score the gate had built up
-                 and replaced it with a "Score yourself" box asking them to keep
-                 count in their head — at exactly the point we want them engaged
-                 and heading for the offer. All ten are tickable here, seeded
-                 with whatever they ticked behind the gate. ── */
+                 Carries forward whatever they scored behind the gate, opens all
+                 twelve, and totals out of 24 against the four supplied bands. ── */
             (() => {
-              const v = verdict(ticked.length);
+              const v = verdict(total, answeredCount > 0);
               let n = 0; // display number, sequential across the groups
               return (
                 <div>
@@ -730,79 +829,83 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                     </p>
                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 18, flexWrap: "wrap" }}>
                       <h2 style={{ ...h2Style, margin: 0 }}>
-                        {ticked.length}
-                        <span style={{ color: "#A6ABBC", fontWeight: 700 }}> / {CHECKLIST.length}</span>
+                        {total}
+                        <span style={{ color: "#A6ABBC", fontWeight: 700 }}> / {MAX_SCORE}</span>
                       </h2>
                       <span style={{ ...sora, fontSize: 13, fontWeight: 700, color: v.tone, background: v.bg, borderRadius: 999, padding: "8px 15px" }}>
                         {v.label}
                       </span>
                     </div>
-                    <div style={{ display: "flex", gap: 4, marginTop: 16 }} aria-hidden>
-                      {Array.from({ length: CHECKLIST.length }).map((_, i) => (
-                        <span key={i} style={{ flex: 1, height: 7, borderRadius: 999, background: i < ticked.length ? ds.orange : "#E4E6EC", transition: "background .2s" }} />
-                      ))}
+                    <div style={{ height: 8, borderRadius: 999, background: "#E4E6EC", overflow: "hidden", marginTop: 16 }} aria-hidden>
+                      <div style={{ width: `${(total / MAX_SCORE) * 100}%`, height: "100%", borderRadius: 999, background: ds.orange, transition: "width .25s" }} />
                     </div>
                     <p style={{ ...inter, margin: "16px 0 0", fontSize: 15, lineHeight: 1.65, color: ds.navy }}>
                       {v.body}
                     </p>
                     <p style={{ ...inter, margin: "10px 0 0", fontSize: 13.5, lineHeight: 1.6, color: ds.muted }}>
-                      Most brands we talk to get to 3 or 4. Your answers stay on this
-                      page, so you can bookmark it and pick up where you left off.
+                      {answeredCount < ESSENTIALS.length
+                        ? `${ESSENTIALS.length - answeredCount} of ${ESSENTIALS.length} still to score. `
+                        : "All twelve scored. "}
+                      Your answers stay on this page, so you can bookmark it and pick
+                      up where you left off.
                     </p>
                   </div>
 
-                  {/* ── The ten, grouped ── */}
+                  {/* ── The twelve, grouped ── */}
                   {GROUPS.map((g) => {
-                    const done = g.items.filter((i) => ticked.includes(i)).length;
+                    const groupMax = g.items.length * MAX_PER_ITEM;
+                    const groupScore = g.items.reduce((a, i) => a + (scores[i] ?? 0), 0);
+                    const groupDone = g.items.every((i) => scores[i] !== undefined);
                     return (
                       <div key={g.label} style={{ marginTop: 30 }}>
                         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 4 }}>
                           <h3 style={{ ...sora, margin: 0, fontSize: 17, fontWeight: 800, color: ds.navy, letterSpacing: "-0.01em" }}>
                             {g.label}
                           </h3>
-                          <span style={{ ...sora, fontSize: 12.5, fontWeight: 700, color: done === g.items.length ? "#2F8F55" : ds.muted, whiteSpace: "nowrap" }}>
-                            {done}/{g.items.length}
+                          <span style={{ ...sora, fontSize: 12.5, fontWeight: 700, color: groupDone && groupScore === groupMax ? "#2F8F55" : ds.muted, whiteSpace: "nowrap" }}>
+                            {groupScore}/{groupMax}
                           </span>
                         </div>
                         <p style={{ ...inter, margin: "0 0 14px", fontSize: 13.5, color: ds.muted }}>{g.blurb}</p>
 
                         <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 9 }}>
                           {g.items.map((idx) => {
-                            const on = ticked.includes(idx);
+                            const val = scores[idx];
+                            const set = val !== undefined;
                             n += 1;
                             return (
-                              <li key={idx}>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleTick(idx)}
-                                  aria-pressed={on}
-                                  style={{
-                                    display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left", width: "100%",
-                                    background: on ? "#FFF8F4" : ds.white,
-                                    border: `1.5px solid ${on ? "rgba(236,90,38,0.4)" : ds.border}`,
-                                    borderRadius: 14, padding: "15px 17px", cursor: "pointer",
-                                    boxShadow: on ? "none" : "0 2px 10px rgba(28,30,61,0.04)",
-                                    transition: "background .18s, border-color .18s",
-                                  }}
-                                >
+                              <li
+                                key={idx}
+                                style={{
+                                  background: set ? "#FFF8F4" : ds.white,
+                                  border: `1.5px solid ${set ? "rgba(236,90,38,0.4)" : ds.border}`,
+                                  borderRadius: 14,
+                                  padding: "15px 17px",
+                                  boxShadow: set ? "none" : "0 2px 10px rgba(28,30,61,0.04)",
+                                  transition: "background .18s, border-color .18s",
+                                }}
+                              >
+                                <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
                                   <span style={{
-                                    flexShrink: 0, width: 24, height: 24, borderRadius: 7, marginTop: 1,
-                                    background: on ? ds.orange : ds.white,
-                                    border: `1.5px solid ${on ? ds.orange : "#D4D6E0"}`,
+                                    ...sora, flexShrink: 0, width: 26, height: 26, borderRadius: 8, marginTop: 1,
+                                    background: set ? ds.orange : ds.surface,
+                                    border: `1.5px solid ${set ? ds.orange : ds.border}`,
+                                    color: set ? ds.white : "#9AA0B0",
+                                    fontSize: 12.5, fontWeight: 800,
                                     display: "flex", alignItems: "center", justifyContent: "center",
                                   }}>
-                                    {on ? (
-                                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={ds.white} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                                        <polyline points="20 6 9 17 4 12" />
-                                      </svg>
-                                    ) : (
-                                      <span style={{ ...sora, fontSize: 12, fontWeight: 800, color: "#9AA0B0" }}>{n}</span>
-                                    )}
+                                    {n}
                                   </span>
                                   <span style={{ ...inter, fontSize: 15.5, lineHeight: 1.6, color: ds.navy }}>
-                                    {CHECKLIST[idx]}
+                                    {ESSENTIALS[idx]}
                                   </span>
-                                </button>
+                                </div>
+                                {/* Selector sits under the text and indented to the
+                                    number's gutter, so long items don't squeeze it
+                                    into an unreadable column on a phone. */}
+                                <div className="gm-score-row" style={{ marginTop: 12, marginLeft: 40 }}>
+                                  <ScoreSelect value={val} onPick={(picked) => setScore(idx, picked)} />
+                                </div>
                               </li>
                             );
                           })}
@@ -811,7 +914,20 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                     );
                   })}
 
-                  <div style={{ marginTop: 32 }}>
+                  {/* ── Closing insight, his wording verbatim. Deliberately a
+                       light pull-quote, not navy: the offer box directly below is
+                       navy, and two dark blocks in a row merged into one slab and
+                       cost the offer its emphasis. ── */}
+                  <div style={{ marginTop: 30, padding: "22px 24px", background: ds.surface, border: `1px solid ${ds.border}`, borderLeft: `3px solid ${ds.orange}`, borderRadius: 14 }}>
+                    <p style={{ ...sora, margin: "0 0 10px", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: ds.orange }}>
+                      ShipTime insight
+                    </p>
+                    <p style={{ ...inter, margin: 0, fontSize: 15.5, lineHeight: 1.7, color: ds.navy }}>
+                      {INSIGHT}
+                    </p>
+                  </div>
+
+                  <div style={{ marginTop: 20 }}>
                     <OfferBox variant={variant} rounded email={email} />
                   </div>
                 </div>

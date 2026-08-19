@@ -8,9 +8,9 @@ import GrommetClient, { type OfferVariant } from "@/components/ui/grommet-client
 // noindex: this is a partner-only destination, not something we want competing
 // with our own pages in search.
 export const metadata: Metadata = {
-  title: "The New Brand Shipping Readiness Checklist | ShipTime × Grommet",
+  title: "The ShipTime Logistics Readiness Scorecard | ShipTime × Grommet",
   description:
-    "10 questions to answer before your first order ships. A free checklist from ShipTime for Grommet brands, plus shipping credit when you sign up.",
+    "12 essentials every new brand should get right before shipping their first 1,000 orders. A free scorecard from ShipTime for Grommet brands, plus shipping credit when you sign up.",
   robots: "noindex",
 };
 
