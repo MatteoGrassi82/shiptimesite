@@ -215,6 +215,7 @@ type Win = Window & {
   gtag?: (...args: unknown[]) => void;
   fbq?: (...args: unknown[]) => void;
   dataLayer?: unknown[];
+  _hsq?: unknown[];
 };
 
 export function trackLeadConversion(detail: Record<string, unknown> = {}) {
@@ -250,20 +251,137 @@ export function trackSignupConversion(detail: Record<string, unknown> = {}) {
   } catch { /* ignore */ }
 }
 
-export async function submitLead(payload: Record<string, unknown>) {
-  // Posts to the shared lead sink (/api/lead → HubSpot). In dev, before the
-  // HUBSPOT_* env vars are set, the route accepts and echoes so the form still
-  // works end-to-end.
+// ── Lead durability ──────────────────────────────────────────────────────────
+// The requirement is that a name and email typed into step 1 reaches us even if
+// the visitor never answers another question and never opens an account. Step 1
+// already POSTs to /api/lead, so the happy path was covered — but three things
+// could swallow a lead silently, and all three are handled here.
+//
+//  1. HubSpot rejects the write. /api/lead is deliberately fail-soft: it answers
+//     `{ ok: true, saved: false }` so a CRM outage never blocks a visitor. The
+//     forms only read `ok`, which meant a bad token or a HubSpot incident looked
+//     exactly like success and nothing ever retried. `saved === false` is now
+//     treated as a failure worth re-sending.
+//  2. The network drops, or the visitor closes the tab mid-request. `keepalive`
+//     lets an in-flight POST outlive the page, and anything that still fails is
+//     queued.
+//  3. Nothing recovers a queued lead. Any later page view flushes the queue, so
+//     a lead lost to a flaky café connection lands the next time they visit.
+//
+// Re-sending is safe: the route creates the contact and falls back to PATCH by
+// email on 409, so the same payload twice is an update, not a duplicate.
+const OUTBOX_KEY = "st_lead_outbox";
+const OUTBOX_MAX = 20;
+const OUTBOX_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000; // a fortnight
+
+type OutboxEntry = { payload: Record<string, unknown>; ts: number; tries: number };
+
+function readOutbox(): OutboxEntry[] {
+  try {
+    const raw = localStorage.getItem(OUTBOX_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as OutboxEntry[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeOutbox(entries: OutboxEntry[]) {
+  try {
+    if (!entries.length) localStorage.removeItem(OUTBOX_KEY);
+    else localStorage.setItem(OUTBOX_KEY, JSON.stringify(entries.slice(-OUTBOX_MAX)));
+  } catch {
+    /* private mode — nothing more we can do */
+  }
+}
+
+function enqueueLead(payload: Record<string, unknown>) {
+  const email = String(payload.email ?? "").toLowerCase();
+  const rest = readOutbox().filter((e) => String(e.payload?.email ?? "").toLowerCase() !== email);
+  writeOutbox([...rest, { payload, ts: Date.now(), tries: 0 }]);
+}
+
+// One POST attempt. Returns true only when the CRM confirms it stored the lead.
+async function postLead(payload: Record<string, unknown>): Promise<boolean> {
   const res = await fetch("/api/lead", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(payload),
+    // Survives the page being closed or navigated away from mid-flight.
+    keepalive: true,
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok || data?.ok === false) {
-    throw new Error(data?.error ? String(data.error) : "lead_submit_failed");
+  if (!res.ok || data?.ok === false) return false;
+  // The stub response (HubSpot not configured, i.e. local dev) has no `saved`
+  // field. Treat only an explicit `saved: false` as a failure so dev still works.
+  return data?.saved !== false;
+}
+
+// Retries anything queued by an earlier visit. Safe to call on every mount:
+// it's a no-op when the queue is empty, and it never throws.
+export async function flushLeadOutbox() {
+  if (typeof window === "undefined") return;
+  const queued = readOutbox();
+  if (!queued.length) return;
+
+  const fresh = queued.filter((e) => Date.now() - (e.ts ?? 0) < OUTBOX_MAX_AGE_MS && e.tries < 8);
+  const kept: OutboxEntry[] = [];
+  for (const entry of fresh) {
+    let ok = false;
+    try {
+      ok = await postLead(entry.payload);
+    } catch {
+      ok = false;
+    }
+    if (!ok) kept.push({ ...entry, tries: (entry.tries ?? 0) + 1 });
   }
-  return data;
+  writeOutbox(kept);
+}
+
+// A second, independent route to the same contact record.
+//
+// /api/lead writes server-side with HUBSPOT_TOKEN. If that token is ever revoked
+// or rotated, every one of those writes fails at once — the single point of
+// failure the outbox above can queue against but not replace. HubSpot's own
+// tracking script is already loaded on these pages and carries its own portal
+// auth, so pushing an identify through it reaches HubSpot by a path that shares
+// nothing with the token: different transport, different credential.
+//
+// identify only takes effect on the next tracked hit, hence the trackPageView.
+// Guarded and fail-soft like the rest — this is insurance, never the primary.
+export function identifyLead(fields: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+  if (!fields.email) return;
+  try {
+    const w = window as Win;
+    w._hsq = w._hsq || [];
+    w._hsq.push(["identify", fields]);
+    w._hsq.push(["trackPageView"]);
+  } catch {
+    /* ignore — the server-side write is the primary path */
+  }
+}
+
+export async function submitLead(payload: Record<string, unknown>) {
+  // Posts to the shared lead sink (/api/lead → HubSpot). In dev, before the
+  // HUBSPOT_* env vars are set, the route accepts and echoes so the form still
+  // works end-to-end.
+  //
+  // Two attempts, then the queue. Callers already treat a throw as non-fatal, so
+  // the visitor is never blocked either way — the difference is that the lead is
+  // now recoverable instead of gone.
+  let lastErr: unknown = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      if (await postLead(payload)) return { ok: true, saved: true };
+    } catch (e) {
+      lastErr = e;
+    }
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 600));
+  }
+  enqueueLead(payload);
+  throw new Error(lastErr ? String(lastErr) : "lead_submit_unconfirmed");
 }
 
 function LeadCaptureModal({ source, onClose }: { source: string; onClose: () => void }) {
@@ -295,17 +413,21 @@ function LeadCaptureModal({ source, onClose }: { source: string; onClose: () => 
     if (!email.trim() || !name.trim()) return;
     setStatus("loading");
     const parts = name.trim().split(/\s+/);
+    const lead = {
+      email: email.trim(),
+      firstname: parts[0],
+      ...(parts.length > 1 ? { lastname: parts.slice(1).join(" ") } : {}),
+      ...(company.trim() ? { company: company.trim() } : {}),
+      lead_source: source,
+      ...readAttribution(),
+    };
+    // Independent of the token-based write below — see identifyLead.
+    identifyLead(lead);
     try {
-      await submitLead({
-        email: email.trim(),
-        firstname: parts[0],
-        ...(parts.length > 1 ? { lastname: parts.slice(1).join(" ") } : {}),
-        ...(company.trim() ? { company: company.trim() } : {}),
-        lead_source: source,
-        ...readAttribution(),
-      });
+      await submitLead(lead);
     } catch {
-      /* fail-soft: still advance — we'll retry the write on step 2 */
+      /* fail-soft: still advance. submitLead has retried and queued the payload,
+         so the lead is recoverable on any later page view. */
     }
     // Fire once, here — step 1 is where the lead is actually captured. Firing
     // again on step 2 would double-count the conversion in Ads and GA4.
@@ -597,8 +719,11 @@ export function LeadCaptureButton({
   const [open, setOpen] = useState(false);
   // Runs on first paint of any page with a lead button (nav is always present),
   // so first-touch UTMs are captured on landing before the visitor converts.
+  // Same mount is the natural place to retry unconfirmed leads: this button is
+  // on every page, so any later visit anywhere on the site drains the queue.
   useEffect(() => {
     captureAttribution();
+    void flushLeadOutbox();
   }, []);
   return (
     <>

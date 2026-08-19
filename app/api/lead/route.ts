@@ -132,32 +132,37 @@ export async function POST(req: NextRequest) {
 
   const headers = { authorization: `Bearer ${token}`, "content-type": "application/json" };
 
+  // Rate limits and 5xx are transient by definition — retrying in-request costs
+  // one short wait and saves a lead that would otherwise fall to the client's
+  // outbox and wait for a page view that may never come. 4xx is not retried:
+  // a bad token or malformed property won't fix itself in 400ms.
+  const transient = (status: number) => status === 429 || status >= 500;
+  const send = async (url: string, method: "POST" | "PATCH") => {
+    let res = await fetch(url, { method, headers, body: JSON.stringify({ properties }) });
+    for (let attempt = 0; attempt < 2 && transient(res.status); attempt++) {
+      await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+      res = await fetch(url, { method, headers, body: JSON.stringify({ properties }) });
+    }
+    return res;
+  };
+
   try {
     // Create the contact…
-    let res = await fetch(CONTACTS_URL, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ properties }),
-    });
+    let res = await send(CONTACTS_URL, "POST");
 
     // …and if it already exists (409), update it by email instead.
     if (res.status === 409) {
-      res = await fetch(`${CONTACTS_URL}/${encodeURIComponent(email)}?idProperty=email`, {
-        method: "PATCH",
-        headers,
-        body: JSON.stringify({ properties }),
-      });
+      res = await send(`${CONTACTS_URL}/${encodeURIComponent(email)}?idProperty=email`, "PATCH");
     }
 
     const data = await res.json().catch(() => ({}));
-    // Fail-soft: never block the visitor on a CRM hiccup. Accept the lead and
-    // flag whether it actually saved (surfaced for diagnostics, ignored by the
-    // form UI, which only checks `ok`).
+    // Fail-soft: never block the visitor on a CRM hiccup. Accept the lead but
+    // report honestly whether it stored — submitLead reads `saved` and queues the
+    // payload for retry when it's false, so this flag is load-bearing now, not
+    // just diagnostics.
     if (!res.ok) {
-      // Log it: `saved: false` travels back in the response but the forms only
-      // check `ok`, by design, so a broken token or a HubSpot outage would drop
-      // leads in total silence. This is the only trace, so keep the email in it
-      // — it's the one field that makes the lead recoverable by hand.
+      // Keep the email in the log line: it's what makes a lead recoverable by
+      // hand if every automatic retry is also exhausted.
       console.error("[lead] HubSpot rejected the write", {
         email, status: res.status, response: data,
       });

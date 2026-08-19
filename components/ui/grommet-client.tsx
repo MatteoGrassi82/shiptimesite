@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Icon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/reveal";
-import { captureAttribution, readAttribution, submitLead, trackLeadConversion } from "@/components/ui/lead-capture-form";
+import { captureAttribution, flushLeadOutbox, identifyLead, readAttribution, submitLead, trackLeadConversion } from "@/components/ui/lead-capture-form";
 import { ShipTimeSignupForm } from "@/components/ui/shiptime-signup-form";
 
 const ds = {
@@ -555,6 +555,8 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
   // values survive the two-step transition and aren't lost on submit.
   useEffect(() => {
     captureAttribution();
+    // Retry anything a previous visit couldn't confirm. No-op when empty.
+    void flushLeadOutbox();
   }, []);
 
   // Restore a returning visitor. The scorecard tells them to bookmark the page
@@ -625,16 +627,22 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
     if (!name.trim() || !email.trim()) return;
     setBusy(true);
     const parts = name.trim().split(/\s+/);
+    const lead = {
+      email: email.trim(),
+      firstname: parts[0],
+      ...(parts.length > 1 ? { lastname: parts.slice(1).join(" ") } : {}),
+      ...partnerFields,
+      ...readAttribution(),
+    };
+    // Fire the tracker identify first, and synchronously. It's a queue push
+    // rather than a request, so it costs nothing and it lands even if the CRM
+    // write below fails outright.
+    identifyLead(lead);
     try {
-      await submitLead({
-        email: email.trim(),
-        firstname: parts[0],
-        ...(parts.length > 1 ? { lastname: parts.slice(1).join(" ") } : {}),
-        ...partnerFields,
-        ...readAttribution(),
-      });
+      await submitLead(lead);
     } catch {
-      /* fail-soft: never block the visitor; step 2 writes again */
+      /* fail-soft: never block the visitor. submitLead has already retried and
+         queued the payload for the next page view, so the lead survives. */
     }
     // Fire once, here — step 1 is where the lead is captured. Firing again on
     // step 2 would double-count.
