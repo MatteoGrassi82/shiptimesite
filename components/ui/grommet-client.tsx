@@ -86,6 +86,40 @@ const GROUPS: { label: string; blurb: string; items: number[] }[] = [
   { label: "What your customer sees", blurb: "Cost isn't the only thing you're competing on.", items: [10, 11] },
 ];
 
+// Render order across the groups, so "next unanswered" walks the list the way
+// the visitor sees it rather than the order ESSENTIALS happens to be declared in.
+const ORDER = GROUPS.flatMap((g) => g.items);
+
+// Eases the displayed total toward the real one. A score that snaps from 14 to
+// 16 reads as a re-render; one that travels reads as something being tallied,
+// which is the whole feeling a scorecard is meant to have.
+function useCountUp(value: number, ms = 420) {
+  const [shown, setShown] = useState(value);
+  const shownRef = useRef(value);
+  useEffect(() => {
+    shownRef.current = shown;
+  }, [shown]);
+  useEffect(() => {
+    const from = shownRef.current;
+    if (from === value) return;
+    // Respect a reduced-motion preference: jump straight there.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setShown(value);
+      return;
+    }
+    const start = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / ms);
+      setShown(Math.round(from + (value - from) * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value, ms]);
+  return shown;
+}
+
 // Bands are his exact supplied copy, verbatim, so the page can't drift from the
 // scorecard he hands out elsewhere. Scored out of 24.
 function verdict(score: number, answered: boolean) {
@@ -257,14 +291,32 @@ function ScoreSelect({
   onPick: (v: 0 | 1 | 2) => void;
   compact?: boolean;
 }) {
+  const btns = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Left/right arrows move along the scale and pick as they go, so the whole
+  // card is answerable from the keyboard without tabbing through 36 buttons.
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const at = SCORE_OPTIONS.findIndex((o) => o.value === value);
+    const cur = at < 0 ? 0 : at;
+    const next = e.key === "ArrowRight"
+      ? Math.min(SCORE_OPTIONS.length - 1, cur + 1)
+      : Math.max(0, cur - 1);
+    onPick(SCORE_OPTIONS[next].value);
+    btns.current[next]?.focus();
+  };
+
   return (
-    <div style={{ display: "flex", gap: 5, flexShrink: 0 }} role="group">
-      {SCORE_OPTIONS.map((o) => {
+    <div style={{ display: "flex", gap: 5, flexShrink: 0 }} role="group" onKeyDown={onKeyDown}>
+      {SCORE_OPTIONS.map((o, oi) => {
         const on = value === o.value;
         return (
           <button
             key={o.value}
+            ref={(el) => { btns.current[oi] = el; }}
             type="button"
+            className="gm-score-btn"
             onClick={() => onPick(o.value)}
             aria-pressed={on}
             aria-label={o.full}
@@ -459,6 +511,45 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
   const setScore = (i: number, v: 0 | 1 | 2) => setScores((prev) => ({ ...prev, [i]: v }));
   const total = Object.values(scores).reduce<number>((a, b) => a + b, 0);
   const answeredCount = Object.keys(scores).length;
+  const allScored = answeredCount === ESSENTIALS.length;
+  const shownTotal = useCountUp(total);
+
+  // The first item they haven't scored, in the order they see them.
+  const nextUnanswered = ORDER.find((i) => scores[i] === undefined);
+  const jumpToNext = () => {
+    if (nextUnanswered === undefined) return;
+    document.getElementById(`gm-item-${nextUnanswered}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  // Scoring twelve items scrolls the running total off screen, so the number
+  // they're building is invisible exactly while they build it. This bar docks it
+  // to the bottom for the stretch between the header leaving view and the offer
+  // arriving — never over the offer, which is the one thing that must not be
+  // covered.
+  const scoreHeaderRef = useRef<HTMLDivElement>(null);
+  const offerRef = useRef<HTMLDivElement>(null);
+  const [showDock, setShowDock] = useState(false);
+  useEffect(() => {
+    if (step !== "done") {
+      setShowDock(false);
+      return;
+    }
+    const header = scoreHeaderRef.current;
+    const offer = offerRef.current;
+    if (!header) return;
+    let headerVisible = true;
+    let offerVisible = false;
+    const update = () => setShowDock(!headerVisible && !offerVisible);
+    const obs: IntersectionObserver[] = [];
+    const watch = (el: Element, set: (v: boolean) => void) => {
+      const o = new IntersectionObserver(([entry]) => { set(entry.isIntersecting); update(); });
+      o.observe(el);
+      obs.push(o);
+    };
+    watch(header, (v) => { headerVisible = v; });
+    if (offer) watch(offer, (v) => { offerVisible = v; });
+    return () => obs.forEach((o) => o.disconnect());
+  }, [step]);
 
   // Grommet's emails carry their own UTMs; store first-touch on arrival so the
   // values survive the two-step transition and aren't lost on submit.
@@ -602,10 +693,21 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
             <span aria-hidden style={{ ...inter, fontSize: 15, lineHeight: 1, color: "#B9BCC9" }}>×</span>
             <Image className="gm-brand-gm" src="/grommet-logo.svg" alt="Grommet" width={128} height={18} style={{ height: "clamp(11px, 3vw, 14px)", width: "auto" }} />
           </div>
-          <a href="#get-checklist" className="gm-nav-cta" style={{ ...sora, background: ds.orange, color: ds.white, borderRadius: 999, padding: "9px 18px", fontSize: 13.5, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
-            {/* Swapped by CSS, not JS, so there's no hydration flash */}
-            <span className="gm-cta-long">Get the scorecard</span>
-            <span className="gm-cta-short">Get it free</span>
+          {/* Once the scorecard is unlocked, "Get the scorecard" is stale — they
+              have it. Point the header at the offer instead. */}
+          <a href={step === "done" ? "#create-account" : "#get-checklist"} className="gm-nav-cta" style={{ ...sora, background: ds.orange, color: ds.white, borderRadius: 999, padding: "9px 18px", fontSize: 13.5, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
+            {step === "done" ? (
+              <>
+                {/* Swapped by CSS, not JS, so there's no hydration flash */}
+                <span className="gm-cta-long">Claim your credit</span>
+                <span className="gm-cta-short">Claim it</span>
+              </>
+            ) : (
+              <>
+                <span className="gm-cta-long">Get the scorecard</span>
+                <span className="gm-cta-short">Get it free</span>
+              </>
+            )}
           </a>
         </div>
       </header>
@@ -823,13 +925,24 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
               return (
                 <div>
                   {/* ── Scorecard ── */}
-                  <div style={{ background: ds.white, border: `1px solid ${ds.border}`, borderRadius: 20, padding: "26px 26px 22px", boxShadow: "0 8px 30px rgba(28,30,61,0.07)" }}>
-                    <p style={{ ...sora, margin: "0 0 14px", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: ds.orange }}>
-                      Your scorecard
-                    </p>
+                  <div ref={scoreHeaderRef} style={{ background: ds.white, border: `1px solid ${ds.border}`, borderRadius: 20, padding: "26px 26px 22px", boxShadow: "0 8px 30px rgba(28,30,61,0.07)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14 }}>
+                      <p style={{ ...sora, margin: 0, fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: ds.orange }}>
+                        Your scorecard
+                      </p>
+                      {answeredCount > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setScores({})}
+                          style={{ ...inter, background: "none", border: 0, padding: 0, cursor: "pointer", fontSize: 12.5, fontWeight: 600, color: ds.muted, textDecoration: "underline", textUnderlineOffset: 3 }}
+                        >
+                          Start over
+                        </button>
+                      )}
+                    </div>
                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 18, flexWrap: "wrap" }}>
                       <h2 style={{ ...h2Style, margin: 0 }}>
-                        {total}
+                        {shownTotal}
                         <span style={{ color: "#A6ABBC", fontWeight: 700 }}> / {MAX_SCORE}</span>
                       </h2>
                       <span style={{ ...sora, fontSize: 13, fontWeight: 700, color: v.tone, background: v.bg, borderRadius: 999, padding: "8px 15px" }}>
@@ -862,7 +975,14 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                           <h3 style={{ ...sora, margin: 0, fontSize: 17, fontWeight: 800, color: ds.navy, letterSpacing: "-0.01em" }}>
                             {g.label}
                           </h3>
-                          <span style={{ ...sora, fontSize: 12.5, fontWeight: 700, color: groupDone && groupScore === groupMax ? "#2F8F55" : ds.muted, whiteSpace: "nowrap" }}>
+                          <span style={{ ...sora, display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, color: groupDone && groupScore === groupMax ? "#2F8F55" : ds.muted, whiteSpace: "nowrap" }}>
+                            {/* A check means "all answered", not "all correct" —
+                                a group scored straight zeroes is complete too. */}
+                            {groupDone && (
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            )}
                             {groupScore}/{groupMax}
                           </span>
                         </div>
@@ -876,7 +996,10 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                             return (
                               <li
                                 key={idx}
+                                id={`gm-item-${idx}`}
                                 style={{
+                                  scrollMarginTop: 90,
+                                  scrollMarginBottom: 110,
                                   background: set ? "#FFF8F4" : ds.white,
                                   border: `1.5px solid ${set ? "rgba(236,90,38,0.4)" : ds.border}`,
                                   borderRadius: 14,
@@ -914,6 +1037,45 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                     );
                   })}
 
+                  {/* ── By-area breakdown, once every item is scored. Holding it
+                       back until then is deliberate: a "weakest area" verdict
+                       drawn from four answers would be noise, and it gives the
+                       twelfth pick a payoff instead of just filling a bar. ── */}
+                  {allScored && (() => {
+                    const rows = GROUPS.map((g) => {
+                      const max = g.items.length * MAX_PER_ITEM;
+                      const got = g.items.reduce<number>((a, i) => a + (scores[i] ?? 0), 0);
+                      return { label: g.label, got, max, pct: got / max };
+                    });
+                    const weakest = rows.reduce((lo, r) => (r.pct < lo.pct ? r : lo), rows[0]);
+                    return (
+                      <div style={{ marginTop: 30, background: ds.white, border: `1px solid ${ds.border}`, borderRadius: 18, padding: "24px 24px 20px", boxShadow: "0 8px 30px rgba(28,30,61,0.06)" }}>
+                        <p style={{ ...sora, margin: "0 0 18px", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: ds.orange }}>
+                          Where you stand by area
+                        </p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                          {rows.map((r) => (
+                            <div key={r.label}>
+                              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 6 }}>
+                                <span style={{ ...inter, fontSize: 14, fontWeight: 600, color: ds.navy }}>{r.label}</span>
+                                <span style={{ ...sora, fontSize: 13, fontWeight: 800, color: r === weakest ? ds.orange : ds.muted, whiteSpace: "nowrap" }}>
+                                  {r.got}/{r.max}
+                                </span>
+                              </div>
+                              <div style={{ height: 6, borderRadius: 999, background: "#EDEFF3", overflow: "hidden" }} aria-hidden>
+                                <div style={{ width: `${r.pct * 100}%`, height: "100%", borderRadius: 999, background: r === weakest ? ds.orange : "#C3C8D4", transition: "width .3s" }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <p style={{ ...inter, margin: "20px 0 0", fontSize: 14.5, lineHeight: 1.65, color: ds.navy }}>
+                          Your weakest area is <strong>{weakest.label.toLowerCase()}</strong>, at{" "}
+                          {weakest.got} of {weakest.max}. That&rsquo;s the one worth fixing first.
+                        </p>
+                      </div>
+                    );
+                  })()}
+
                   {/* ── Closing insight, his wording verbatim. Deliberately a
                        light pull-quote, not navy: the offer box directly below is
                        navy, and two dark blocks in a row merged into one slab and
@@ -927,7 +1089,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                     </p>
                   </div>
 
-                  <div style={{ marginTop: 20 }}>
+                  <div ref={offerRef} style={{ marginTop: 20 }}>
                     <OfferBox variant={variant} rounded email={email} />
                   </div>
                 </div>
@@ -1041,6 +1203,71 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
 
       {/* Single stacked column on mobile (most of this traffic is email clicks);
           two columns and a 3-up step row from the breakpoints below. */}
+      {/* ── Docked running score ──────────────────────────────────────────────
+           Only while the scorecard header is out of view and the offer hasn't
+           arrived yet, so it fills the stretch where the total would otherwise
+           be invisible. Rendered outside the section (not position: sticky
+           inside it) because the section's own transforms would trap a fixed
+           child, the same containing-block trap the nav's backdrop-filter set
+           for the lead modal. */}
+      {step === "done" && (
+        <div
+          aria-live="polite"
+          style={{
+            position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 40,
+            display: "flex", justifyContent: "center",
+            padding: "0 14px calc(14px + env(safe-area-inset-bottom, 0px))",
+            pointerEvents: showDock ? "auto" : "none",
+            opacity: showDock ? 1 : 0,
+            transform: showDock ? "translateY(0)" : "translateY(115%)",
+            transition: "opacity .22s ease, transform .28s cubic-bezier(.22,1,.36,1)",
+          }}
+        >
+          <div style={{
+            display: "flex", alignItems: "center", gap: 14, flexWrap: "nowrap",
+            maxWidth: 720, width: "100%",
+            background: "rgba(22,24,47,0.97)", backdropFilter: "blur(8px)",
+            borderRadius: 16, padding: "11px 12px 11px 18px",
+            boxShadow: "0 14px 40px rgba(0,0,0,0.32)",
+          }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                <span style={{ ...sora, fontSize: 19, fontWeight: 800, color: ds.white, lineHeight: 1 }}>
+                  {shownTotal}
+                  <span style={{ color: "rgba(255,255,255,0.45)" }}> / {MAX_SCORE}</span>
+                </span>
+                <span className="gm-dock-band" style={{ ...sora, fontSize: 11.5, fontWeight: 700, color: verdict(total, answeredCount > 0).tone, background: verdict(total, answeredCount > 0).bg, borderRadius: 999, padding: "4px 9px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {verdict(total, answeredCount > 0).label}
+                </span>
+              </div>
+              <div style={{ height: 4, borderRadius: 999, background: "rgba(255,255,255,0.16)", overflow: "hidden", marginTop: 8 }} aria-hidden>
+                <div style={{ width: `${(total / MAX_SCORE) * 100}%`, height: "100%", borderRadius: 999, background: ds.orange, transition: "width .25s" }} />
+              </div>
+            </div>
+
+            {nextUnanswered !== undefined ? (
+              <button
+                type="button"
+                onClick={jumpToNext}
+                style={{ ...sora, flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 7, background: ds.orange, color: ds.white, border: 0, borderRadius: 999, padding: "10px 15px", fontSize: 13, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}
+              >
+                <span className="gm-dock-full">{ESSENTIALS.length - answeredCount} left</span>
+                <span className="gm-dock-short">{ESSENTIALS.length - answeredCount}</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" />
+                </svg>
+              </button>
+            ) : (
+              <a
+                href="#create-account"
+                style={{ ...sora, flexShrink: 0, background: ds.orange, color: ds.white, borderRadius: 999, padding: "10px 16px", fontSize: 13, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}
+              >
+                Claim your credit
+              </a>
+            )}
+          </div>
+        </div>
+      )}
       <style>{`
         @media (min-width: 760px) {
           .gm-3col { grid-template-columns: repeat(3, 1fr) !important; }
@@ -1077,6 +1304,19 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
           .gm-brand-st { height: 24px !important; }
           .gm-brand-gm { height: 11px !important; }
           .gm-nav-cta  { padding: 8px 14px !important; font-size: 12.5px !important; }
+        }
+        /* Focus ring for the score buttons — the card is fully keyboard-driven
+           (arrows move along the scale), so focus has to be visible. */
+        .gm-score-btn:focus-visible {
+          outline: 2px solid #EC5A26;
+          outline-offset: 2px;
+        }
+        /* The docked bar's band label is the first thing to give up room. */
+        .gm-dock-short { display: none; }
+        @media (max-width: 460px) {
+          .gm-dock-band  { max-width: 110px; }
+          .gm-dock-full  { display: none; }
+          .gm-dock-short { display: inline; }
         }
         @media (max-width: 380px) {
           .gm-brand     { gap: 6px !important; }
