@@ -81,7 +81,7 @@ const ESSENTIALS: { title: string; body: string }[] = [
   { title: "Review shipping performance monthly",
     body: "Monitor shipping costs, delivery performance and customer issues." },
   { title: "Audit your shipping invoices",
-    body: "Have a process in place to audit shipping invoices — there can be errors on these bills that will cost you money." },
+    body: "Have a process in place to audit shipping invoices - there can be errors on these bills that will cost you money." },
   { title: "Establish simple shipping policies early",
     body: "Clearly define shipping rates, processing times and policies for damaged or lost shipments." },
   { title: "Choose a provider that automates and rate shops",
@@ -194,7 +194,7 @@ function scoreFields(scores: Record<number, 0 | 1 | 2>) {
     scorecard_band: verdict(total, answered > 0).label,
     scorecard_areas: areas.map((a) => `${a.label}: ${a.got}/${a.max}`).join("; "),
     ...(weakest ? { scorecard_weakest: `${weakest.label} (${weakest.got}/${weakest.max})` } : {}),
-    scorecard_detail: ORDER.map((i, n) => `${n + 1}. [${scores[i] ?? "-"}] ${ESSENTIALS[i].title}`).join("\n"),
+    scorecard_detail: ORDER.map((i) => `${i + 1}. [${scores[i] ?? "-"}] ${ESSENTIALS[i].title}`).join("\n"),
   };
 }
 
@@ -1037,7 +1037,6 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                  twelve, and totals out of 24 against the four supplied bands. ── */
             (() => {
               const v = verdict(total, answeredCount > 0);
-              let n = 0; // display number, sequential across the groups
               return (
                 <div>
                   {/* ── Scorecard ── */}
@@ -1108,7 +1107,12 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                           {g.items.map((idx) => {
                             const val = scores[idx];
                             const set = val !== undefined;
-                            n += 1;
+                            // His document's own numbering, not a display
+                            // sequence. Regrouping onto the three pillars means
+                            // these no longer run 1..12 down the page — that's
+                            // deliberate: the numbers have to cross-reference his
+                            // PDF, which people will have open beside this.
+                            const num = idx + 1;
                             return (
                               <li
                                 key={idx}
@@ -1133,7 +1137,7 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                                     fontSize: 12.5, fontWeight: 800,
                                     display: "flex", alignItems: "center", justifyContent: "center",
                                   }}>
-                                    {n}
+                                    {num}
                                   </span>
                                   <span>
                                     <span style={{ ...sora, display: "block", fontSize: 15.5, fontWeight: 800, lineHeight: 1.35, color: ds.navy, letterSpacing: "-0.01em" }}>
