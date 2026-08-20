@@ -41,6 +41,18 @@ const LTL_BANDS = ["Less than 5", "5–20", "20–100"];
 // for New Brands.docx" (emailed 2026-08-19, Spark 180921). Kept in his document
 // order so his numbering still lines up; GROUPS below controls display order.
 //
+// Provenance of what these REPLACED, since two earlier versions of this comment
+// got it wrong and the question was asked directly:
+//  • The ten questions here from 2026-07-29 to 2026-08-19 came verbatim from
+//    Matteo's build brief of 2026-07-28, under the heading "Full checklist copy
+//    — The New Brand Shipping Readiness Checklist". Not written here, and never
+//    reviewed by Michael or Stephen — that review covered the /vs and
+//    /alternative comparison pages.
+//  • Only two items were ever authored here: on-time delivery tracking and
+//    branded tracking / proactive updates, added 2026-08-19 because Michael's
+//    closing insight names delivery performance and customer experience and the
+//    original ten measured neither. Both are now gone, superseded by his list.
+//
 // Two normalisations, both presentational and both flagged back to him:
 //  • Items 10 and 12 arrived as a single sentence with no bold lead-in, unlike
 //    1-9 and 11. Titles added so every row renders the same shape; his sentence
