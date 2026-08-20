@@ -37,40 +37,40 @@ const h2Style: React.CSSProperties = {
 const PARCEL_BANDS = ["0–50", "50–250", "250+"];
 const LTL_BANDS = ["Less than 5", "5–20", "20–100"];
 
-// ⚠️ DRAFT ITEMS — not Michael's list. Awaiting his real twelve (asked 2026-08-20).
+// The twelve, verbatim from Michael's "ShipTime - Logistics Readiness Scorecard
+// for New Brands.docx" (emailed 2026-08-19, Spark 180921). Kept in his document
+// order so his numbering still lines up; GROUPS below controls display order.
 //
-// Provenance, precisely, because it was asked and an earlier version of this
-// comment got it wrong:
-//  • The title, the 2/1/0 scoring key, the four score bands and the closing
-//    insight are Michael's supplied wording, verbatim.
-//  • The twelve items are NOT. His message carried the frame but the list itself
-//    was missing from the paste, so items 1-10 are restatements of the ten
-//    questions written here on 2026-07-29 (6daa20d) for the original checklist,
-//    built from the Grommet brief.
-//  • Items 11 and 12 were written 2026-08-19, because the closing insight names
-//    cost, delivery performance AND customer experience, and the original ten
-//    measured only the first two.
-//
-// An earlier version of this comment claimed the ten "cleared Michael's and
-// Stephen's review". They did not. That review covered the /vs and /alternative
-// comparison pages — competitor claims, support wording, Purolator Ground — and
-// this checklist was never part of it.
-//
-// Replace wholesale when the real twelve arrive: nothing else depends on their
-// wording, only on there being twelve of them.
-const ESSENTIALS: string[] = [
-  "You know your average package weight and dimensions, rather than guessing at checkout.",
-  "You've compared parcel rates from more than one carrier in the last six months.",
-  "You know the point at which shipping from home stops being cheaper than a 3PL.",
-  "You have a backup plan for when a carrier misses a delivery window in peak season.",
-  "You know your return rate, and what it costs you in reverse shipping.",
-  "If you ship pallets or bulky items, you treat LTL freight as its own market rather than an extension of parcel.",
-  "You carry insurance or declared value coverage on shipments above a set dollar amount.",
-  "You can generate a shipping label in under two minutes, rather than one order at a time by hand.",
-  "You know your carriers' Q4 cutoff dates for guaranteed delivery.",
-  "Your current shipping setup would hold up if order volume doubled next month.",
-  "You track on-time delivery performance, so you know which carriers actually deliver on your lanes.",
-  "Your customers get branded tracking and proactive delivery updates, so they aren't chasing you for them.",
+// Two normalisations, both presentational and both flagged back to him:
+//  • Items 10 and 12 arrived as a single sentence with no bold lead-in, unlike
+//    1-9 and 11. Titles added so every row renders the same shape; his sentence
+//    is preserved intact as the body.
+//  • Nothing else is reworded.
+const ESSENTIALS: { title: string; body: string }[] = [
+  { title: "Know your product dimensions & weight",
+    body: "Measure and record the exact weight and dimensions of every product and its packaged form." },
+  { title: "Choose packaging that protects without adding cost",
+    body: "Use the smallest box or mailer that safely protects your products." },
+  { title: "Compare carrier rates before every shipment",
+    body: "Compare rates and transit times across multiple carriers." },
+  { title: "Understand your shipping costs",
+    body: "Know your true shipping cost per order, including packaging and fulfillment." },
+  { title: "Set clear customer delivery expectations",
+    body: "Communicate accurate delivery expectations before and after purchase." },
+  { title: "Provide shipment tracking",
+    body: "Automatically send tracking updates to customers." },
+  { title: "Create a simple returns process",
+    body: "Have a clear, customer-friendly returns process." },
+  { title: "Automate wherever possible",
+    body: "Connect your store to your shipping platform to reduce manual work." },
+  { title: "Review shipping performance monthly",
+    body: "Monitor shipping costs, delivery performance and customer issues." },
+  { title: "Audit your shipping invoices",
+    body: "Have a process in place to audit shipping invoices — there can be errors on these bills that will cost you money." },
+  { title: "Establish simple shipping policies early",
+    body: "Clearly define shipping rates, processing times and policies for damaged or lost shipments." },
+  { title: "Choose a provider that automates and rate shops",
+    body: "Select a provider that can help you automate the shipping process and rate shop across multiple courier options." },
 ];
 
 const MAX_PER_ITEM = 2;
@@ -85,16 +85,18 @@ const SCORE_OPTIONS: { value: 0 | 1 | 2; label: string; full: string }[] = [
   { value: 0, label: "Not yet", full: "Not yet addressed" },
 ];
 
-// Four themes over twelve items. Indices point back into ESSENTIALS so scores
-// survive the gate (which opens 0-2 and blurs 3-5) while rows renumber 1..12 in
-// render order. Reordering ESSENTIALS itself would change which items the gate
-// exposes, so the grouping lives here instead. The last group exists because the
-// closing insight names delivery performance and customer experience.
+// Michael's note with the list: "needs to be re-organized in a better order".
+// These are his own three pillars, lifted from the Logistics Performance
+// Framework doc he sent the day before — Logistics Costs, Operational Excellence,
+// Customer Experience — so the two artifacts describe the business the same way
+// and the sub-scores here map onto his CPS/OES/CES.
+//
+// Indices point back into ESSENTIALS, so his numbering survives while the rows
+// renumber 1..12 in display order.
 const GROUPS: { label: string; blurb: string; items: number[] }[] = [
-  { label: "What it's costing you", blurb: "The gaps that show up on the invoice.", items: [0, 1, 2, 4] },
-  { label: "Whether it holds up", blurb: "The things that only hurt when they go wrong.", items: [3, 6, 8] },
-  { label: "Whether it scales", blurb: "What breaks when the orders multiply.", items: [5, 7, 9] },
-  { label: "What your customer sees", blurb: "Cost isn't the only thing you're competing on.", items: [10, 11] },
+  { label: "Logistics costs", blurb: "What each parcel actually costs you, and where it leaks.", items: [0, 1, 2, 3, 9] },
+  { label: "Operational excellence", blurb: "How much of this runs without you touching it.", items: [7, 8, 10, 11] },
+  { label: "Customer experience", blurb: "What the buyer sees after they hit pay.", items: [4, 5, 6] },
 ];
 
 // Render order across the groups, so "next unanswered" walks the list the way
@@ -177,7 +179,7 @@ function scoreFields(scores: Record<number, 0 | 1 | 2>) {
     scorecard_band: verdict(total, answered > 0).label,
     scorecard_areas: areas.map((a) => `${a.label}: ${a.got}/${a.max}`).join("; "),
     ...(weakest ? { scorecard_weakest: `${weakest.label} (${weakest.got}/${weakest.max})` } : {}),
-    scorecard_detail: ORDER.map((i, n) => `${n + 1}. [${scores[i] ?? "-"}] ${ESSENTIALS[i]}`).join("\n"),
+    scorecard_detail: ORDER.map((i, n) => `${n + 1}. [${scores[i] ?? "-"}] ${ESSENTIALS[i].title}`).join("\n"),
   };
 }
 
@@ -458,7 +460,8 @@ function ChecklistDoc({
                   transition: "background .18s, border-color .18s",
                 }}
               >
-                <p style={{ ...inter, margin: "0 0 10px", fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</p>
+                <p style={{ ...sora, margin: "0 0 3px", fontSize: 13, fontWeight: 700, lineHeight: 1.35, color: ds.navy }}>{q.title}</p>
+                <p style={{ ...inter, margin: "0 0 10px", fontSize: 12.5, lineHeight: 1.5, color: ds.muted }}>{q.body}</p>
                 <ScoreSelect compact value={scores[i]} onPick={(v) => onScore(i, v)} />
               </div>
             ))}
@@ -470,7 +473,8 @@ function ChecklistDoc({
         <div style={{ position: "relative", padding: "10px 20px 26px", display: "flex", flexDirection: "column", gap: 10 }}>
           {blurred.map((q, i) => (
             <div key={i} aria-hidden style={{ border: `1.5px solid ${ds.border}`, borderRadius: 12, padding: "11px 12px", filter: "blur(4.5px)", opacity: 0.5, userSelect: "none" }}>
-              <p style={{ ...inter, margin: "0 0 10px", fontSize: 13, lineHeight: 1.5, color: ds.navy }}>{q}</p>
+              <p style={{ ...sora, margin: "0 0 3px", fontSize: 13, fontWeight: 700, lineHeight: 1.35, color: ds.navy }}>{q.title}</p>
+              <p style={{ ...inter, margin: "0 0 10px", fontSize: 12.5, lineHeight: 1.5, color: ds.muted }}>{q.body}</p>
               <div style={{ display: "flex", gap: 5 }}>
                 {SCORE_OPTIONS.map((o) => (
                   <span key={o.value} style={{ ...sora, fontSize: 11, fontWeight: 700, padding: "7px 9px", borderRadius: 8, border: `1.5px solid ${ds.border}`, color: ds.muted }}>
@@ -1116,8 +1120,13 @@ export default function GrommetClient({ variant }: { variant: OfferVariant }) {
                                   }}>
                                     {n}
                                   </span>
-                                  <span style={{ ...inter, fontSize: 15.5, lineHeight: 1.6, color: ds.navy }}>
-                                    {ESSENTIALS[idx]}
+                                  <span>
+                                    <span style={{ ...sora, display: "block", fontSize: 15.5, fontWeight: 800, lineHeight: 1.35, color: ds.navy, letterSpacing: "-0.01em" }}>
+                                      {ESSENTIALS[idx].title}
+                                    </span>
+                                    <span style={{ ...inter, display: "block", marginTop: 4, fontSize: 14.5, lineHeight: 1.55, color: ds.muted }}>
+                                      {ESSENTIALS[idx].body}
+                                    </span>
                                   </span>
                                 </div>
                                 {/* Selector sits under the text and indented to the
