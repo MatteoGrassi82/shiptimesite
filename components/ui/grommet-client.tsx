@@ -37,16 +37,27 @@ const h2Style: React.CSSProperties = {
 const PARCEL_BANDS = ["0–50", "50–250", "250+"];
 const LTL_BANDS = ["Less than 5", "5–20", "20–100"];
 
-// ⚠️ DRAFT ITEMS — awaiting Matteo's real list (2026-08-17).
-// The scorecard title, the 0/1/2 scoring, the four bands and the closing insight
-// below are all his exact supplied wording. The twelve ESSENTIALS are NOT: his
-// message carried the frame but the list itself was missing from the paste, so
-// these are adapted from the ten questions that already cleared Michael's and
-// Stephen's review, restated as scoreable statements, plus two new ones (11 and
-// 12) covering the delivery-performance and customer-experience legs that the
-// closing insight names but the original ten never measured.
-// Replace wholesale when the real twelve arrive — nothing else here depends on
-// their wording, only on there being twelve of them.
+// ⚠️ DRAFT ITEMS — not Michael's list. Awaiting his real twelve (asked 2026-08-20).
+//
+// Provenance, precisely, because it was asked and an earlier version of this
+// comment got it wrong:
+//  • The title, the 2/1/0 scoring key, the four score bands and the closing
+//    insight are Michael's supplied wording, verbatim.
+//  • The twelve items are NOT. His message carried the frame but the list itself
+//    was missing from the paste, so items 1-10 are restatements of the ten
+//    questions written here on 2026-07-29 (6daa20d) for the original checklist,
+//    built from the Grommet brief.
+//  • Items 11 and 12 were written 2026-08-19, because the closing insight names
+//    cost, delivery performance AND customer experience, and the original ten
+//    measured only the first two.
+//
+// An earlier version of this comment claimed the ten "cleared Michael's and
+// Stephen's review". They did not. That review covered the /vs and /alternative
+// comparison pages — competitor claims, support wording, Purolator Ground — and
+// this checklist was never part of it.
+//
+// Replace wholesale when the real twelve arrive: nothing else depends on their
+// wording, only on there being twelve of them.
 const ESSENTIALS: string[] = [
   "You know your average package weight and dimensions, rather than guessing at checkout.",
   "You've compared parcel rates from more than one carrier in the last six months.",
