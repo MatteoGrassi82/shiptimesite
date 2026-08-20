@@ -44,10 +44,13 @@ const LTL_BANDS = ["Less than 5", "5–20", "20–100"];
 // Provenance of what these REPLACED, since two earlier versions of this comment
 // got it wrong and the question was asked directly:
 //  • The ten questions here from 2026-07-29 to 2026-08-19 came verbatim from
-//    Matteo's build brief of 2026-07-28, under the heading "Full checklist copy
-//    — The New Brand Shipping Readiness Checklist". Not written here, and never
-//    reviewed by Michael or Stephen — that review covered the /vs and
-//    /alternative comparison pages.
+//    Matteo's build brief, typed 2026-07-29 19:18 UTC, under the heading "Full
+//    checklist copy — The New Brand Shipping Readiness Checklist". Written by
+//    him, shipped the same day, and never reviewed by Michael or Stephen — that
+//    review covered the /vs and /alternative comparison pages. The same brief
+//    also supplied "7+ yes answers means you're in good shape" and "most brands
+//    answer honestly on 3 or 4 of these", which is what the verdict bands were
+//    kept consistent with.
 //  • Only two items were ever authored here: on-time delivery tracking and
 //    branded tracking / proactive updates, added 2026-08-19 because Michael's
 //    closing insight names delivery performance and customer experience and the
