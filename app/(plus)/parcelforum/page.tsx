@@ -128,8 +128,8 @@ export default async function ParcelForumPage() {
             <div className="pf-cards" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(40px, 5vw, 60px)" }}>
               {[
                 { n: "01", t: "Your score out of 100", d: "One Logistics Performance Score, plus a separate score for cost, operations and customer experience." },
-                { n: "02", t: "Where the leverage is", d: "The three gaps costing you the most, weighted — with the first concrete move for each." },
-                { n: "03", t: "The written read, by email", d: "What your answers actually say about the operation — the costliest gaps and the first move for each — in your inbox within the hour." },
+                { n: "02", t: "Points on the table", d: "The five gaps costing you the most, ranked by how many points each one is actually worth." },
+                { n: "03", t: "The written read, by email", d: "A short report on what that pattern means and the first concrete move for each gap — in your inbox within the hour." },
               ].map((c, i) => (
                 <Reveal key={c.n} delay={i * 100}>
                   <div className="pk-lift" style={{ height: "100%", background: P.card, border: `1px solid ${P.line}`, borderRadius: 20, padding: "28px 28px 32px" }}>
