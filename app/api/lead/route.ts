@@ -45,6 +45,16 @@ const PROP_KEYS = [
   "scorecard_areas",
   "scorecard_weakest",
   "scorecard_detail",
+  // The written report, one property per section. It lives on the contact
+  // because HubSpot personalization tokens can read properties and nothing
+  // else — the delayed report email is assembled from exactly these five.
+  // `lps_report_ready_at` is the workflow's enrolment trigger, so it is
+  // written last-in-the-object and only when the rest are present.
+  "lps_report_headline",
+  "lps_report_read",
+  "lps_report_priorities",
+  "lps_report_closing",
+  "lps_report_ready_at",
 ] as const;
 
 type LeadBody = { email?: string; [key: string]: unknown };
@@ -69,6 +79,11 @@ function unknownProps(data: unknown, sent: string[]): string[] {
 
 // Everything the lead told us, as one readable block on the contact timeline.
 // Reps shouldn't have to scroll a property list to see the shipping profile.
+//
+// `scorecard_name`, `scorecard_scale` and `scorecard_of` are deliberately not in
+// PROP_KEYS: they only exist to label this block correctly for whichever
+// assessment produced the lead (the LPS is 0–100 over 16 questions, the older
+// readiness scorecard was 0–24 over 12), and they'd be dead weight in HubSpot.
 function buildNoteBody(b: LeadBody, referer: string | null): string {
   const v = (k: string) => (b[k] ? String(b[k]) : null);
   const name = [v("firstname"), v("lastname")].filter(Boolean).join(" ");
@@ -107,9 +122,9 @@ function buildNoteBody(b: LeadBody, referer: string | null): string {
     // shows up on the timeline whether or not those properties exist yet.
     v("scorecard_total")
       ? [
-          "<br><strong>Logistics Readiness Scorecard</strong><br>",
-          line("Score", `${v("scorecard_total")} / 24 — ${v("scorecard_band") ?? ""}`),
-          line("Items answered", `${v("scorecard_answered") ?? "?"} of 12`),
+          `<br><strong>${v("scorecard_name") ?? "Logistics Readiness Scorecard"}</strong><br>`,
+          line("Score", `${v("scorecard_total")} / ${v("scorecard_scale") ?? "24"} — ${v("scorecard_band") ?? ""}`),
+          line("Items answered", `${v("scorecard_answered") ?? "?"} of ${v("scorecard_of") ?? "12"}`),
           line("By area", v("scorecard_areas")),
           line("Weakest area", v("scorecard_weakest")),
           v("scorecard_detail")
@@ -230,8 +245,12 @@ export async function POST(req: NextRequest) {
 
     // Also drop the whole profile onto the contact as a single note, so sales
     // reads everything at a glance instead of hunting through properties.
+    // `no_note` exists for second writes against a contact this route already
+    // noted — the delayed report attaches itself to a lead that arrived
+    // minutes ago, and a second note would just be the first one with the
+    // shipping profile missing.
     const contactId = (data as { id?: string }).id;
-    const noted = contactId
+    const noted = contactId && !body.no_note
       ? await postNote(contactId, body, req.headers.get("referer"), headers)
       : false;
 

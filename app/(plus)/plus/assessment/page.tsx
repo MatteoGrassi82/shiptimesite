@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries";
 import { ZoneFooter, ZoneNav } from "@/components/sections/site-chrome";
-import { AssessmentTool } from "@/components/sections/plus-assessment-client";
+import { LpsShiplet } from "@/components/sections/lps-shiplet";
 import { PageHero } from "@/components/sections/plus-page-hero";
 import type { SiteSettings } from "@/components/sections/types";
 
-// C14 — the logistics self-assessment. Coded page (not Sanity-driven); the
-// Plus counterpart of Core's savings calculator.
+// C14 — the Logistics Performance Assessment. Runs the LPS shiplet (Michael's
+// 16-question framework, 2026-08-18) — the same unit embedded on /parcelforum.
 
 export const metadata: Metadata = {
-  title: "Logistics maturity assessment — ShipTime Plus",
-  description: "12 questions, 3 minutes. A maturity score, benchmarks, and your three highest-pressure fixes — free.",
+  title: "Logistics Performance Score — ShipTime Plus",
+  description: "16 questions, 5 minutes. Your Logistics Performance Score across cost, operational excellence and customer experience — with a personalized read on where the leverage is.",
 };
 
 export default async function AssessmentPage() {
@@ -22,13 +22,13 @@ export default async function AssessmentPage() {
       <ZoneNav zone="plus" settings={settings} />
       <main>
         <PageHero
-          eyebrow="Free assessment"
+          eyebrow="Logistics Performance Assessment"
           heading={<>How much is your logistics <span className="italic">leaving on the table?</span></>}
-          lead="12 questions, 3 minutes. A maturity score, benchmarks against operations like yours, and the three highest-pressure fixes — free."
+          lead="Sixteen questions. Five minutes. A score out of 100 across the three pillars of a well-designed logistics system — and a personalized read on where your leverage is."
         />
         <section className="bg-[#F8FAFB] py-16 md:py-24">
-          <div className="container mx-auto max-w-3xl px-4 md:px-6">
-            <AssessmentTool />
+          <div className="container mx-auto max-w-4xl px-4 md:px-6">
+            <LpsShiplet />
           </div>
         </section>
       </main>

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "gen:images": "node scripts/generate-images.mjs",
+    "hs:props": "node scripts/hubspot-lps-properties.mjs",
     "gen:video": "node scripts/render-video.mjs",
     "remotion": "remotion studio remotion/index.ts",
     "studio": "sanity dev",
