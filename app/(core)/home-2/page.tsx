@@ -1,5 +1,6 @@
 import type React from "react";
 import ShipTimeHeroFluz from "@/components/ui/shiptime-hero-fluz";
+import ShipTimeStatement from "@/components/ui/shiptime-statement";
 import ShipTimePlatformTrio from "@/components/ui/shiptime-platform-trio";
 import ShipTimeCoreFeaturesSticky from "@/components/ui/shiptime-core-features-sticky";
 import ShipTimeNoStrings from "@/components/ui/shiptime-no-strings";
@@ -34,6 +35,9 @@ export default function HomeVariantTwo() {
 
       {/* ── HERO ── */}
       <ShipTimeHeroFluz />
+
+      {/* ── STATEMENT BAND (Fluz manifesto moment) ── */}
+      <ShipTimeStatement />
 
       {/* ── THREE WAYS IN (audience self-select · §3) ── */}
       <ShipTimePlatformTrio />

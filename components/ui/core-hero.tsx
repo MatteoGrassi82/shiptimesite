@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Icon } from "@/components/ui/icons";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
+import { HandwritingText } from "@/components/ui/handwriting-text";
 
 // ── Core homepage hero — the /alternative hero, genericized ──────────────────
 // Same composition as alternative-hero.tsx: copy left (badge, Manrope headline
@@ -135,9 +136,14 @@ export default function CoreHero({ photo = "/generated/alt-hero.png" }: { photo?
               marginBottom: "1.2rem",
             }}
           >
-            Ship smarter,{" "}
-            <em style={{ fontStyle: "italic", fontWeight: 300, color: "#8B90A8" }}>grow</em>{" "}
-            faster.
+            Ship smarter,
+            <br />
+            <span style={{ color: ORANGE }}>
+              <HandwritingText
+                words={["grow faster.", "save more.", "scale up."]}
+                height="1.15em"
+              />
+            </span>
           </h1>
 
           {/* Sub-headline */}

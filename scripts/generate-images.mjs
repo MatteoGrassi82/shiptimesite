@@ -441,6 +441,137 @@ ASSETS.push(
   },
 );
 
+// ── Floating 3D props (Fluz-style composition objects) ───────────────────────
+// Deliberately MATTE, not the candy-gloss Fluz uses: soft-touch surfaces, gentle
+// studio light, believable materials. These are cut-outs that float over the
+// hero gradients and overlap card edges, so they must have real transparency.
+const OBJECT_STYLE =
+  "A single 3D-rendered object, centered, floating in empty space, shown at a slight three-quarter " +
+  "angle. MATTE finish — soft-touch powder-coated surface, fine micro-texture, NO high gloss, NO " +
+  "mirror reflections, NO wet or candy-plastic shine. Soft diffuse studio lighting from the upper " +
+  "left with a gentle falloff and soft contact shadow on the object itself. Slightly rounded, " +
+  "friendly edges. Rich but restrained color. Clean product-render quality, physically believable " +
+  "materials. FULLY TRANSPARENT BACKGROUND, no backdrop, no ground plane, no scenery. " +
+  "No text, no words, no numbers, no logos, no watermark.";
+
+const OBJECTS = [
+  {
+    name: "prop-parcel",
+    size: "1024x1024",
+    objectStyle: true,
+    background: "transparent",
+    quality: "high",
+    prompt:
+      "A small closed shipping parcel — a cube-ish cardboard box with softly rounded corners, wrapped " +
+      "with a single warm-orange #EC5A26 band across the top and side like a ribbon of tape. Box body " +
+      "in a warm neutral kraft tone. Tilted playfully about 20 degrees.",
+  },
+  {
+    name: "prop-coin",
+    size: "1024x1024",
+    objectStyle: true,
+    background: "transparent",
+    quality: "high",
+    prompt:
+      "A thick round savings token seen at a tilted three-quarter angle so its edge is visible. Warm " +
+      "orange #EC5A26 face with a slightly deeper orange rim, and a simple embossed downward arrow on " +
+      "the face suggesting a lower price. Matte coin, like painted metal.",
+  },
+  {
+    name: "prop-label",
+    size: "1024x1024",
+    objectStyle: true,
+    background: "transparent",
+    quality: "high",
+    prompt:
+      "A single adhesive shipping label, shown as a slightly thick off-white #F8FAFB rounded " +
+      "rectangle in portrait orientation, floating at a three-quarter angle with one bottom corner " +
+      "peeling and curling up to reveal the backing. Across the label: a solid warm-orange #EC5A26 " +
+      "band along the top edge, and below it a block of vertical deep-navy #1C1E3D barcode stripes " +
+      "of varying widths. Clean matte paper. NOT a roll, NOT a cylinder, NOT tissue.",
+  },
+  {
+    name: "prop-plane",
+    size: "1024x1024",
+    objectStyle: true,
+    background: "transparent",
+    quality: "high",
+    prompt:
+      "A folded paper plane in soft light blue #E3EEFC with a warm orange #EC5A26 underside on one " +
+      "wing, banking gently as if in flight. Crisp fold lines, paper-like matte surface with a subtle " +
+      "fibrous texture.",
+  },
+];
+
+// ── /parcelforum — human photography for the booth QR page ──────────────────
+// The page ran five sections of type, icons and numbers before a person
+// appeared, which is a strange thing for a page whose pitch is "experienced
+// operators, not account managers". These are the humans for it.
+//
+// Same raw editorial look as the plus-* photos above (bright, candid, film
+// grain, shallow depth of field) so they sit together. Every prompt kills
+// readable screens, branding and signage on purpose: a fabricated logo on a
+// trade-show stand is the one thing that would make the page look fake.
+ASSETS.push(
+  {
+    name: "pf-score-phone",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: a business owner standing in a sunlit office holding " +
+      "a phone and looking down at it with a small pleased smile, one hand in a pocket, warm morning light " +
+      "through big windows, soft neutral palette with a gentle warm orange highlight, light film grain, " +
+      "shallow depth of field, real person, candid, not posed at camera. The phone screen is turned away " +
+      "and not readable. Wide composition with calm negative space to one side. " +
+      "No text, no logos, no watermarks.",
+  },
+  {
+    name: "pf-gaps-review",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: two logistics colleagues at a long table in a daylight " +
+      "warehouse office going through printed sheets together, one holding a pen and pointing at a line on " +
+      "the page, the other leaning in, candid and focused, warm natural tones with soft highlights, light " +
+      "film grain, shallow depth of field, real people, not posed at camera. The papers are plain and their " +
+      "content is not readable. Wide composition. No text, no logos, no watermarks.",
+  },
+  {
+    name: "pf-report-morning",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: a person at a tidy desk early in the morning reading on " +
+      "a laptop with a cup of coffee beside them, calm and unhurried, soft warm daylight from a window to " +
+      "the left, muted natural palette with a gentle orange warmth, light film grain, shallow depth of " +
+      "field, real person, candid, not posed at camera. The laptop screen is not readable. Wide " +
+      "composition. No text, no logos, no watermarks.",
+  },
+  {
+    name: "pf-proof-packing",
+    size: "1024x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: a fulfillment worker taping and stacking plain kraft " +
+      "cardboard boxes at a packing bench in a busy modern warehouse, caught mid-motion, rows of racking " +
+      "softly out of focus behind, big daylight windows, warm natural tones, light film grain, shallow " +
+      "depth of field, real person, candid, not posed at camera. The boxes are completely blank and " +
+      "unbranded. Square composition. No text, no logos, no watermarks.",
+  },
+  {
+    name: "pf-booth-talk",
+    size: "1536x1024",
+    raw: true,
+    prompt:
+      "Bright editorial photograph, light and airy: two people talking across a small counter at a trade " +
+      "show stand in a bright convention hall, one showing something on a tablet held flat between them, " +
+      "both engaged and relaxed mid-conversation, a clean uncluttered modern stand in soft neutral tones, " +
+      "the exhibition hall blurred behind, warm even daylight, light film grain, shallow depth of field, " +
+      "real people, candid, not posed at camera. The tablet screen is not readable and the stand and all " +
+      "signage are completely blank. No text, no logos, no watermarks.",
+  },
+);
+
 // Model + default quality. Default is gpt-image-1 at medium quality to keep
 // costs down (Matteo's call, 2026-07-11). For hero/marketing shots that need
 // better composition control, override per run:
@@ -448,9 +579,9 @@ ASSETS.push(
 const MODEL = process.env.GEN_MODEL || "gpt-image-1";
 const DEFAULT_QUALITY = process.env.GEN_QUALITY || "medium";
 
-async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrait, raw, quality }) {
+async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrait, raw, quality, background, objectStyle }) {
   // raw: the prompt carries its own complete style — no shared prefix.
-  const stylePrefix = raw ? "" : portrait ? PORTRAIT_STYLE : iso ? ISO_STYLE : sceneStyle ? SCENE_STYLE : photo ? PHOTO_STYLE : STYLE;
+  const stylePrefix = raw ? "" : objectStyle ? OBJECT_STYLE : portrait ? PORTRAIT_STYLE : iso ? ISO_STYLE : sceneStyle ? SCENE_STYLE : photo ? PHOTO_STYLE : STYLE;
   const res = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
     headers: {
@@ -463,6 +594,9 @@ async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrai
       size,
       quality: quality || DEFAULT_QUALITY,
       n: 1,
+      // Cut-out props need a real alpha channel so they can float over any
+      // gradient; PNG is required for transparency to survive.
+      ...(background ? { background, output_format: "png" } : {}),
     }),
   });
 
@@ -497,10 +631,11 @@ async function main() {
   // Optional filter: GEN_ONLY=alt-hero,feature-rate-shopping limits generation
   // to those asset names (handy for trials or re-rendering a single image).
   const only = (process.env.GEN_ONLY || "").split(",").map((s) => s.trim()).filter(Boolean);
-  const queue = only.length ? ASSETS.filter((a) => only.includes(a.name)) : ASSETS;
+  const ALL = [...ASSETS, ...OBJECTS];
+  const queue = only.length ? ALL.filter((a) => only.includes(a.name)) : ASSETS;
 
   if (only.length && queue.length === 0) {
-    console.error(`\n✗ GEN_ONLY matched no assets. Known names:\n  ${ASSETS.map((a) => a.name).join("\n  ")}\n`);
+    console.error(`\n✗ GEN_ONLY matched no assets. Known names:\n  ${ALL.map((a) => a.name).join("\n  ")}\n`);
     process.exit(1);
   }
 
