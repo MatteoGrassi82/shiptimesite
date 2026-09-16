@@ -150,7 +150,7 @@ export default function CoreHero({ photo = "/generated/alt-hero.png" }: { photo?
           {/* Sub-headline */}
           <p
             style={{
-              fontFamily: "var(--font-inter), sans-serif",
+              fontFamily: "var(--font-manrope), sans-serif",
               fontSize: 17,
               lineHeight: 1.65,
               color: MUTED,
@@ -182,7 +182,7 @@ export default function CoreHero({ photo = "/generated/alt-hero.png" }: { photo?
             </div>
             <div>
               <Stars />
-              <p style={{ fontSize: 12.5, color: MUTED, fontFamily: "var(--font-inter), sans-serif", marginTop: 2 }}>
+              <p style={{ fontSize: 12.5, color: MUTED, fontFamily: "var(--font-manrope), sans-serif", marginTop: 2 }}>
                 <strong style={{ color: NAVY }}>500+</strong> businesses shipping smarter every day
               </p>
             </div>
@@ -200,7 +200,7 @@ export default function CoreHero({ photo = "/generated/alt-hero.png" }: { photo?
                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
               </svg>
             </LeadCaptureButton>
-            <p style={{ fontSize: 12, color: MUTED, fontFamily: "var(--font-inter), sans-serif" }}>
+            <p style={{ fontSize: 12, color: MUTED, fontFamily: "var(--font-manrope), sans-serif" }}>
               No platform fee · No contract · Connect your store in minutes
             </p>
           </div>

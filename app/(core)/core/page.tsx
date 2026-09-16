@@ -37,13 +37,13 @@ const heading: React.CSSProperties = {
 };
 
 const body: React.CSSProperties = {
-  fontFamily: "var(--font-inter), system-ui, sans-serif",
+  fontFamily: "var(--font-manrope), system-ui, sans-serif",
   color: ds.muted,
   lineHeight: 1.6,
 };
 
 const sora = { fontFamily: "var(--font-manrope), sans-serif" };
-const inter = { fontFamily: "var(--font-inter), sans-serif" };
+const inter = { fontFamily: "var(--font-manrope), sans-serif" };
 
 const utm = (campaign: string, content: string) =>
   `?utm_source=shiptimelandin&utm_medium=landing&utm_campaign=${campaign}&utm_content=${content}`;

@@ -16,7 +16,7 @@ const ds = {
 };
 
 const sans = { fontFamily: "var(--font-manrope), sans-serif" };
-const inter = { fontFamily: "var(--font-inter), sans-serif" };
+const inter = { fontFamily: "var(--font-manrope), sans-serif" };
 const heading: React.CSSProperties = { fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.005em", lineHeight: 0.96, color: ds.navy };
 
 function CheckIcon() {

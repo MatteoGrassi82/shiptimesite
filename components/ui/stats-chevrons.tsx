@@ -25,7 +25,7 @@ const heading: React.CSSProperties = {
   letterSpacing: "0.005em",
   lineHeight: 0.96,
 };
-const inter = { fontFamily: "var(--font-inter), sans-serif" };
+const inter = { fontFamily: "var(--font-manrope), sans-serif" };
 const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 
 type Step = { eyebrow: string; big: string; label: string; bg: string; fg: string; fgSub: string };
