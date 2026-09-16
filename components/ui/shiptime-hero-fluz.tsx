@@ -1,7 +1,10 @@
+"use client";
+
 import type React from "react";
 import Image from "next/image";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 import { HandwritingText } from "@/components/ui/handwriting-text";
+import ExplainerPlayer from "@/components/ui/explainer-player";
 
 // ── /home-2 hero — Fluz-style ─────────────────────────────────────────────────
 // Full-bleed painted dawn sky, centered pill badge, and a two-part headline:
@@ -169,36 +172,16 @@ export default function ShipTimeHeroFluz({
         </div>
       </div>
 
-      {/* ── The product film, one rounded player ────────────────────────────
-          Replaces the three-card composition: one piece of motion says more
-          than three static tiles, and it is the actual product. Props still
-          float around and over its edges so the Fluz composition survives.
-          Autoplays muted and loops — a poster covers the first paint. */}
+      {/* ── The explainer, one rounded player ───────────────────────────────
+          The 90-second film lives here. Until it renders this is a labelled
+          placeholder at the player's exact size, so nothing below moves when the
+          MP4 lands — pass `src` (and `poster`) to go live. The matte props still
+          float around and over its edges so the Fluz composition survives. */}
       <div className="relative z-10 mx-auto mt-10 md:mt-14 px-5" style={{ maxWidth: 1180 }}>
         <div className="relative mx-auto" style={{ maxWidth: 1000 }}>
-          {/* player */}
-          <div
-            className="relative overflow-hidden"
-            style={{
-              borderRadius: 26,
-              aspectRatio: "16 / 9",
-              background: ds.navy,
-              boxShadow: "0 50px 110px rgba(28,30,61,0.34)",
-              border: "1px solid rgba(255,255,255,0.35)",
-            }}
-          >
-            <video
-              className="absolute inset-0 w-full h-full object-cover"
-              src="/generated/core-hero-rates.mp4"
-              poster="/generated/core-hero-rates-poster.jpg"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="ShipTime comparing live carrier rates for one shipment"
-            />
-          </div>
+          <ExplainerPlayer
+            note="The 90-second film drops in here as an MP4."
+          />
 
           {/* props, strewn around and over the player */}
           <div className="absolute inset-0 pointer-events-none" aria-hidden>
