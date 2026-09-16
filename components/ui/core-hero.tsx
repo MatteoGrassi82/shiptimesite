@@ -127,11 +127,12 @@ export default function CoreHero({ photo = "/generated/alt-hero.png" }: { photo?
           {/* Headline */}
           <h1
             style={{
-              fontFamily: "var(--font-manrope), system-ui, sans-serif",
-              fontWeight: 800,
-              fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
-              lineHeight: 1.08,
-              letterSpacing: "-0.03em",
+              fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif",
+              fontWeight: 400,
+              textTransform: "uppercase",
+              fontSize: "clamp(2.3rem, 5.2vw, 3.7rem)",
+              lineHeight: 0.98,
+              letterSpacing: "0.005em",
               color: NAVY,
               marginBottom: "1.2rem",
             }}

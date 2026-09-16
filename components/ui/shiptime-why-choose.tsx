@@ -33,7 +33,7 @@ export default function ShipTimeWhyChoose({ background = ds.field }: { backgroun
     <section className="px-5 md:px-10 py-20 md:py-28" style={{ background }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
         <div className="text-center mb-14 md:mb-16">
-          <h2 style={{ ...sans, fontFamily: "var(--font-bricolage), var(--font-manrope), system-ui, sans-serif", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.05, color: ds.navy, fontSize: "clamp(2rem, 4.8vw, 3.2rem)" }}>
+          <h2 style={{ ...sans, fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.005em", lineHeight: 1.05, color: ds.navy, fontSize: "clamp(2rem, 4.8vw, 3.2rem)" }}>
             Why choose ShipTime?
           </h2>
           <p className="mt-5 mx-auto" style={{ ...sans, fontSize: 16.5, lineHeight: 1.6, color: ds.muted, maxWidth: 460 }}>

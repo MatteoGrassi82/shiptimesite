@@ -30,7 +30,7 @@ const anton: React.CSSProperties = {
 };
 const sans: React.CSSProperties = { fontFamily: "var(--font-manrope), system-ui, sans-serif" };
 const mono: React.CSSProperties = { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" };
-const heading: React.CSSProperties = { ...sans, fontFamily: "var(--font-bricolage), var(--font-manrope), system-ui, sans-serif", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.06, color: ds.navy };
+const heading: React.CSSProperties = { fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.005em", lineHeight: 0.96, color: ds.navy };
 
 // ── Card 1 — tilted shipping label ────────────────────────────────────────────
 

@@ -29,7 +29,7 @@ const ds = {
 };
 
 const sans: React.CSSProperties = { fontFamily: "var(--font-manrope), system-ui, sans-serif" };
-const heading: React.CSSProperties = { ...sans, fontFamily: "var(--font-bricolage), var(--font-manrope), system-ui, sans-serif", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.1, color: ds.navy };
+const heading: React.CSSProperties = { fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.005em", lineHeight: 0.96, color: ds.navy };
 const widgetShadow = "0 18px 44px rgba(28,30,61,0.20)";
 
 // ── Floating widgets (same as the non-sticky strip) ──────────────────────────

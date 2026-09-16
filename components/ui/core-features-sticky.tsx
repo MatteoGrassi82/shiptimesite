@@ -25,11 +25,11 @@ const ds = {
 };
 
 const heading: React.CSSProperties = {
-  fontFamily: "var(--font-manrope), system-ui, sans-serif",
-  color: ds.navy,
-  letterSpacing: "-0.02em",
-  lineHeight: 1.1,
-  fontWeight: 800,
+  fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif",
+  fontWeight: 400,
+  textTransform: "uppercase",
+  letterSpacing: "0.005em",
+  lineHeight: 0.96,
 };
 const body: React.CSSProperties = { fontFamily: "var(--font-inter), system-ui, sans-serif", color: ds.muted, lineHeight: 1.6 };
 const sora = { fontFamily: "var(--font-manrope), sans-serif" };

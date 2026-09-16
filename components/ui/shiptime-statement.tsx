@@ -7,11 +7,6 @@ import Image from "next/image";
 // Fluz scatters gems and butterflies. Some props sit in front of the letters,
 // some hug the edges half off-screen, sizes vary for depth.
 
-const ds = {
-  navy:  "#1C1E3D",
-  white: "#FFFFFF",
-};
-
 const sans: React.CSSProperties = { fontFamily: "var(--font-manrope), system-ui, sans-serif" };
 
 type PropName = "parcel" | "coin" | "label" | "plane";
@@ -76,9 +71,9 @@ export default function ShipTimeStatement({
         <h2
           className="uppercase"
           style={{
-            ...sans,
-            fontWeight: 800,
-            letterSpacing: "-0.025em",
+            fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif",
+            fontWeight: 400,
+            letterSpacing: "0.005em",
             lineHeight: 0.96,
             color: "#FDF7F4",
             fontSize: "clamp(4rem, 12.5vw, 11rem)",

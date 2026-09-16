@@ -88,7 +88,7 @@ export default function ShipTimeTestimonialsColumns({ background = ds.white }: {
           <span className="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-[0.12em]" style={{ ...sans, background: "#F8FAFB", border: `1px solid ${ds.border}`, color: ds.navy }}>
             Testimonials
           </span>
-          <h2 className="mt-5" style={{ ...sans, fontFamily: "var(--font-bricolage), var(--font-manrope), system-ui, sans-serif", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.06, color: ds.navy, fontSize: "clamp(2rem, 4.6vw, 3.1rem)" }}>
+          <h2 className="mt-5" style={{ ...sans, fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif", fontWeight: 400, textTransform: "uppercase", letterSpacing: "0.005em", lineHeight: 1.06, color: ds.navy, fontSize: "clamp(2rem, 4.6vw, 3.1rem)" }}>
             Loved by shippers across North America
           </h2>
           <p className="mt-5" style={{ ...sans, fontSize: 16.5, lineHeight: 1.6, color: ds.muted }}>
