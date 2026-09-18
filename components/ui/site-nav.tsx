@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { withAttribution } from "@/components/ui/lead-capture-form";
 import Image from "next/image";
 import Link from "next/link";
 import { competitors } from "@/lib/competitors";
@@ -40,6 +41,17 @@ const SIGNUP =
 export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", leadCapture = false, minimal = false }: SiteNavProps) {
   const [open, setOpen] = useState(false);     // desktop dropdown
   const [mobileOpen, setMobileOpen] = useState(false); // mobile menu
+
+  // The signup link leaves this origin, so localStorage cannot follow it. Stamp
+  // the visitor's real campaign onto the URL instead, or their paid click
+  // arrives at signup labelled as our own landing page.
+  //
+  // Applied after mount rather than during render: the server has no access to
+  // the visitor's stored attribution, and returning a different href on the
+  // client would be a hydration mismatch. The plain href stands until this runs,
+  // so a no-JS visitor still gets a working link.
+  const [href, setHref] = useState(ctaHref);
+  useEffect(() => setHref(withAttribution(ctaHref)), [ctaHref]);
 
   return (
     <nav
@@ -135,7 +147,7 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
             </LeadCaptureButton>
           ) : (
             <a
-              href={ctaHref}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white text-sm font-semibold px-5 py-2 transition-colors hover:opacity-90 whitespace-nowrap"
@@ -158,7 +170,7 @@ export default function SiteNav({ ctaHref = SIGNUP, ctaLabel = "Sign up free", l
             </LeadCaptureButton>
           ) : (
             <a
-              href={ctaHref}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white text-sm font-semibold px-4 py-2 transition-colors hover:opacity-90 whitespace-nowrap"

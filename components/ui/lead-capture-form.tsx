@@ -1,5 +1,6 @@
 "use client";
 
+import { adsSignupSendTo, normalizeEmail, sha256Hex } from "@/lib/ads";
 // Low-commitment lead capture: replaces the external "sign up" redirect on the
 // comparison pages with an inline popup. Just an email — no account creation,
 // no call booked. Submission is stubbed (onSubmit prop) until a real
@@ -80,7 +81,10 @@ function utmFromUrl(): Record<string, string> {
   if (typeof window === "undefined") return {};
   const p = new URLSearchParams(window.location.search);
   const out: Record<string, string> = {};
-  for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid"]) {
+  for (const k of [
+    "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+    "gclid", "wbraid", "gbraid", "msclkid",
+  ]) {
     const v = p.get(k);
     if (v) out[k] = v;
   }
@@ -141,6 +145,13 @@ export function readAttribution(
      * utm_campaign always wins over this.
      */
     fallbackCampaign?: string;
+    /**
+     * Skip the on-site fallback below and return only what the visitor actually
+     * arrived with. Callers that *label* a conversion want the fallback; callers
+     * that *forward* attribution to another system must not have it, or every
+     * organic visitor gets relabelled as a shiptime/website campaign.
+     */
+    raw?: boolean;
   } = {},
 ): Record<string, string> {
   if (typeof window === "undefined") return {};
@@ -174,6 +185,7 @@ export function readAttribution(
   // On-site fallback: a visitor with no inbound campaign who clicks a lead
   // trigger is a "website" conversion per the UTM guideline — attribute it to
   // ShipTime, medium "website", campaign = the page they converted on.
+  if (opts.raw) return merged;
   if (!merged.utm_source) {
     merged.utm_source = "shiptime";
     merged.utm_medium = "website";
@@ -248,6 +260,30 @@ export function trackSignupConversion(detail: Record<string, unknown> = {}) {
   try {
     w.dataLayer = w.dataLayer || [];
     w.dataLayer.push({ event: "shiptime_signup", ...detail });
+  } catch { /* ignore */ }
+}
+
+// The Google Ads conversion for a completed signup, sent WITH the customer's
+// email so Google can tie this click to this person (Enhanced Conversions for
+// Leads). That tie is what lets scripts/ads-first-shipment-export.mjs report the
+// first shipment back weeks later by email alone — no gclid has to survive.
+//
+// The email is hashed here, before it leaves the browser: Google receives
+// sha256(normalised address), never the address. Both the normalisation and the
+// hash match the export script exactly, or the two sides won't join.
+//
+// A no-op until NEXT_PUBLIC_ADS_SIGNUP_LABEL is set (see lib/ads.ts). Same
+// fail-soft rule as everything else here: a blocked tag never breaks the form.
+export async function trackAdsSignupConversion(email: string) {
+  if (typeof window === "undefined") return;
+  const sendTo = adsSignupSendTo();
+  if (!sendTo) return;
+  const w = window as Win;
+  if (!w.gtag) return;
+  try {
+    const hashed = await sha256Hex(normalizeEmail(email));
+    w.gtag("set", "user_data", { sha256_email_address: hashed });
+    w.gtag("event", "conversion", { send_to: sendTo });
   } catch { /* ignore */ }
 }
 
@@ -376,6 +412,34 @@ export function identifyLead(fields: Record<string, unknown>) {
     w._hsq.push(["trackPageView"]);
   } catch {
     /* ignore — the server-side write is the primary path */
+  }
+}
+
+// Carries the visitor's real campaign across to shiptime.com / app.shiptime.com.
+//
+// Every outbound signup link on this site hardcodes
+// `utm_source=shiptimelandin&utm_medium=landing&utm_campaign=signup`. That does
+// not merely lose the paid campaign that brought the visitor here, it overwrites
+// it: a LocalIQ click arrives at the signup page claiming to be our own landing
+// page. Verified 2026-09-18 — three paying customers traceable to the ads in
+// HubSpot have no UTM row at all in ShipTime's BI, so no report can credit them.
+//
+// Only rewrites when the visitor genuinely arrived on a campaign (`raw: true`,
+// so readAttribution's shiptime/website fallback can't relabel organic traffic).
+// utm_content is left alone: it identifies which button was clicked, which is
+// ours to set and still useful.
+export function withAttribution(url: string): string {
+  if (typeof window === "undefined") return url;
+  try {
+    const a = readAttribution({ raw: true });
+    if (!a.utm_source) return url;
+    const u = new URL(url, window.location.origin);
+    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "gclid", "wbraid", "gbraid", "msclkid"]) {
+      if (a[k]) u.searchParams.set(k, a[k]);
+    }
+    return u.toString();
+  } catch {
+    return url;
   }
 }
 
