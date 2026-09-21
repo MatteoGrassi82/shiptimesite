@@ -48,19 +48,19 @@ function PaintedSky() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, #4E97F2 0%, #6E9BEB 26%, #A9A6DE 46%, #E7AE9C 62%, #F2B98E 71%, #D9A9C4 84%, #9E93DE 100%)",
+            "linear-gradient(180deg, #8FA8CE 0%, #9DB0D4 26%, #BDB3CB 46%, #DCC4C6 62%, #E9C6B6 71%, #DDB3B8 84%, #AEA5C6 100%)",
         }}
       />
       {/* soft painted clouds hugging the bottom */}
       <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" style={{ height: "42%" }}>
         <defs>
           <linearGradient id="fluz-cloud-a" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#B9A9E6" />
-            <stop offset="100%" stopColor="#8E7FD6" />
+            <stop offset="0%" stopColor="#C4BBDA" />
+            <stop offset="100%" stopColor="#A79FC4" />
           </linearGradient>
           <linearGradient id="fluz-cloud-b" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#D9CFF2" />
-            <stop offset="100%" stopColor="#A99EE2" />
+            <stop offset="0%" stopColor="#DED8E8" />
+            <stop offset="100%" stopColor="#B8B1CE" />
           </linearGradient>
           <filter id="fluz-soft" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="6" />
