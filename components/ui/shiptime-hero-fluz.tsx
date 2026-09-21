@@ -1,10 +1,10 @@
 "use client";
 
 import type React from "react";
-import Image from "next/image";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 import { HandwritingText } from "@/components/ui/handwriting-text";
 import ExplainerPlayer from "@/components/ui/explainer-player";
+import FloatProp from "@/components/ui/float-prop";
 
 // ── /home-2 hero — Fluz-style ─────────────────────────────────────────────────
 // Full-bleed painted dawn sky, centered pill badge, and a two-part headline:
@@ -79,40 +79,6 @@ function PaintedSky() {
 }
 
 // ── Composition pieces ────────────────────────────────────────────────────────
-
-// Floating prop — a matte 3D cut-out (generated, transparent PNG) that drifts
-// over the gradients and overlaps card edges, Fluz-style. Deliberately matte
-// rather than candy-gloss. A soft drop shadow seats it against the background.
-type PropName = "parcel" | "coin" | "label" | "plane";
-
-function FloatProp({
-  prop,
-  size = 96,
-  rotate = 0,
-  style,
-}: {
-  prop: PropName;
-  size?: number;
-  rotate?: number;
-  style?: React.CSSProperties;
-}) {
-  return (
-    <div
-      className="absolute pointer-events-none"
-      style={{ width: size, height: size, transform: `rotate(${rotate}deg)`, ...style }}
-      aria-hidden
-    >
-      <Image
-        src={`/generated/prop-${prop}.png`}
-        alt=""
-        width={size * 2}
-        height={size * 2}
-        className="w-full h-full object-contain"
-        style={{ filter: "drop-shadow(0 14px 22px rgba(28,30,61,0.28))" }}
-      />
-    </div>
-  );
-}
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 

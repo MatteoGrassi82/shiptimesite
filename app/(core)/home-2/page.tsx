@@ -2,7 +2,6 @@ import type React from "react";
 import ShipTimeHeroFluz from "@/components/ui/shiptime-hero-fluz";
 import ShipTimePlatformTrio from "@/components/ui/shiptime-platform-trio";
 import ShipTimeCoreFeaturesSticky from "@/components/ui/shiptime-core-features-sticky";
-import ShipTimeNoStrings from "@/components/ui/shiptime-no-strings";
 import ShipTimePartners from "@/components/ui/shiptime-partners";
 import ShipTimeHowItWorks from "@/components/ui/shiptime-how-it-works";
 import ShipTimeIntegrations from "@/components/ui/shiptime-integrations";
@@ -65,7 +64,6 @@ export default function HomeVariantTwo() {
       {/* ── SUPPORT ── */}
       <ShipTimeSupport background="#F8FAFB" />
 
-      <ShipTimeNoStrings background={ds.white} />
 
       {/* ── FAQ ── */}
       <ShipTimeFAQ background="#ECEAE7" />
