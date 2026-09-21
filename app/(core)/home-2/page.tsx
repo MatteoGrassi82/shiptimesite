@@ -3,6 +3,11 @@ import ShipTimeHeroFluz from "@/components/ui/shiptime-hero-fluz";
 import ShipTimePlatformTrio from "@/components/ui/shiptime-platform-trio";
 import ShipTimeCoreFeaturesSticky from "@/components/ui/shiptime-core-features-sticky";
 import ShipTimeNoStrings from "@/components/ui/shiptime-no-strings";
+import ShipTimePartners from "@/components/ui/shiptime-partners";
+import ShipTimeHowItWorks from "@/components/ui/shiptime-how-it-works";
+import ShipTimeIntegrations from "@/components/ui/shiptime-integrations";
+import ShipTimeSupport from "@/components/ui/shiptime-support";
+import ShipTimeFAQ from "@/components/ui/shiptime-faq";
 import ShipTimeWhyChoose from "@/components/ui/shiptime-why-choose";
 import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials-columns";
 import SiteNav from "@/components/ui/site-nav";
@@ -36,19 +41,34 @@ export default function HomeVariantTwo() {
       <ShipTimeHeroFluz />
 
       {/* ── THREE WAYS IN (audience self-select · §3) ── */}
+      {/* ── PARTNERSHIPS + RATINGS ── */}
+      <ShipTimePartners background={ds.white} />
+
       <ShipTimePlatformTrio />
 
       {/* ── FEATURE STRIP (the toolkit · §3.2) ── */}
       <ShipTimeCoreFeaturesSticky />
 
       {/* ── WHY CHOOSE SHIPTIME (advantages vs others) ── */}
+      {/* ── HOW IT WORKS ── */}
+      <ShipTimeHowItWorks />
+
+      {/* ── INTEGRATIONS ── */}
+      <ShipTimeIntegrations background={ds.white} />
+
       <ShipTimeWhyChoose />
 
       {/* ── TESTIMONIALS ── */}
       <ShipTimeTestimonials background="#ECEAE7" />
 
       {/* ── NO STRINGS ATTACHED (objection handler) ── */}
+      {/* ── SUPPORT ── */}
+      <ShipTimeSupport background="#F8FAFB" />
+
       <ShipTimeNoStrings background={ds.white} />
+
+      {/* ── FAQ ── */}
+      <ShipTimeFAQ background="#ECEAE7" />
 
       {/* ── FOOTER ── */}
       <footer className="px-5 md:px-10 py-10 md:py-14" style={{ background: ds.navy, borderTop: "1px solid rgba(255,255,255,0.07)" }}>

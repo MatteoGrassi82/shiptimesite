@@ -9,6 +9,9 @@ import CoreFeaturesSticky from "@/components/ui/core-features-sticky";
 import CoreWhyChoose from "@/components/ui/core-why-choose";
 import ShipTimeTestimonials from "@/components/ui/shiptime-testimonials";
 import ShipTimeFAQ from "@/components/ui/shiptime-faq";
+import ShipTimePartners from "@/components/ui/shiptime-partners";
+import ShipTimeIntegrations from "@/components/ui/shiptime-integrations";
+import ShipTimeSupport from "@/components/ui/shiptime-support";
 import ShipTimeSceneDivider from "@/components/ui/shiptime-scene-divider";
 import { LeadCaptureButton } from "@/components/ui/lead-capture-form";
 
@@ -247,6 +250,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── PARTNERSHIPS + RATINGS ── */}
+      <ShipTimePartners background={ds.white} />
+
       {/* ── PLATFORM TRIO (For me / For my business / Enterprise, landing skin) ── */}
       <CorePlatformTrio signupHref={signupUrl("trio")} />
 
@@ -261,6 +267,12 @@ export default function Home() {
 
       {/* ── TESTIMONIALS ── */}
       <ShipTimeTestimonials />
+
+      {/* ── INTEGRATIONS ── */}
+      <ShipTimeIntegrations background={ds.white} />
+
+      {/* ── SUPPORT ── */}
+      <ShipTimeSupport background={ds.surface} />
 
       {/* ── GETTING STARTED (navy, from /alternative switching guide) ── */}
       <GettingStarted />
