@@ -210,7 +210,7 @@ export default function ShipTimePlatformTrio({
   background?: string;
 }) {
   return (
-    <section className="px-5 md:px-10 py-20 md:py-28" style={{ background }}>
+    <section className="px-5 md:px-10 pt-24 md:pt-36 pb-20 md:pb-28" style={{ background }}>
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         {/* header */}
         <div className="text-center mb-12 md:mb-16">

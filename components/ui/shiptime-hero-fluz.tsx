@@ -48,7 +48,7 @@ function PaintedSky() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, #8FA8CE 0%, #9DB0D4 26%, #BDB3CB 46%, #DCC4C6 62%, #E9C6B6 71%, #DDB3B8 84%, #AEA5C6 100%)",
+            "linear-gradient(180deg, #8FA8CE 0%, #9DB0D4 26%, #BDB3CB 46%, #DCC4C6 62%, #E9C6B6 70%, #C9A3AE 84%, #7E749B 100%)",
         }}
       />
       {/* soft painted clouds hugging the bottom */}
@@ -135,7 +135,7 @@ export default function ShipTimeHeroFluz({
   ctaHref?: string;
 }) {
   return (
-    <section className="relative overflow-hidden" style={{ minHeight: "clamp(720px, 96vh, 1040px)" }}>
+    <section className="relative overflow-hidden" style={{ minHeight: "clamp(720px, 96vh, 1040px)", paddingBottom: "clamp(88px, 11vh, 150px)" }}>
       <PaintedSky />
 
       {/* Copy */}
