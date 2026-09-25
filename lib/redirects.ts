@@ -42,6 +42,13 @@ export const redirects: Redirect[] = [
   { source: "/comparisons/:slug", destination: "/vs/:slug", permanent: true },
   { source: "/alternatives/:slug", destination: "/alternative/:slug", permanent: true },
 
+  // ── Retired comparison pages ────────────────────────────────────
+  // Freightcom pages pulled 2026-09-25 after a CFIB complaint. Sent to the
+  // main site rather than /compare, which no longer names Freightcom. 307 —
+  // the removal is "for now", so don't let browsers cache it.
+  { source: "/vs/freightcom", destination: "https://shiptime.com/", permanent: false },
+  { source: "/alternative/freightcom", destination: "https://shiptime.com/", permanent: false },
+
   // ── Blog path consolidation ─────────────────────────────────────
   { source: "/blog/posts/:slug", destination: "/blog/:slug", permanent: true },
   { source: "/resources/:slug", destination: "/blog/:slug", permanent: true },
