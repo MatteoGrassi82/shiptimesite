@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "gen:images": "node scripts/generate-images.mjs",
+    "gen:map": "node scripts/generate-map.mjs",
     "hs:props": "node scripts/hubspot-lps-properties.mjs",
     "ads:export": "node scripts/ads-first-shipment-export.mjs",
     "gen:video": "node scripts/render-video.mjs",

@@ -100,7 +100,11 @@ function PlusNavGroups() {
 
 // `minimal` drops the nav links entirely (logo + primary CTA only) — the mode
 // for pages sent directly to prospects, where the only move is "book a call".
-export function ZoneNav({ zone, settings, minimal = false }: { zone: Zone; settings?: SiteSettings; minimal?: boolean }) {
+// brandSuffix: the word after "ShipTime" in the plus zone. Defaults to the
+// "Plus" every page has shipped with; /plus/v3 passes "One" while the rename
+// is only agreed for that page. Opt-in on purpose — 22 indexed pages share
+// this chrome, so flipping the default would rebrand the live zone in one go.
+export function ZoneNav({ zone, settings, minimal = false, brandSuffix = "Plus" }: { zone: Zone; settings?: SiteSettings; minimal?: boolean; brandSuffix?: string }) {
   const home = zone === "plus" ? "/plus" : "/";
   const primaryCta =
     zone === "plus" && !settings?.primaryCta?.label
@@ -126,7 +130,7 @@ export function ZoneNav({ zone, settings, minimal = false }: { zone: Zone; setti
             </span>
             {zone === "plus" && (
               <span className="st-eyebrow" style={{ fontSize: 11, color: "var(--brand)" }}>
-                Plus
+                {brandSuffix}
               </span>
             )}
           </Link>
@@ -156,7 +160,7 @@ export function ZoneNav({ zone, settings, minimal = false }: { zone: Zone; setti
   );
 }
 
-export function ZoneFooter({ zone, settings }: { zone: Zone; settings?: SiteSettings }) {
+export function ZoneFooter({ zone, settings, brandSuffix = "Plus" }: { zone: Zone; settings?: SiteSettings; brandSuffix?: string }) {
   const year = new Date().getFullYear();
   const dim = (pct: number) => `color-mix(in oklab, var(--on-contrast) ${pct}%, transparent)`;
   return (
@@ -165,7 +169,7 @@ export function ZoneFooter({ zone, settings }: { zone: Zone; settings?: SiteSett
         <div style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "space-between", alignItems: "flex-start" }}>
           <div style={{ maxWidth: "40ch" }}>
             <div className="st-display" style={{ fontSize: 22, marginBottom: 10 }}>
-              ShipTime{zone === "plus" ? " Plus" : ""}
+              ShipTime{zone === "plus" ? ` ${brandSuffix}` : ""}
             </div>
             {settings?.tagline && (
               <p className="st-body" style={{ margin: 0, color: dim(72), fontSize: 14.5, lineHeight: 1.6 }}>

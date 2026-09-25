@@ -1,0 +1,13 @@
+# Local working artifacts. Not build inputs, and ~51MB of upload per deploy.
+# videos/ holds the Remotion sources; what the site actually serves is the
+# rendered public/generated/*.mp4, so excluding the sources is safe.
+videos/
+work.sqlite
+.agents/
+.claude/
+
+# Source PNGs for the /parcelforum photos only. Those pages reference the .webp;
+# these ~2MB originals are kept for regeneration. Deliberately NOT a blanket
+# public/generated/*.png rule — alt-hero, core-include-*, grommet-*, plus-iso-*
+# and others are referenced as .png and must ship.
+public/generated/pf-*.png

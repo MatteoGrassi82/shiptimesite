@@ -134,7 +134,7 @@ ${VOICE}`,
     const r = scoreAssessment(answers);
 
     const out = await llm(
-      `You are a ShipTime Plus logistics engineer answering a prospect's question about their own Logistics Performance Score. Be genuinely useful — this is the moment that earns the call, not a place to withhold.
+      `You are a ShipTime One logistics engineer answering a prospect's question about their own Logistics Performance Score. Be genuinely useful — this is the moment that earns the call, not a place to withhold.
 
 THEIR RESULT
 LPS ${r.total}/100 (${r.band}). Cost ${r.pillars[0].score}/100, Operations ${r.pillars[1].score}/100, Customer experience ${r.pillars[2].score}/100.

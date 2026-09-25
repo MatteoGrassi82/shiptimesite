@@ -37,7 +37,7 @@ export const PILLARS: Pillar[] = [
     scoreName: "Cost Performance Score",
     abbr: "CPS",
     weight: 42,
-    blurb: "What you pay to move every order — and how deliberately that gets decided.",
+    blurb: "What you pay to move every order, and how deliberately that gets decided.",
   },
   {
     key: "ops",
@@ -53,7 +53,7 @@ export const PILLARS: Pillar[] = [
     scoreName: "Customer Experience Score",
     abbr: "CES",
     weight: 24,
-    blurb: "What the customer feels after they buy — tracking, delivery, returns.",
+    blurb: "What the customer feels after they buy: tracking, delivery, returns.",
   },
 ];
 
@@ -107,7 +107,7 @@ export const QUESTIONS: Question[] = [
       "Monthly reports.",
       "Regular KPI reporting.",
       "Interactive dashboards.",
-      "Real-time analytics with forecasting.",
+      "Real time analytics with forecasting.",
     ],
   },
   {
@@ -128,14 +128,14 @@ export const QUESTIONS: Question[] = [
     id: 5,
     pillar: "cost",
     title: "Regional Carrier Utilization",
-    prompt: "Which statement best describes your use of regional and alternative last-mile carriers?",
+    prompt: "Which statement best describes your use of regional and alternative last mile carriers?",
     points: 10,
     levels: [
       "We ship almost exclusively with UPS, FedEx or USPS.",
       "We occasionally use a regional carrier when requested.",
       "We regularly use regional carriers in selected markets.",
       "We actively optimize shipments between national and regional carriers based on destination, cost and service.",
-      "We continuously optimize shipments across national, regional and specialized last-mile providers using data and business rules.",
+      "We continuously optimize shipments across national, regional and specialized last mile providers using data and business rules.",
     ],
   },
   {
@@ -163,7 +163,7 @@ export const QUESTIONS: Question[] = [
       "Some automation.",
       "Most routine processes automated.",
       "Highly automated.",
-      "End-to-end intelligent automation.",
+      "End to end intelligent automation.",
     ],
   },
   {
@@ -177,7 +177,7 @@ export const QUESTIONS: Question[] = [
       "Limited integrations.",
       "Most systems integrated.",
       "Fully integrated workflows.",
-      "Real-time synchronization across commerce, ERP/WMS and shipping.",
+      "Real time synchronization across commerce, ERP/WMS and shipping.",
     ],
   },
   {
@@ -219,14 +219,14 @@ export const QUESTIONS: Question[] = [
       "We review reports occasionally.",
       "KPIs are reviewed regularly by management.",
       "Data drives operational decisions and improvement initiatives.",
-      "Continuous improvement is embedded into the business through dashboards, analytics and AI-driven recommendations.",
+      "Continuous improvement is embedded into the business through dashboards, analytics and AI driven recommendations.",
     ],
   },
   {
     id: 12,
     pillar: "cx",
     title: "Delivery Experience",
-    prompt: "Which best describes the post-purchase experience?",
+    prompt: "Which best describes the post purchase experience?",
     points: 8,
     levels: [
       "Shipment confirmation only.",
@@ -261,14 +261,14 @@ export const QUESTIONS: Question[] = [
       "Functional but inconvenient.",
       "Straightforward.",
       "Mostly automated.",
-      "Seamless and loyalty-enhancing.",
+      "Seamless, and it builds loyalty.",
     ],
   },
   {
     id: 15,
     pillar: "cx",
     title: "Customer Feedback",
-    prompt: "How is logistics-related customer feedback used?",
+    prompt: "How is customer feedback about logistics used?",
     points: 3,
     levels: [
       "Not measured.",
@@ -303,7 +303,7 @@ export const PRIORITY_OPTIONS = [
   "Delivery performance",
   "Customer experience",
   "Warehouse & fulfillment",
-  "Multi-warehouse strategy",
+  "Multi warehouse strategy",
   "International shipping",
   "Technology & automation",
   "Returns management",

@@ -548,15 +548,31 @@ ASSETS.push(
       "composition. No text, no logos, no watermarks.",
   },
   {
+    // The /parcelforum photos (2026-09-15 review: "images need to be more
+    // realistic"). The earlier "bright editorial, film grain, brand campaign"
+    // framing read as AI; this one asks for an unretouched documentary shot in
+    // a working facility instead. Shared preamble so the set matches.
     name: "pf-proof-packing",
     size: "1024x1024",
     raw: true,
     prompt:
-      "Bright editorial photograph, light and airy: a fulfillment worker taping and stacking plain kraft " +
-      "cardboard boxes at a packing bench in a busy modern warehouse, caught mid-motion, rows of racking " +
-      "softly out of focus behind, big daylight windows, warm natural tones, light film grain, shallow " +
-      "depth of field, real person, candid, not posed at camera. The boxes are completely blank and " +
-      "unbranded. Square composition. No text, no logos, no watermarks.",
+      pfReal() +
+      " Scene: one fulfillment worker taping a plain kraft box shut at a scuffed packing bench, a second " +
+      "box already sealed beside it, worn pallet racking with mixed cartons behind, a tape gun and a roll " +
+      "of paper on the bench. The boxes are completely blank and unbranded. Square composition.",
+  },
+  {
+    // Proof 02, the high-volume DTC campaign. Same look as pf-proof-packing so
+    // the two cases read as a pair; the volume is the subject.
+    name: "pf-proof-campaign",
+    size: "1024x1024",
+    raw: true,
+    prompt:
+      pfReal() +
+      " Scene: a long packing line in a working fulfillment warehouse, hundreds of identical small plain " +
+      "kraft mailer boxes stacked on pallets and steel rolling carts stretching back into the building, two " +
+      "workers picking and sealing parcels, one slightly motion blurred. Every box is completely blank and " +
+      "unbranded. No screens or monitors anywhere. Square composition.",
   },
   {
     name: "pf-booth-talk",
@@ -576,6 +592,23 @@ ASSETS.push(
 // costs down (Matteo's call, 2026-07-11). For hero/marketing shots that need
 // better composition control, override per run:
 //   GEN_MODEL=gpt-image-2 GEN_QUALITY=high npm run gen:images
+// Shared realism preamble for the pf-* photos above. Everything here pushes
+// away from the polished "AI editorial" look: a named camera and lens, mixed
+// real light, no grading, imperfect people and places. A function declaration
+// so it hoists above the entries that call it.
+function pfReal() {
+  return (
+  "Unretouched documentary photograph taken inside a real, working fulfillment warehouse in North America. " +
+  "Shot handheld on a full frame camera with a 35mm lens at f/4, ISO 800, natural daylight from high windows " +
+  "mixed with ordinary overhead fluorescent lighting, true to life colour with no cinematic colour grading, " +
+  "no film grain overlay, no HDR, no vignette, mild lens imperfections. Ordinary looking people in plain " +
+  "work clothes with natural skin texture and no retouching, caught mid task and not looking at the camera. " +
+  "Believable clutter: scuffed concrete floor, worn racking, mixed carton sizes, tape guns, a floor scale, " +
+  "safety tape on the floor. It should look like a photo an operations manager took on site for an internal " +
+  "report, not an advertisement or a stock photo. No text, no logos, no signage, no watermarks."
+  );
+}
+
 const MODEL = process.env.GEN_MODEL || "gpt-image-1";
 const DEFAULT_QUALITY = process.env.GEN_QUALITY || "medium";
 

@@ -6,7 +6,6 @@ import OrbitingIntegrations from "@/components/ui/orbiting-circles-02";
 import { Marquee } from "@/components/ui/marquee";
 import {
   P,
-  serif,
   sans,
   dots,
   inner,
@@ -18,6 +17,24 @@ import {
   SectionHead,
   PlusKitMotion,
 } from "./plus-v2-kit";
+
+// Headings follow the printed Parcel Forum banner (2026-09-21 request): Anton,
+// the same heavy condensed uppercase, in place of the kit's Instrument Serif.
+// Body was already Manrope, so it matches as-is.
+//
+// Defined here rather than in plus-v2-kit on purpose. The kit is shared with
+// the LPS shiplet, and /parcelforum remaps the shiplet's serif to Manrope by
+// overriding --font-instrument-serif; changing the kit would silently break
+// that override and put Anton on the assessment. Shadowing the import keeps
+// the change inside this page while every existing `...serif` call site picks
+// it up. Call sites that set their own lineHeight still win over the 0.96.
+const serif: CSSProperties = {
+  fontFamily: "var(--font-anton), Impact, 'Arial Narrow', sans-serif",
+  fontWeight: 400,
+  textTransform: "uppercase",
+  letterSpacing: "0.005em",
+  lineHeight: 0.96,
+};
 
 // ── /plus/v3 — the ShipTime + page ───────────────────────────────────────────
 // Content v2, per PLUS-V3-CONTENT.md — the merge of Michael's brief
@@ -72,8 +89,9 @@ function Hero() {
 
       <div style={{ ...inner, position: "relative", minHeight: "calc(100svh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
         <div className="pk-fade" style={{ animationDelay: "0.05s", display: "flex", justifyContent: "center" }}>
-          {/* "ShipTime Plus" is a placeholder — enterprise name still open with Michael */}
-          <Eyebrow onDark>ShipTime Plus · For growing e-commerce</Eyebrow>
+          {/* Name settled: ShipTime One (Michael, 2026-09-10), replacing the
+              "ShipTime Plus" placeholder this page shipped with. */}
+          <Eyebrow onDark>ShipTime One · For growing e-commerce</Eyebrow>
         </div>
         <h1 style={{ ...serif, fontSize: "clamp(2.7rem, 6.8vw, 5.7rem)", lineHeight: 1.03, color: "#FFFFFF", textShadow: "0 2px 28px rgba(16,18,38,0.55)", margin: "24px 0 0" }}>
           <span className="pk-line"><span className="pk-line-in" style={{ animationDelay: "0.1s" }}>Logistics is holding your growth back.</span></span>
@@ -653,7 +671,7 @@ function HowWeWork() {
           <Reveal delay={180}>
             <img
               src="/generated/plus-ops-team.webp"
-              alt="A ShipTime Plus operator and a customer's operations manager reviewing a logistics plan together"
+              alt="A ShipTime One operator and a customer's operations manager reviewing a logistics plan together"
               width={1024}
               height={1024}
               loading="lazy"
@@ -1174,7 +1192,7 @@ function LpsCta() {
 // ── page ─────────────────────────────────────────────────────────────────────
 export function PlusHomeV3() {
   return (
-    <div style={{ fontFamily: "var(--font-manrope), system-ui, sans-serif" }}>
+    <div className="v3-flow" style={{ fontFamily: "var(--font-manrope), system-ui, sans-serif" }}>
       <Hero />
       <Problems />
       <WhoItsFor />
@@ -1189,6 +1207,16 @@ export function PlusHomeV3() {
 
       <PlusKitMotion />
       <style>{`
+        /* SectionHead and the CTA band live in plus-v2-kit, so the shadowed
+           serif above can't reach their inline styles. Remap the variable they
+           resolve instead — the same move /parcelforum makes for the shiplet —
+           which avoids !important, then add the casing Anton is set in. */
+        .v3-flow { --font-instrument-serif: var(--font-anton); }
+        .v3-flow h2 { text-transform: uppercase; letter-spacing: 0.005em; }
+        /* The headings' emphasis device was italic Instrument Serif. Anton ships
+           no italic, so the browser would synthesize a slanted condensed face —
+           /parcelforum neutralizes the same way where it remaps its serif. */
+        .v3-flow [style*="font-style:italic"] { font-style: normal !important; }
         @media (prefers-reduced-motion: reduce) { .pk-herovid { display: none; } .v3-mq [class*="animate-"] { animation: none !important; } }
         @media (prefers-reduced-motion: no-preference) {
           @keyframes v3-travel-kf { from { offset-distance: 0%; } to { offset-distance: 100%; } }

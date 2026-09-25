@@ -90,7 +90,7 @@ function PillarRadar({ scores }: { scores: number[] }) {
   const poly = (f: number[]) => f.map((v, i) => pt(i, v).join(",")).join(" ");
   const labels = ["Cost", "Operations", "Experience"];
   return (
-    <svg viewBox="0 0 260 250" style={{ width: "100%", maxWidth: 260, height: "auto", display: "block" }} role="img" aria-label={`Cost ${scores[0]}, Operations ${scores[1]}, Experience ${scores[2]} out of 100`}>
+    <svg viewBox="-36 0 332 250" style={{ width: "100%", maxWidth: 300, height: "auto", display: "block" }} role="img" aria-label={`Cost ${scores[0]}, Operations ${scores[1]}, Experience ${scores[2]} out of 100`}>
       {[0.25, 0.5, 0.75, 1].map((f) => (
         <polygon key={f} points={poly([f, f, f])} fill="none" stroke={P.line} strokeWidth="1" />
       ))}
@@ -150,8 +150,8 @@ function BandScale({ total }: { total: number }) {
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
-        {bands.map((b) => (
-          <span key={b.n} className="lps-bandlabel" style={{ ...sans, flex: 1, textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: P.faint }}>
+        {bands.map((b, i) => (
+          <span key={b.n} className="lps-bandlabel" data-active={total >= i * 20 && total < b.to + (i === 4 ? 1 : 0) ? "true" : undefined} style={{ ...sans, flex: 1, textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: P.faint }}>
             {b.n}
           </span>
         ))}
@@ -192,7 +192,7 @@ function GapChart({ gaps }: { gaps: { question: { title: string }; level: number
   );
 }
 
-export function LpsShiplet({
+function LpsShipletStages({
   compact = false,
   /** When set, the intro CTA navigates here instead of starting inline — lets a
    *  landing page pitch the assessment and hand it to its own focused page. */
@@ -290,7 +290,7 @@ export function LpsShiplet({
       const data = await res.json();
       setChat((c) => c.map((t, i) => (i === c.length - 1 ? { ...t, a: data?.answer || "Something went wrong there." } : t)));
     } catch {
-      setChat((c) => c.map((t, i) => (i === c.length - 1 ? { ...t, a: "Couldn't reach the model just then — try again?" } : t)));
+      setChat((c) => c.map((t, i) => (i === c.length - 1 ? { ...t, a: "Couldn't reach the model just then. Try again?" } : t)));
     } finally {
       setChatBusy(false);
     }
@@ -409,8 +409,8 @@ export function LpsShiplet({
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, margin: "26px 0 0" }} className="lps-pillars">
           {PILLARS.map((p) => (
             <div key={p.key} style={{ background: P.panelSoft, border: `1px solid ${P.line}`, borderRadius: 14, padding: "16px 18px" }}>
-              <div style={{ ...sans, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: P.faint }}>
-                {p.weight}% of score
+              <div style={{ ...sans, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: P.sub }}>
+                {p.abbr}
               </div>
               <div style={{ ...serif, fontSize: 19, color: P.ink, marginTop: 6 }}>{p.name}</div>
               <div style={{ ...sans, fontSize: 12.5, lineHeight: 1.5, color: P.sub, marginTop: 5 }}>{p.blurb}</div>
@@ -473,6 +473,7 @@ export function LpsShiplet({
                 key={level}
                 type="button"
                 onClick={() => choose(level)}
+                aria-pressed={active}
                 className="lps-opt"
                 style={{
                   ...sans,
@@ -637,12 +638,12 @@ export function LpsShiplet({
             : "You'll see your full result on the next screen. We'll send a copy so you can share it internally."}
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 22 }} className="lps-fields">
-          <input required value={form.firstname} onChange={(e) => setForm({ ...form, firstname: e.target.value })} placeholder="First name" style={field} />
-          <input value={form.lastname} onChange={(e) => setForm({ ...form, lastname: e.target.value })} placeholder="Last name" style={field} />
-          <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Work email" style={{ ...field, gridColumn: "1 / -1" }} />
-          <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="Company" style={{ ...field, gridColumn: "1 / -1" }} />
+          <input required value={form.firstname} onChange={(e) => setForm({ ...form, firstname: e.target.value })} placeholder="First name" name="firstname" autoComplete="given-name" aria-label="First name" style={field} />
+          <input value={form.lastname} onChange={(e) => setForm({ ...form, lastname: e.target.value })} placeholder="Last name (optional)" name="lastname" autoComplete="family-name" aria-label="Last name" style={field} />
+          <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Work email" name="email" autoComplete="email" inputMode="email" aria-label="Work email" style={{ ...field, gridColumn: "1 / -1" }} />
+          <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="Company (optional)" name="company" autoComplete="organization" aria-label="Company" style={{ ...field, gridColumn: "1 / -1" }} />
         </div>
-        {err && <p style={{ ...sans, fontSize: 13.5, color: P.orange, margin: "12px 0 0" }}>{err}</p>}
+        {err && <p role="alert" style={{ ...sans, fontSize: 13.5, color: P.orange, margin: "12px 0 0" }}>{err}</p>}
         <button
           type="submit"
           disabled={busy}
@@ -705,7 +706,7 @@ export function LpsShiplet({
                 <div className="lps-bar" style={{ height: "100%", width: `${p.score}%`, background: P.orange, borderRadius: 999 }} />
               </div>
               <div style={{ ...sans, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: P.faint, marginTop: 6 }}>
-                {p.abbr} · {p.weight}% of total
+                {p.abbr}
               </div>
             </div>
           ))}
@@ -722,13 +723,13 @@ export function LpsShiplet({
             It&rsquo;s being written now.
           </h3>
           <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.68, color: "#4A5060", margin: "10px 0 0", maxWidth: "54ch" }}>
-            The read on your answer pattern, the three gaps costing you the most, and the first concrete move for each
-            — on its way to{" "}
+            The read on your answer pattern, the three gaps costing you the most, and the first concrete move for each,
+            on its way to{" "}
             <span style={{ fontWeight: 700, color: P.ink, wordBreak: "break-word" }}>{form.email || "your inbox"}</span>.
             Give it about an hour.
           </p>
           <p style={{ ...sans, fontSize: 13.5, lineHeight: 1.6, color: P.faint, margin: "12px 0 0", maxWidth: "54ch" }}>
-            Your scores are final — the report explains them, it doesn&rsquo;t change them.
+            Your scores are final. The report explains them, it doesn&rsquo;t change them.
           </p>
         </div>
       ) : (
@@ -865,11 +866,24 @@ export function LpsShiplet({
           Talk through your score <ArrowRight size={15} />
         </a>
         <span style={{ ...sans, fontSize: 13, color: P.sub }}>
-          A 30-minute call with a logistics engineer — no pitch, just the read.
+          A 30 minute call with a logistics engineer. No pitch, just the read.
         </span>
       </div>
 
-      <style>{`
+    </div>
+  );
+}
+
+// ── Stylesheet ───────────────────────────────────────────────────────────────
+// Lives at module scope, rendered by the exported wrapper below, so EVERY stage
+// gets it. It used to sit inside the result-stage return only, which meant the
+// intro / questions / micro-ask / priority / gate stages rendered with no CSS
+// at all: no spinner animation, no hover states, and no mobile rules. On
+// /parcelforum that left `.lps-pillars` three-across on a 390px phone, its
+// min-content forced the hero's grid track to ~406px inside a 346px container,
+// and the hero's overflow:hidden silently clipped the headline (found 2026-09-07,
+// one week before the show).
+const LPS_CSS = `
         .lps-opt { transition: border-color 0.15s ease, background 0.15s ease; }
         .lps-opt:hover { border-color: ${P.orange} !important; }
         .lps-spin { animation: lps-spin-kf 0.9s linear infinite; }
@@ -898,9 +912,16 @@ export function LpsShiplet({
         }
         @media (max-width: 720px) {
           .lps-pillars, .lps-fields { grid-template-columns: 1fr !important; }
-          .lps-gaprow { grid-template-columns: 1fr auto !important; }
-          .lps-gaprow > div[aria-hidden] { grid-column: 1 / -1; }
-          .lps-bandlabel { font-size: 8.5px !important; }
+          .lps-gaprow { grid-template-columns: 1fr auto !important; row-gap: 6px !important; }
+          .lps-gaprow > span:first-child { grid-row: 1; grid-column: 1; }
+          .lps-gaprow > span:last-child { grid-row: 1; grid-column: 2; }
+          .lps-gaprow > div[aria-hidden] { grid-row: 2; grid-column: 1 / -1; }
+          .lps-bandlabel { font-size: 9px !important; }
+        }
+        @media (max-width: 560px) {
+          /* five band names can't share 350px — show the one that applies */
+          .lps-bandlabel:not([data-active]) { visibility: hidden; }
+          .lps-bandlabel[data-active] { font-size: 10.5px !important; }
           .lps-result, .lps-breakdown { grid-template-columns: 1fr !important; justify-items: start; }
         }
 
@@ -916,7 +937,13 @@ export function LpsShiplet({
           .lps-breakdown { break-inside: avoid; }
           .lps-in { break-inside: avoid; animation: none !important; }
         }
-      `}</style>
-    </div>
+      `;
+
+export function LpsShiplet(props: Parameters<typeof LpsShipletStages>[0]) {
+  return (
+    <>
+      <LpsShipletStages {...props} />
+      <style>{LPS_CSS}</style>
+    </>
   );
 }

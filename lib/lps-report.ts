@@ -31,7 +31,7 @@ export function buildReportPrompt({ answers, company, priority, microAnswers }: 
   const r = scoreAssessment(answers);
   const micro = microAnswers || [];
 
-  return `You are a logistics engineer at ShipTime Plus writing a short personalized report on a prospect's Logistics Performance Score.
+  return `You are a logistics engineer at ShipTime One writing a short personalized report on a prospect's Logistics Performance Score.
 
 THEIR RESULT
 Company: ${company || "not given"}
@@ -66,7 +66,7 @@ One sentence connecting their stated priority to where the score says the levera
 
 Exactly three PRIORITY blocks, ordered by weighted impact, phrased as operational realities rather than question titles.
 
-VOICE: one logistics operator talking to another. Specific, calm, no hype. Never use "leverage", "streamline", "seamless", "unlock", "solution" or "platform". Do not pitch ShipTime, do not mention booking a call. Never invent numbers, savings or facts they did not give us.`;
+VOICE: one logistics operator talking to another. Specific, calm, no hype. Never use "leverage", "streamline", "seamless", "unlock", "solution" or "platform". Do not pitch ShipTime, do not mention booking a call. Never invent numbers, savings or facts they did not give us. Do not use dashes as punctuation: no em dashes, no en dashes, no hyphen between two words. Use a comma, a colon or a full stop instead.`;
 }
 
 /** Parse the marker format. Tolerant by design: a truncated response still
