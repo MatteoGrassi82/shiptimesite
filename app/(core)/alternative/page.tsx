@@ -34,7 +34,7 @@ const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 export const metadata: Metadata = {
   title: "ShipTime Alternatives — A Better Way to Ship | ShipTime",
   description:
-    "Looking for an alternative to Freightcom, ShipStation, or eShipper? See why growing brands switch to ShipTime: no platform fee, Bring Your Own Rates, and Canada Post in one place.",
+    "Looking for an alternative to ShipStation or eShipper? See why growing brands switch to ShipTime: no platform fee, Bring Your Own Rates, and Canada Post in one place.",
   alternates: { canonical: "/alternative" },
 };
 
@@ -63,7 +63,7 @@ export default function AlternativeHub() {
 
       {/* ── CARDS ── */}
       <section className="px-5 md:px-10 py-16 md:py-24" style={{ background: ds.white }}>
-        <div className="grid gap-5 md:grid-cols-3" style={{ maxWidth: 1040, margin: "0 auto" }}>
+        <div className="grid gap-5 md:grid-cols-2" style={{ maxWidth: 1040, margin: "0 auto" }}>
           {competitors.map((c) => (
             <Link
               key={c.slug}

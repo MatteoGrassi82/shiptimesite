@@ -167,7 +167,7 @@ function SiteFooter() {
         { label: "All comparisons", href: "/vs" },
         { label: "All alternatives", href: "/alternative" },
         { label: "ShipStation alternative", href: "/alternative/shipstation" },
-        { label: "Freightcom alternative", href: "/alternative/freightcom" },
+        { label: "eShipper alternative", href: "/alternative/eshipper" },
       ],
     },
     {

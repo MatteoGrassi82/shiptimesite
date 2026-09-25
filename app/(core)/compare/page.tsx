@@ -4,12 +4,12 @@ import { join } from "node:path";
 import ComparePage from "@/components/ui/compare-page";
 
 export const metadata: Metadata = {
-  title: "Compare ShipTime vs Freightcom, eShipper & ShipStation | ShipTime",
+  title: "Compare ShipTime vs eShipper & ShipStation | ShipTime",
   description:
-    "Freightcom, eShipper, ShipStation, or ShipTime: platform fees, whose rates you can use, courier + LTL coverage, and who answers the phone. All four side by side.",
+    "eShipper, ShipStation, or ShipTime: platform fees, whose rates you can use, courier + LTL coverage, and who answers the phone. All three side by side.",
   alternates: { canonical: "/compare" },
   openGraph: {
-    title: "Compare ShipTime vs Freightcom, eShipper & ShipStation | ShipTime",
+    title: "Compare ShipTime vs eShipper & ShipStation | ShipTime",
     description:
       "The differences that lower your true cost of shipping: no platform fee, your own rates in every quote, courier + LTL in one place, and support that answers in 26 seconds.",
     type: "website",

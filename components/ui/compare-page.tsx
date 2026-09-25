@@ -36,28 +36,27 @@ const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 // claim on that competitor's own /vs/[slug] page, so nothing is asserted for
 // the first time in this table.
 const COMPETITOR_COLS: MultiCompareCompetitor[] = [
-  { key: "freightcom", name: "Freightcom", price: "Free", logo: "/logos/freightcom.png" },
   { key: "eshipper", name: "eShipper", price: "Free" },
   { key: "shipstation", name: "ShipStation", price: "$14.99–$7,499/mo" },
 ];
 
 const ROWS: MultiCompareRow[] = [
-  { feature: "Monthly platform fee", shiptime: "$0", shiptimeWin: true, freightcom: "$0", eshipper: "$0", shipstation: "$14.99–$7,499/mo" },
-  { feature: "Discounted carrier rates of their own", shiptime: "Yes", freightcom: "Yes", eshipper: "Yes", shipstation: "No" },
-  { feature: "Bring your own rates, compared on every label", shiptime: "Parcel & LTL", shiptimeWin: true, freightcom: "No", eshipper: "No", shipstation: "Own accounts only" },
-  { feature: "Courier + LTL freight in one platform", shiptime: "Yes", freightcom: "Yes", eshipper: "Yes", shipstation: "Parcel only" },
-  { feature: "Invoice audit & carrier dispute support", shiptime: "Set up with us", shiptimeWin: true, freightcom: "No", eshipper: "No", shipstation: "No" },
-  { feature: "Support you can actually reach", shiptime: "~26s avg", shiptimeWin: true, freightcom: "Limited", eshipper: "Limited", shipstation: "Ticket queue" },
+  { feature: "Monthly platform fee", shiptime: "$0", shiptimeWin: true, eshipper: "$0", shipstation: "$14.99–$7,499/mo" },
+  { feature: "Discounted carrier rates of their own", shiptime: "Yes", eshipper: "Yes", shipstation: "No" },
+  { feature: "Bring your own rates, compared on every label", shiptime: "Parcel & LTL", shiptimeWin: true, eshipper: "No", shipstation: "Own accounts only" },
+  { feature: "Courier + LTL freight in one platform", shiptime: "Yes", eshipper: "Yes", shipstation: "Parcel only" },
+  { feature: "Invoice audit & carrier dispute support", shiptime: "Set up with us", shiptimeWin: true, eshipper: "No", shipstation: "No" },
+  { feature: "Support you can actually reach", shiptime: "~26s avg", shiptimeWin: true, eshipper: "Limited", shipstation: "Ticket queue" },
 ];
 
 const COMPARE_FAQ: FaqItem[] = [
   {
     q: "Is ShipTime really free?",
-    a: "Yes — no platform fee, no contract. You pay for the labels you print, nothing else. Of the three platforms on this page, only ShipStation charges a subscription: $14.99 to $7,499 a month.",
+    a: "Yes — no platform fee, no contract. You pay for the labels you print, nothing else. Of the other platforms on this page, only ShipStation charges a subscription: $14.99 to $7,499 a month.",
   },
   {
     q: "Can I bring my own carrier rates?",
-    a: "Yes. Drop in the pricing you've already negotiated and ShipTime compares it against our discounted rates on every shipment, parcel and LTL both. Freightcom and eShipper don't support this; ShipStation connects your own accounts but has no discounted rates of its own to compare them against.",
+    a: "Yes. Drop in the pricing you've already negotiated and ShipTime compares it against our discounted rates on every shipment, parcel and LTL both. eShipper doesn't support this; ShipStation connects your own accounts but has no discounted rates of its own to compare them against.",
   },
   {
     q: "Do you handle freight and LTL?",
@@ -65,15 +64,15 @@ const COMPARE_FAQ: FaqItem[] = [
   },
   {
     q: "Can I get Canada Post rates, with pickups?",
-    a: "Yes. Canada Post is built in, with pickups. Freightcom and ShipStation include Canada Post too; eShipper's Canada Post service only runs out of their warehouse, and pickups aren't supported.",
+    a: "Yes. Canada Post is built in, with pickups. ShipStation includes Canada Post too; eShipper's Canada Post service only runs out of their warehouse, and pickups aren't supported.",
   },
   {
     q: "How fast do you actually answer support calls?",
-    a: "So far this year our Canadian team has taken more than 10,000 support calls, with an average time to answer of 26 seconds — and fewer than 1% of callers needed a callback. Support at Freightcom and eShipper is more limited, and ShipStation routes you to a ticket queue.",
+    a: "So far this year our Canadian team has taken more than 10,000 support calls, with an average time to answer of 26 seconds — and fewer than 1% of callers needed a callback. Support at eShipper is more limited, and ShipStation routes you to a ticket queue.",
   },
   {
     q: "Do you check carrier invoices for errors?",
-    a: "We do — on the carrier invoices for the rates you bring to ShipTime. Set it up with us once, and we'll check those bills for overcharges, help you recover them, and take carrier disputes on ourselves. None of the other three offer this.",
+    a: "We do — on the carrier invoices for the rates you bring to ShipTime. Set it up with us once, and we'll check those bills for overcharges, help you recover them, and take carrier disputes on ourselves. Neither eShipper nor ShipStation offers this.",
   },
   {
     q: "Does ShipTime integrate with my store?",
@@ -91,13 +90,13 @@ export default function ComparePage({ images }: { images: Record<string, string 
       {/* ── HERO ── */}
       <LandingHero
         photo={images["hero"]}
-        eyebrow="ShipTime vs Freightcom · eShipper · ShipStation"
+        eyebrow="ShipTime vs eShipper · ShipStation"
         headline={
           <>
             Comparing shipping platforms? <em style={{ fontStyle: "italic", fontWeight: 300, color: "#8B90A8" }}>See them side by side.</em>
           </>
         }
-        subhead="Freightcom, eShipper, ShipStation, or ShipTime: the real differences are the platform fee, whose rates you can use, courier and LTL coverage, and who answers when something goes wrong. Here are all four, side by side."
+        subhead="eShipper, ShipStation, or ShipTime: the real differences are the platform fee, whose rates you can use, courier and LTL coverage, and who answers when something goes wrong. Here are all three, side by side."
         ctaSource="compare-hero"
         chipTop="Best rate found"
         chipBottom="No platform fee"
@@ -107,7 +106,7 @@ export default function ComparePage({ images }: { images: Record<string, string 
       <section className="px-5 md:px-10 pt-4 pb-14 md:pb-20" style={{ background: ds.white }}>
         <div className="text-center" style={{ maxWidth: 760, margin: "0 auto" }}>
           <p style={{ ...body, fontSize: 20, color: ds.navy, lineHeight: 1.7, letterSpacing: "-0.01em" }}>
-            Freightcom, eShipper, and ShipStation each do part of this well. ShipTime is built to lower your true cost of shipping across all of it.
+            eShipper and ShipStation each do part of this well. ShipTime is built to lower your true cost of shipping across all of it.
           </p>
           <p className="mt-5" style={{ ...body, fontSize: 16, lineHeight: 1.75 }}>
             No platform fee at any volume, your own negotiated carrier rates compared on every quote, courier and LTL together in one dashboard, and a Canadian team that answers in 26 seconds on average — not a ticket queue.
@@ -119,7 +118,7 @@ export default function ComparePage({ images }: { images: Record<string, string 
       <section className="px-5 md:px-10 py-16 md:py-20" style={{ background: ds.surface }} id="compare-table">
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div className="text-center mb-10">
-            <h2 className="mb-3" style={{ ...heading, fontSize: "clamp(1.5rem, 3.6vw, 2.2rem)" }}>Four platforms. One table.</h2>
+            <h2 className="mb-3" style={{ ...heading, fontSize: "clamp(1.5rem, 3.6vw, 2.2rem)" }}>Three platforms. One table.</h2>
             <p className="mx-auto" style={{ ...body, fontSize: 15, maxWidth: 460 }}>
               Bring the carrier deals you&rsquo;ve already earned — and keep them. No platform fee, ever.
             </p>
@@ -190,7 +189,7 @@ export default function ComparePage({ images }: { images: Record<string, string 
       <ShipTimeTestimonials />
 
       {/* ── FAQ ── */}
-      <LandingFaq faq={COMPARE_FAQ} title="Common questions" subtitle="Answers that hold across Freightcom, eShipper, and ShipStation" />
+      <LandingFaq faq={COMPARE_FAQ} title="Common questions" subtitle="Answers that hold across eShipper and ShipStation" />
 
       {/* ── SCENE DIVIDER ── */}
       <ShipTimeSceneDivider />

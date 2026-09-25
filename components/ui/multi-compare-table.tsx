@@ -45,8 +45,6 @@ export type MultiCompareRow = {
   feature: string;
   shiptime: string;
   shiptimeWin?: boolean;
-  freightcom: string;
-  freightcomWin?: boolean;
   eshipper: string;
   eshipperWin?: boolean;
   shipstation: string;
@@ -54,7 +52,7 @@ export type MultiCompareRow = {
 };
 
 export type MultiCompareCompetitor = {
-  key: "freightcom" | "eshipper" | "shipstation";
+  key: "eshipper" | "shipstation";
   name: string;
   price: string;
   logo?: string;
@@ -94,7 +92,7 @@ function Cell({
   );
 }
 
-// Four-way comparison table (ShipTime + all three competitors on one screen).
+// Side-by-side table: ShipTime plus every competitor passed in, one column each.
 // Rows are a curated, cross-checked subset of the per-competitor data in
 // lib/competitors.ts — every cell here has a matching claim on that
 // competitor's own /vs page, so nothing is asserted here that isn't already
@@ -108,14 +106,14 @@ export function MultiCompareTable({
   competitors: MultiCompareCompetitor[];
   ctaSource?: string;
 }) {
-  const COLS = "minmax(150px,1.6fr) repeat(4, minmax(78px, 1fr))";
+  const COLS = `minmax(150px,1.6fr) repeat(${competitors.length + 1}, minmax(78px, 1fr))`;
 
   return (
     <div
       className="overflow-x-auto"
       style={{ borderRadius: 16, border: `1px solid ${ds.border}`, background: ds.white, boxShadow: "0 8px 30px rgba(28,30,61,0.08)" }}
     >
-      <div style={{ minWidth: 640 }}>
+      <div style={{ minWidth: 540 }}>
         {/* Header */}
         <div className="grid" style={{ gridTemplateColumns: COLS, background: ds.white, borderBottom: `1px solid ${ds.border}` }}>
           <div className="px-4 md:px-6 py-4" />
@@ -144,9 +142,9 @@ export function MultiCompareTable({
               <span style={{ ...inter, fontSize: 13, color: ds.navy, fontWeight: 500 }}>{row.feature}</span>
             </div>
             <Cell value={row.shiptime} win={row.shiptimeWin} spotlight />
-            <Cell value={row.freightcom} win={row.freightcomWin} />
-            <Cell value={row.eshipper} win={row.eshipperWin} />
-            <Cell value={row.shipstation} win={row.shipstationWin} />
+            {competitors.map((c) => (
+              <Cell key={c.key} value={row[c.key]} win={row[`${c.key}Win`]} />
+            ))}
           </div>
         ))}
 
@@ -160,9 +158,9 @@ export function MultiCompareTable({
               Get in touch
             </LeadCaptureButton>
           </div>
-          <div className="py-4" style={{ borderLeft: `1px solid ${ds.border}` }} />
-          <div className="py-4" style={{ borderLeft: `1px solid ${ds.border}` }} />
-          <div className="py-4" style={{ borderLeft: `1px solid ${ds.border}` }} />
+          {competitors.map((c) => (
+            <div key={c.key} className="py-4" style={{ borderLeft: `1px solid ${ds.border}` }} />
+          ))}
         </div>
       </div>
     </div>

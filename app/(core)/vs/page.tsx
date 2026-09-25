@@ -27,7 +27,7 @@ const sora = { fontFamily: "var(--font-manrope), sans-serif" };
 export const metadata: Metadata = {
   title: "Choose ShipTime — Side-by-Side Comparisons | ShipTime",
   description:
-    "See how ShipTime compares head-to-head with Freightcom, ShipStation, and eShipper. No platform fee, Bring Your Own Rates, Canada Post, and more.",
+    "See how ShipTime compares head-to-head with ShipStation and eShipper. No platform fee, Bring Your Own Rates, Canada Post, and more.",
   alternates: { canonical: "/vs" },
 };
 
@@ -47,7 +47,7 @@ export default function VsHub() {
       </section>
 
       <section className="px-5 md:px-10 py-16 md:py-24" style={{ background: ds.white }}>
-        <div className="grid gap-5 md:grid-cols-3" style={{ maxWidth: 1040, margin: "0 auto" }}>
+        <div className="grid gap-5 md:grid-cols-2" style={{ maxWidth: 1040, margin: "0 auto" }}>
           {competitors.map((c) => (
             <Link key={c.slug} href={`/vs/${c.slug}`} className="group flex flex-col lift" style={{ background: ds.white, borderRadius: 16, padding: 28, border: `1px solid ${ds.border}` }}>
               <p className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: ds.orange, ...sora }}>Choose ShipTime over</p>
