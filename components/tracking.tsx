@@ -17,6 +17,8 @@
 //
 // Deliberately NOT included: Universal Analytics (UA-49380729-1) is still on
 // shiptime.com but stopped processing data in 2023, so it would collect nothing.
+import { ADS_CONVERSION_ID } from "@/lib/ads";
+
 const GA4_ID = "G-XVFEYDGD5H";        // main shiptime.com property (316813460)
 const META_PIXEL_ID = "459473094815977";
 const CLARITY_ID = "k1s7pph1hu";
@@ -33,6 +35,7 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${GA4_ID}', { linker: { domains: ${JSON.stringify(LINKER_DOMAINS)} } });
+gtag('config', '${ADS_CONVERSION_ID}', { allow_enhanced_conversions: true });
 `;
 
 const META_PIXEL_INIT = `
@@ -59,8 +62,10 @@ fbq('track', 'PageView');
 //    names and same shape, so our pages and theirs agree on where attribution
 //    lives and either can pick it up.
 //  • st_attribution — our own JSON blob, which additionally carries utm_term,
-//    utm_content and gclid. ShipTime's three keys don't cover those and the CRM
-//    lead wants them, so the blob stays rather than losing the extra fields.
+//    utm_content and the ad-click ids (gclid, plus wbraid/gbraid which Google
+//    sends instead on iOS, and msclkid for Bing). ShipTime's three keys don't
+//    cover those; the CRM lead wants them and the signup forwards them, so the
+//    blob stays rather than losing the extra fields.
 //
 // Deliberately a plain inline script rather than a React effect: it runs while
 // the document parses, on every page, whether or not that page happens to mount
@@ -79,7 +84,8 @@ const ATTRIBUTION_KEY = "st_attribution";
 const ATTRIBUTION_INIT = `
 (function(){
   try {
-    var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid'];
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                'gclid','wbraid','gbraid','msclkid'];
     var params = new URLSearchParams(window.location.search);
     var fresh = {};
     for (var i = 0; i < keys.length; i++) {

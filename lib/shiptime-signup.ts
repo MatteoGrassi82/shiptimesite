@@ -173,6 +173,11 @@ export type SignupAttribution = {
   source?: string;
   medium?: string;
   campaign?: string;
+  /** Ad-click ids. Sent when present; the upstream API may ignore them today. */
+  gclid?: string;
+  wbraid?: string;
+  gbraid?: string;
+  msclkid?: string;
 };
 
 // ── Payloads ─────────────────────────────────────────────────────────────────
@@ -229,6 +234,14 @@ export function buildSignupPayload(input: SignupInput) {
     ...(attr.source ? { source: attr.source } : {}),
     ...(attr.medium ? { medium: attr.medium } : {}),
     ...(attr.campaign ? { campaign: attr.campaign } : {}),
+    // Click ids, only when we have them. Unknown to the upstream API as of
+    // 2026-09-05, so they're dropped there today; sending them anyway means the
+    // moment ShipTime persists them (a new marketing QUESTION row, no schema
+    // change) the data flows without a redeploy here.
+    ...(attr.gclid ? { gclid: attr.gclid } : {}),
+    ...(attr.wbraid ? { wbraid: attr.wbraid } : {}),
+    ...(attr.gbraid ? { gbraid: attr.gbraid } : {}),
+    ...(attr.msclkid ? { msclkid: attr.msclkid } : {}),
   };
 }
 

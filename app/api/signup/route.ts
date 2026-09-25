@@ -32,6 +32,13 @@ type Body = {
   source?: string;
   medium?: string;
   campaign?: string;
+  // Ad-click identifiers, forwarded verbatim. gclid is Google's; wbraid/gbraid
+  // replace it on iOS; msclkid is Bing's. Passed through to the ShipTime API so
+  // they can live on the account record (not persisted upstream yet — David).
+  gclid?: string;
+  wbraid?: string;
+  gbraid?: string;
+  msclkid?: string;
 };
 
 const clean = (v: unknown): string => (typeof v === "string" ? v.trim() : "");
@@ -104,6 +111,10 @@ export async function POST(req: NextRequest) {
       source: clean(body.source) || undefined,
       medium: clean(body.medium) || undefined,
       campaign: clean(body.campaign) || undefined,
+      gclid: clean(body.gclid) || undefined,
+      wbraid: clean(body.wbraid) || undefined,
+      gbraid: clean(body.gbraid) || undefined,
+      msclkid: clean(body.msclkid) || undefined,
     },
   });
 

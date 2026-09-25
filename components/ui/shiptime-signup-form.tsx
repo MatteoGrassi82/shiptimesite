@@ -17,6 +17,7 @@ import {
   clearAttribution,
   readAttribution,
   submitLead,
+  trackAdsSignupConversion,
   trackSignupConversion,
 } from "@/components/ui/lead-capture-form";
 import {
@@ -148,6 +149,14 @@ export function ShipTimeSignupForm({
       medium: leadAttribution.utm_medium ?? "",
       campaign: leadAttribution.utm_campaign ?? "",
     };
+    // Ad-click ids ride along so the ShipTime account itself can record them.
+    // They're the join key for Google's click-based offline import, the fallback
+    // if matching on email ever isn't enough. Harmless if upstream ignores them.
+    const clickIds = Object.fromEntries(
+      (["gclid", "wbraid", "gbraid", "msclkid"] as const)
+        .filter((k) => leadAttribution[k])
+        .map((k) => [k, leadAttribution[k]]),
+    );
 
     let result: SignupResult;
     try {
@@ -163,6 +172,7 @@ export function ShipTimeSignupForm({
           ...(parts.length > 1 ? { lastname: parts.slice(1).join(" ") } : {}),
           ...(company.trim() ? { company: company.trim() } : {}),
           ...apiAttribution,
+          ...clickIds,
         }),
       });
       result = (await res.json()) as SignupResult;
@@ -183,6 +193,13 @@ export function ShipTimeSignupForm({
     // must never stand between the visitor and their new dashboard.
     setStatus("redirecting");
     trackSignupConversion({ lead_source: leadSource, affiliation, ...leadFields });
+    // Awaited (it hashes the email) so the hit is on its way before the redirect
+    // below tears the page down. Still best-effort — see the helper.
+    try {
+      await trackAdsSignupConversion(email.trim());
+    } catch {
+      /* never stand between the visitor and their dashboard */
+    }
     try {
       await submitLead({
         email: email.trim(),
