@@ -588,6 +588,84 @@ ASSETS.push(
   },
 );
 
+// ── /koherent "What we bring" — the two photo tiles ─────────────────────────
+// The brand deck allows two kinds of photo (slide 28): our operators at work
+// with customers (whiteboards, screens, strategy sessions) and partner sites
+// shot straight down the aisle. The look follows the deck's own tests ("Make
+// It Coherent" frames): candid, soft window light, muted colour with a plum
+// cast, dark knitwear. A first gpt-image-1 pass in the documentary pf-* style
+// read flat and off-brand (Matteo, Oct 23: "not great"), hence this look and
+// gpt-image-2:
+//   GEN_MODEL=gpt-image-2 GEN_ONLY=koherent-bring-people-a,... npm run gen:images
+// Tall tiles: the picture shows in the top third on desktop and as a wide crop
+// on phones, and the chevrons sit in the top right corner. Placeholders until
+// our own shoot: the deck rules out AI images shown as real operations.
+const KOHERENT_LOOK =
+  "Candid editorial photograph for an enterprise logistics brand campaign. Natural soft window light, gentle " +
+  "contrast, muted and slightly desaturated colour: charcoal, ink and warm off-white, with a faint " +
+  "aubergine-plum cast in the shadows. Shot on a full frame camera with a 35mm lens at f/2.8, shallow depth of " +
+  "field, fine natural grain. Real people with natural skin texture, caught mid conversation and not looking at " +
+  "the camera, in understated dark knitwear and plain workwear. Calm, intelligent, unhurried mood. Considered " +
+  "composition with clean negative space. Not glossy and not a stock photo: no posed smiles, no handshakes. " +
+  "Every surface, vehicle, box and garment is completely unbranded. No text, no logos, no signage, no readable " +
+  "screens or writing, no watermarks.";
+const TALL_TILE =
+  " Vertical portrait composition for a tall card: the subject sits in the upper third of the frame, the lower " +
+  "half is quieter because text will cover it, and the top right corner is calm, plain background with nothing " +
+  "important in it.";
+
+ASSETS.push(
+  {
+    name: "koherent-bring-people-a",
+    size: "1024x1536",
+    raw: true,
+    prompt:
+      KOHERENT_LOOK +
+      " Scene: a working session in a bright office beside a warehouse. A logistics operator in a dark charcoal " +
+      "sweater stands at a whiteboard, marker in hand, sketching a simple network of boxes and arrows that cannot " +
+      "be read, while the customer's operations director, seated at the table with a laptop, leans in and listens. " +
+      "Coffee cups and printed sheets on the table. Both faces in three-quarter profile." +
+      TALL_TILE,
+  },
+  {
+    name: "koherent-bring-people-b",
+    size: "1024x1536",
+    raw: true,
+    prompt:
+      KOHERENT_LOOK +
+      " Scene: two people at a long wooden table by big windows that look out over a warehouse yard. An " +
+      "experienced logistics operator in a deep plum knit sweater points with a pen at a large printed map of North " +
+      "America with a few route lines drawn on it and no readable labels, while the customer, sleeves rolled up, " +
+      "studies it. A laptop turned away, a notebook and coffee. Both in three-quarter profile, absorbed in the plan." +
+      TALL_TILE,
+  },
+  {
+    name: "koherent-bring-carriers-a",
+    size: "1024x1536",
+    raw: true,
+    prompt:
+      KOHERENT_LOOK +
+      " Scene: a partner warehouse's outbound dock, shot straight down the long row of dock doors in one-point " +
+      "perspective. Rolled-up doors on the left with plain unbranded trailers and delivery vans backed in, pallets " +
+      "of sealed plain kraft boxes staged on the right, two workers small in the frame loading parcels. Early " +
+      "morning daylight spills in from the open doors across polished concrete, with yellow floor lines leading " +
+      "the eye down the dock. The vanishing point and the brightest doors sit in the upper third of the frame." +
+      TALL_TILE,
+  },
+  {
+    name: "koherent-bring-carriers-b",
+    size: "1024x1536",
+    raw: true,
+    prompt:
+      KOHERENT_LOOK +
+      " Scene: shot straight down the main aisle of a partner fulfillment warehouse in one-point perspective, tall " +
+      "racking on both sides, toward a wide open dock door at the far end where a courier and a warehouse worker " +
+      "load parcels into a plain white, completely unbranded delivery van, soft daylight pouring in through the " +
+      "door. The open door and the van sit in the upper third of the frame." +
+      TALL_TILE,
+  },
+);
+
 // Model + default quality. Default is gpt-image-1 at medium quality to keep
 // costs down (Matteo's call, 2026-07-11). For hero/marketing shots that need
 // better composition control, override per run:
@@ -644,7 +722,9 @@ async function generateOne({ name, size, prompt, photo, sceneStyle, iso, portrai
 
   const outPath = resolve(OUT_DIR, `${name}.png`);
   await writeFile(outPath, Buffer.from(b64, "base64"));
-  console.log(`  ✓ ${name}.png  (${size})`);
+  // token counts, so a run's cost can be reported
+  const usage = json.usage ? `  usage ${JSON.stringify(json.usage)}` : "";
+  console.log(`  ✓ ${name}.png  (${size})${usage}`);
 }
 
 async function main() {

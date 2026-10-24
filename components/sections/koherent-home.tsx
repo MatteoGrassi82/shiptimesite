@@ -4,7 +4,10 @@ import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Marquee } from "@/components/ui/marquee";
 import { KoherentHeroArt } from "./koherent-hero-art";
-import { ConsoleView, MethodPlayer, NetworkLive } from "./koherent-motion";
+import { BringBento } from "./koherent-bring";
+import { MethodPlayer } from "./koherent-method";
+import { ConsoleView } from "./koherent-motion";
+import { TargetTriangle } from "./koherent-target";
 
 // ── /koherent — first revision (Oct 23, 2026) ────────────────────────────────
 // The enterprise site under the Koherent name, replacing ShipTime One (Oct 22
@@ -366,25 +369,10 @@ function WhoItsFor() {
 }
 
 // ── 03 what we bring ─────────────────────────────────────────────────────────
-// Michael's building blocks, in his order, with the lattice he asked for: our
-// carriers, warehouses and systems coming together at one point, which is
-// also what the K's arrowhead means. Labels stay generic (no warehouse
-// cities) until the partner list is confirmed.
-const BLOCKS: { title: string; body: string; tag?: string }[] = [
-  { title: "Integrated carriers", body: "Couriers, regional carriers, LTL and FTL, compared on every shipment for cost and speed." },
-  { title: "Discounted rates", body: "Our buying power, passed through to you. Or bring your own rates and we'll use those too." },
-  { title: "A warehouse network", body: "Certified partner warehouses in Canada and the US. We don't own them; we pick the right ones for you." },
-  { title: "The integration library", body: "Shopify, Amazon, NetSuite, QuickBooks and 30 more. It plugs into what you already run." },
-  { title: "Shiplets", body: "Small custom apps for the one workflow that's yours alone, built in days on the same platform.", tag: "Rolling out" },
-  { title: "People and support", body: "Experienced operators and a support team that knows your account. Calls, texts and email." },
-];
-
-const STATS: [string, string][] = [
-  ["2M+", "shipments managed a year"],
-  ["20 yrs", "in shipping and logistics"],
-  ["1,000+", "businesses on the platform"],
-];
-
+// Michael's building blocks, in his order, as one bento with a map, the
+// buying power behind the rates, photos and the stats in the tiles they prove
+// (koherent-bring.tsx). Matteo picked the bento on Oct 23 over the lattice in
+// the arrowhead frame, which How we work right below already uses.
 function WhatWeBring() {
   return (
     <Sect id="bring">
@@ -396,41 +384,7 @@ function WhatWeBring() {
             lead="The building blocks we design with. You use the ones you need, and we connect them into one network you can see in one place."
           />
         </Reveal>
-        <Reveal delay={100}>
-          <div style={{ marginTop: "clamp(28px, 4vw, 48px)" }}>
-            <NetworkLive />
-          </div>
-        </Reveal>
-        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0 36px", marginTop: "clamp(28px, 4vw, 48px)" }}>
-          {BLOCKS.map((b, i) => (
-            <Reveal key={b.title} delay={(i % 3) * 80}>
-              <div style={{ borderTop: `1px solid ${K.line}`, padding: "22px 0 26px", textAlign: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
-                  <h3 style={{ ...title, fontSize: "clamp(1.15rem, 1.6vw, 1.3rem)", color: K.ink, margin: 0 }}>{b.title}</h3>
-                  {b.tag && (
-                    <span style={{ ...mono, fontSize: 11, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: K.plum, background: K.mist, borderRadius: 999, padding: "4px 10px" }}>
-                      {b.tag}
-                    </span>
-                  )}
-                </div>
-                <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "8px 0 0" }}>{b.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={160}>
-          <div className="k-stats" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginTop: "clamp(24px, 3vw, 36px)", borderTop: `1px solid ${K.line}`, paddingTop: 30, textAlign: "center" }}>
-            {STATS.map(([v, l]) => (
-              <div key={l}>
-                <div style={{ ...mono, fontSize: "clamp(1.9rem, 3.2vw, 2.5rem)", fontWeight: 500, lineHeight: 1, color: K.plum }}>{v}</div>
-                <div style={{ ...sans, fontSize: 14, color: K.stone, marginTop: 8 }}>{l}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
-            <More href="/plus/technology">See the platform</More>
-          </div>
-        </Reveal>
+        <BringBento />
       </div>
     </Sect>
   );
@@ -484,45 +438,25 @@ function HowWeWork() {
 // ── 05 the design target ─────────────────────────────────────────────────────
 // The triangle carries all three pillars, always (deck slide 26): never "pick
 // two". Pillars as agreed on Oct 16: direct cost, operational efficiency,
-// customer experience.
-const PILLARS: { name: string; body: string }[] = [
-  { name: "Lower cost", body: "Priced from your own shipping data, before you sign." },
-  { name: "Smoother operations", body: "One price per order you can compare against anyone." },
-  { name: "Better customer experience", body: "Faster, more reliable delivery your customers notice." },
-];
-
+// customer experience. Interactive since Oct 23: visitors put in their own
+// numbers and see their triangle against the target (koherent-target.tsx).
 function DesignTarget() {
   return (
     <Sect bg={K.ink}>
       <div style={{ ...inner }}>
         <Reveal>
-          <Head label="05 · The design target" onDark heading={<>Always all three. Never pick two.</>} lead="Every network we design is held to the same three results, and you see all three in one view." />
+          <Head
+            label="05 · The design target"
+            onDark
+            heading={<>Always all three. Never pick two.</>}
+            lead="Every network we design is held to lower cost, smoother operations and a better customer experience, all at once. Put in your numbers to see your triangle."
+          />
         </Reveal>
         <Reveal delay={100}>
-          <div style={{ maxWidth: 300, margin: "clamp(40px, 5vw, 64px) auto 0" }}>
-            <svg viewBox="28 8 314 404" fill="none" aria-hidden style={{ width: "100%", height: "auto", display: "block" }}>
-              <path d="M330 20 L330 400 L40 210 Z" fill={K.plum} />
-              <path d="M330 20 L330 400 L40 210 Z" stroke={K.lilac} strokeWidth="1.5" strokeDasharray="3 8" opacity="0.6" />
-              <circle cx="330" cy="20" r="8" fill={K.lilac} />
-              <circle cx="40" cy="210" r="8" fill={K.lilac} />
-              <circle cx="330" cy="400" r="8" fill={K.lilac} />
-              <text x="318" y="64" textAnchor="end" style={mono} fontSize="15" fontWeight="500" letterSpacing="1.4" fill={K.lilac}>COST</text>
-              <text x="96" y="215" dominantBaseline="central" style={mono} fontSize="15" fontWeight="500" letterSpacing="1.4" fill={K.lilac}>OPERATIONS</text>
-              <text x="318" y="366" textAnchor="end" style={mono} fontSize="15" fontWeight="500" letterSpacing="1.4" fill={K.lilac}>EXPERIENCE</text>
-            </svg>
+          <div style={{ marginTop: "clamp(44px, 5vw, 72px)" }}>
+            <TargetTriangle />
           </div>
         </Reveal>
-        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(40px, 5vw, 60px)" }}>
-          {PILLARS.map((p, i) => (
-            <Reveal key={p.name} delay={120 + i * 90}>
-              <div style={{ height: "100%", textAlign: "center", borderTop: `1px solid ${K.darkLine}`, paddingTop: 22 }}>
-                <span style={{ ...mono, fontSize: 14, fontWeight: 500, color: K.lilac }}>{String(i + 1).padStart(2, "0")}</span>
-                <h3 style={{ ...title, fontSize: "clamp(1.25rem, 1.8vw, 1.45rem)", color: K.onDark, margin: "10px 0 0" }}>{p.name}</h3>
-                <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.onDarkDim, margin: "8px auto 0", maxWidth: "30ch" }}>{p.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </Sect>
   );
@@ -735,8 +669,8 @@ function Close() {
           <Label onDark>Your Logistics Performance Score</Label>
           <h2 style={{ ...display, fontSize: "clamp(2.6rem, 6vw, 4.8rem)", color: K.onDark, margin: "20px auto 0", maxWidth: "14ch" }}>How coherent is your logistics?</h2>
           <p style={{ ...sans, fontSize: "clamp(1.05rem, 1.4vw, 1.2rem)", lineHeight: 1.6, color: K.onDarkDim, margin: "20px auto 0", maxWidth: "46ch" }}>
-            Twelve questions. A score out of 100 across cost, operations and experience, and where you&rsquo;re losing
-            money.
+            Sixteen questions, five minutes. A score out of 100 across cost, operations and experience, and where
+            you&rsquo;re losing money.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 32 }}>
             <Primary href="/plus/assessment" onDark>
@@ -833,7 +767,6 @@ export function KoherentHome() {
         @media (max-width: 640px) {
           .k-wideimg { aspect-ratio: 4 / 3 !important; }
           .k-six { grid-template-columns: 1fr !important; }
-          .k-stats { grid-template-columns: 1fr !important; }
           .k-numcard { position: relative !important; left: auto !important; right: auto !important; bottom: auto !important; width: 100% !important; margin-top: -24px; }
         }
       `}</style>
