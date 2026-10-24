@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tooling and media, kept out of the repo
+/.claude/
+/.agents/
+/videos/
