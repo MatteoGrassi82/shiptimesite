@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, ChevronRight, KeyRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, KeyRound } from "lucide-react";
+import { BRAND_CSS, KMark, KoherentLogo, themeVars } from "./brand";
 import { scenarios, type BrandId, type Scenario } from "./scenarios";
-import { T } from "./ui";
+import { FOCUS, T } from "./ui";
 
 // ── Sign in ──────────────────────────────────────────────────────────────────
 // Two steps, the way multi-account products do it (Slack, Google, Stripe):
 // sign in with email, Google or SSO, then choose an account. The chooser holds
 // the demo accounts, so the same app can be shown as a small brand on
-// ShipTime and as a ShipTime One account. The right half shows what's new in
-// the product, drawn as real UI rather than an illustration.
+// ShipTime and as a Koherent account. The right half is ShipTime's "ask" for
+// Koherent: one of its features drawn as real UI, in Koherent's colours, with
+// a way to look inside an example account.
 
 const ORDER: BrandId[] = ["reach", "canada", "stores", "small"];
 
@@ -25,106 +27,122 @@ function GoogleMark() {
   );
 }
 
-const field = "h-10 w-full rounded-md border border-[#D8DEE4] bg-white px-3 text-[14px] text-[#1A1B25] outline-none transition-shadow placeholder:text-[#8792A2] focus:border-[#EC5A26] focus:shadow-[0_0_0_3px_rgba(236,90,38,.18)]";
+const field = "h-10 w-full rounded-md border border-[color:var(--c-border)] bg-white px-3 text-[14px] text-[color:var(--c-ink)] outline-none transition-shadow placeholder:text-[color:var(--c-faint)] focus:border-[color:var(--c-accent)] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--c-accent)_18%,transparent)]";
 
 function SignIn({ onNext }: { onNext: (email: string) => void }) {
   const [email, setEmail] = useState("");
   return (
     <form onSubmit={(e) => { e.preventDefault(); onNext(email); }}>
-      <h1 className="text-[24px] font-semibold tracking-[-0.01em] text-[#1A1B25]">Sign in to ShipTime</h1>
-      <p className="mt-1 text-[14px] text-[#6A7383]">Welcome back. Use your work email or Google.</p>
-      <label htmlFor="email" className="mt-8 block text-[13px] font-medium text-[#353A44]">Work email</label>
+      <h1 className="text-[24px] font-semibold tracking-[-0.01em] text-[color:var(--c-ink)]">Sign in to ShipTime</h1>
+      <p className="mt-1 text-[14px] text-[color:var(--c-muted)]">Welcome back. Use your work email or Google.</p>
+      <label htmlFor="email" className="mt-8 block text-[13px] font-medium text-[color:var(--c-text)]">Work email</label>
       <input id="email" type="email" autoFocus autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@company.com" className={`mt-1.5 ${field}`} />
-      <button type="submit" className="mt-4 h-10 w-full rounded-md bg-[#EC5A26] text-[14px] font-semibold text-white shadow-[0_1px_1px_rgba(0,0,0,.12)] transition-colors hover:bg-[#D94E1C]">Continue</button>
-      <div className="my-6 flex items-center gap-3 text-[12px] text-[#8792A2]"><span className="h-px flex-1 bg-[#EBEEF1]" />or<span className="h-px flex-1 bg-[#EBEEF1]" /></div>
-      <button type="button" onClick={() => onNext("")} className="flex h-10 w-full items-center justify-center gap-2.5 rounded-md border border-[#D8DEE4] bg-white text-[14px] font-medium text-[#1A1B25] transition-colors hover:bg-[#F6F8FA]">
+      <button type="submit" className={`mt-4 h-10 w-full rounded-md bg-[color:var(--c-action)] text-[14px] font-semibold text-white shadow-[0_1px_1px_rgba(0,0,0,.12)] transition-colors hover:bg-[color:var(--c-action-hover)] ${FOCUS}`}>Continue</button>
+      <div className="my-6 flex items-center gap-3 text-[12px] text-[color:var(--c-faint)]"><span className="h-px flex-1 bg-[color:var(--c-line)]" />or<span className="h-px flex-1 bg-[color:var(--c-line)]" /></div>
+      <button type="button" onClick={() => onNext("")} className={`flex h-10 w-full items-center justify-center gap-2.5 rounded-md border border-[color:var(--c-border)] bg-white text-[14px] font-medium text-[color:var(--c-ink)] transition-colors hover:bg-[color:var(--c-hover)] ${FOCUS}`}>
         <GoogleMark /> Continue with Google
       </button>
-      <button type="button" onClick={() => onNext("")} className="mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-md text-[14px] font-medium text-[#353A44] transition-colors hover:bg-[#F6F8FA]">
-        <KeyRound className="h-4 w-4 text-[#6A7383]" strokeWidth={1.8} /> Sign in with SSO
+      <button type="button" onClick={() => onNext("")} className={`mt-2 flex h-10 w-full items-center justify-center gap-2 rounded-md text-[14px] font-medium text-[color:var(--c-text)] transition-colors hover:bg-[color:var(--c-hover)] ${FOCUS}`}>
+        <KeyRound className="h-4 w-4 text-[color:var(--c-muted)]" strokeWidth={1.8} /> Sign in with SSO
       </button>
-      <p className="mt-8 text-[13px] text-[#6A7383]">New to ShipTime? <a href="#" className="font-medium text-[#2E4C8F] hover:underline">Create an account</a></p>
+      <p className="mt-8 text-[13px] text-[color:var(--c-muted)]">New to ShipTime? <a href="#" className="font-medium text-[color:var(--c-link)] hover:underline">Create an account</a></p>
     </form>
   );
 }
 
-function Choose({ email, onBack, onPick }: { email: string; onBack: () => void; onPick: (b: BrandId) => void }) {
-  const sub = (s: Scenario) => `${s.sites[0].name} · ${s.sites.length} site${s.sites.length > 1 ? "s" : ""}`;
+function Choose({ email, onBack, onPick, onTeam }: { email: string; onBack: () => void; onPick: (b: BrandId) => void; onTeam: () => void }) {
+  const sub = (s: Scenario) => `${s.sites[0].name} · ${s.sites.length} warehouse${s.sites.length > 1 ? "s" : ""}`;
   return (
     <div>
-      <button type="button" onClick={onBack} className="-ml-1 inline-flex items-center gap-1 rounded px-1 text-[13px] font-medium text-[#6A7383] hover:text-[#1A1B25]"><ArrowLeft className="h-3.5 w-3.5" /> Back</button>
-      <h1 className="mt-4 text-[24px] font-semibold tracking-[-0.01em] text-[#1A1B25]">Choose an account</h1>
-      <p className="mt-1 text-[14px] text-[#6A7383]">Signed in as <span className="text-[#353A44]">{email || "demo@shiptime.com"}</span></p>
-      <ul className="mt-6 divide-y divide-[#EBEEF1] overflow-hidden rounded-lg border border-[#EBEEF1]">
+      <button type="button" onClick={onBack} className={`-ml-1 inline-flex items-center gap-1 rounded px-1 text-[13px] font-medium text-[color:var(--c-muted)] hover:text-[color:var(--c-ink)] ${FOCUS}`}><ArrowLeft className="h-3.5 w-3.5" /> Back</button>
+      <h1 className="mt-4 text-[24px] font-semibold tracking-[-0.01em] text-[color:var(--c-ink)]">Choose an account</h1>
+      <p className="mt-1 text-[14px] text-[color:var(--c-muted)]">Signed in as <span className="text-[color:var(--c-text)]">{email || "demo@shiptime.com"}</span></p>
+      <ul className="mt-6 divide-y divide-[color:var(--c-line)] overflow-hidden rounded-lg border border-[color:var(--c-line)]">
         {ORDER.map((id) => {
           const s = scenarios[id];
-          const one = s.tier === "ShipTime One";
+          const one = s.tier === "Koherent";
           return (
             <li key={id}>
-              <button type="button" onClick={() => onPick(id)} className="group flex w-full items-center gap-3 px-3.5 py-3 text-left transition-colors hover:bg-[#F6F8FA] focus:bg-[#F6F8FA] focus:outline-none">
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#F5F6F8] text-[11px] font-semibold text-[#353A44]">{s.account.initials}</span>
+              <button type="button" onClick={() => onPick(id)} className="group flex w-full items-center gap-3 px-3.5 py-3 text-left transition-colors hover:bg-[color:var(--c-hover)] focus-visible:bg-[color:var(--c-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--c-accent)]/40">
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[color:var(--c-subtle)] text-[11px] font-semibold text-[color:var(--c-text)]">{s.account.initials}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[14px] font-medium text-[#1A1B25]">{s.account.name}</span>
-                  <span className="block truncate text-[12px] text-[#6A7383]">{sub(s)}</span>
+                  <span className="block truncate text-[14px] font-medium text-[color:var(--c-ink)]">{s.account.name}</span>
+                  <span className="block truncate text-[12px] text-[color:var(--c-muted)]">{sub(s)}</span>
                 </span>
-                <span className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${one ? "bg-[#FFF4EF] text-[#C2410C]" : "bg-[#F5F6F8] text-[#6A7383]"}`}>{s.tier}</span>
-                <ChevronRight className="h-4 w-4 shrink-0 text-[#C0C8D2] transition-colors group-hover:text-[#6A7383]" />
+                {one
+                  ? <span className="inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-semibold" style={{ background: "#EEE8F3", color: "#461948" }}><KMark size={9} color="#461948" />Koherent</span>
+                  : <span className="shrink-0 rounded bg-[color:var(--c-subtle)] px-1.5 py-0.5 text-[11px] font-medium text-[color:var(--c-muted)]">ShipTime</span>}
+                <ChevronRight className="h-4 w-4 shrink-0 text-[color:var(--c-border2)] transition-colors group-hover:text-[color:var(--c-muted)]" />
               </button>
             </li>
           );
         })}
       </ul>
-      <p className="mt-6 text-[13px] text-[#6A7383]">Need access to another account? Ask its admin to invite you.</p>
+      <p className="mt-6 text-[12px] font-medium text-[color:var(--c-muted)]">ShipTime staff</p>
+      <button type="button" onClick={onTeam} className="group mt-2 flex w-full items-center gap-3 rounded-lg border border-[color:var(--c-line)] px-3.5 py-3 text-left transition-colors hover:bg-[color:var(--c-hover)] focus-visible:bg-[color:var(--c-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--c-accent)]/40">
+        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2E4C8F] text-[11px] font-semibold text-white">PS</span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[14px] font-medium text-[color:var(--c-ink)]">Priya Shah, account team</span>
+          <span className="block truncate text-[12px] text-[color:var(--c-muted)]">Her day and her 3 Koherent accounts</span>
+        </span>
+        <span className="shrink-0 rounded bg-[color:var(--c-subtle)] px-1.5 py-0.5 text-[11px] font-medium text-[color:var(--c-muted)]">Internal</span>
+        <ChevronRight className="h-4 w-4 shrink-0 text-[color:var(--c-border2)] transition-colors group-hover:text-[color:var(--c-muted)]" />
+      </button>
+      <p className="mt-6 text-[13px] text-[color:var(--c-muted)]">Need access to another account? Ask its admin to invite you.</p>
     </div>
   );
 }
 
-function WhatsNew() {
+function WhatsNew({ onExample }: { onExample: () => void }) {
   const rules = scenarios.reach.rules;
   const tone = { Live: "border-[#A8F170] bg-[#EAFCDD] text-[#217005]", Shadow: "border-[#A7E7FC] bg-[#E2FBFE] text-[#045AD0]", Suggested: "border-[#FBD992] bg-[#FDF8C9] text-[#B13600]" };
+  const label = { Live: "Live", Shadow: "Test run", Suggested: "Suggested" };
   return (
-    <div className="w-full max-w-[460px]">
-      <span className="text-[13px] font-medium text-white/60">What&rsquo;s new · ShipTime One</span>
-      <h2 className="mt-3 text-[28px] font-semibold leading-[1.2] tracking-[-0.01em] text-white">Rules for every order</h2>
-      <p className="mt-3 text-[15px] leading-6 text-white/70">Choose which site and which carrier each order uses. We suggest them from your orders, and nothing changes until you approve.</p>
-      <div className="mt-10 overflow-hidden rounded-xl bg-white shadow-[0_24px_48px_rgba(0,0,0,.28)]">
-        <div className="flex items-center justify-between border-b border-[#EBEEF1] px-4 py-3">
-          <span className="text-[13px] font-semibold text-[#1A1B25]">Rules</span>
-          <span className="text-[12px] text-[#6A7383]">Tested on September&rsquo;s orders</span>
+    <div data-brand="koherent" className="w-full max-w-[460px]" style={{ ...themeVars("koherent"), fontFamily: "var(--c-font)" }}>
+      <style>{BRAND_CSS}</style>
+      <KoherentLogo size={20} color="#F6F3EE" />
+      <p className="mt-8 text-[12px] font-medium uppercase tracking-[0.14em] text-[#C7AEE6]" style={{ fontFamily: "var(--c-mono)" }}>For established brands</p>
+      <h2 className="mt-3 text-[30px] font-bold leading-[1.15] tracking-[-0.025em] text-[#F6F3EE]">Rules for every order</h2>
+      <p className="mt-3 text-[15px] leading-6 text-[#F6F3EE]/75">Which warehouse and which carrier each order uses, written by your Koherent team from your own orders. Nothing changes until you approve.</p>
+      <div className="mt-9 overflow-hidden rounded-lg bg-white shadow-[0_24px_48px_rgba(23,16,28,.45)]">
+        <div className="flex items-center justify-between border-b border-[color:var(--c-line)] px-4 py-3">
+          <span className="text-[13px] font-semibold text-[color:var(--c-ink)]">Rules</span>
+          <span className="text-[12px] text-[color:var(--c-muted)]">Tested on September&rsquo;s orders</span>
         </div>
         {rules.map((r) => (
-          <div key={r.id} className="flex items-center gap-3 border-b border-[#EBEEF1] px-4 py-3 last:border-b-0">
-            <span className="min-w-0 flex-1 text-[13px] leading-5 text-[#1A1B25]">{r.name}</span>
+          <div key={r.id} className="flex items-center gap-3 border-b border-[color:var(--c-line)] px-4 py-3 last:border-b-0">
+            <span className="min-w-0 flex-1 text-[13px] leading-5 text-[color:var(--c-ink)]">{r.name}</span>
             <span className="text-[13px] tabular-nums text-[#217005]">${r.monthly.toLocaleString("en-US")}/mo</span>
-            <span className={`w-[74px] rounded border px-1.5 py-0.5 text-center text-[11px] font-medium ${tone[r.status]}`}>{r.status}</span>
+            <span className={`w-[74px] shrink-0 rounded border px-1.5 py-0.5 text-center text-[11px] font-medium ${tone[r.status]}`}>{label[r.status]}</span>
           </div>
         ))}
       </div>
+      <button type="button" onClick={onExample} className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#C7AEE6] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7AEE6]">See an example account <ArrowRight className="h-4 w-4" /></button>
     </div>
   );
 }
 
-export function Login({ onSignIn }: { onSignIn: (b: BrandId) => void }) {
+export function Login({ onSignIn, onTeam }: { onSignIn: (b: BrandId) => void; onTeam: () => void }) {
   const [email, setEmail] = useState<string | null>(null);
   return (
-    <div className="flex min-h-screen bg-white text-[#353A44]" style={{ fontFamily: T.font }}>
+    <div className="flex min-h-screen bg-white text-[color:var(--c-text)]" style={{ fontFamily: T.font }}>
       <div className="flex min-h-screen flex-1 flex-col px-6 sm:px-10">
         <header className="flex h-[72px] items-center gap-3">
           <img src="/shiptime-logo.svg" alt="ShipTime" width={120} height={36} className="h-7 w-auto" />
-          <span className="rounded border border-[#EBEEF1] px-1.5 py-0.5 text-[11px] font-medium text-[#6A7383]">Demo · sample data</span>
+          <span className="rounded border border-[color:var(--c-line)] px-1.5 py-0.5 text-[11px] font-medium text-[color:var(--c-muted)]">Demo · sample data</span>
         </header>
-        <main className="flex flex-1 items-center justify-center py-10">
+        <main className="flex flex-1 items-start justify-center pb-10 pt-6 sm:items-center sm:py-10">
           <div className="w-full max-w-[360px]">
-            {email === null ? <SignIn onNext={setEmail} /> : <Choose email={email} onBack={() => setEmail(null)} onPick={onSignIn} />}
+            {email === null ? <SignIn onNext={setEmail} /> : <Choose email={email} onBack={() => setEmail(null)} onPick={onSignIn} onTeam={onTeam} />}
           </div>
         </main>
-        <footer className="flex h-[64px] flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-[#8792A2]">
+        <footer className="flex h-[64px] flex-wrap items-center gap-x-5 gap-y-1 text-[12px] text-[color:var(--c-faint)]">
           <span>© 2026 ShipTime</span>
-          {["Privacy", "Terms", "Help"].map((x) => <a key={x} href="#" className="hover:text-[#353A44]">{x}</a>)}
+          {["Privacy", "Terms", "Help"].map((x) => <a key={x} href="#" className="hover:text-[color:var(--c-text)]">{x}</a>)}
         </footer>
       </div>
-      <aside className="hidden w-[46%] max-w-[720px] items-center justify-center bg-[#0B1F3A] px-14 lg:flex">
-        <WhatsNew />
+      <aside className="hidden w-[46%] max-w-[720px] items-center justify-center bg-[#461948] px-14 lg:flex">
+        <WhatsNew onExample={() => onSignIn("reach")} />
       </aside>
     </div>
   );
