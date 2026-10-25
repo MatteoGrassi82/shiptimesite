@@ -11,7 +11,30 @@ import {
   type Answers,
   type LpsResult,
 } from "@/lib/lps";
-import { P, serif, sans } from "./plus-v2-kit";
+import { P as BASE, serif as BASE_SERIF, sans as BASE_SANS } from "./plus-v2-kit";
+
+// Themeable through --lps-* custom properties, so a page can reskin the
+// shiplet (the /koherent/score page sets them to plum and Schibsted). Pages
+// that set nothing keep the ShipTime Plus look through the fallbacks.
+const v = (name: string, fallback: string) => `var(--lps-${name}, ${fallback})`;
+const P = {
+  ...BASE,
+  orange: v("accent", BASE.orange),
+  orangeTint: v("accent-tint", BASE.orangeTint),
+  accentSoft: v("accent-soft", "rgba(236,90,38,0.16)"),
+  accentHalf: v("accent-half", "rgba(236,90,38,0.5)"),
+  ink: v("ink", BASE.ink),
+  sub: v("sub", BASE.sub),
+  body: v("body", "#4A5060"),
+  faint: v("faint", BASE.faint),
+  line: v("line", BASE.line),
+  track: v("track", "#EDEFF3"),
+  bandOff: v("track", "#E7E9EE"),
+  panelSoft: v("panel", BASE.panelSoft),
+  card: v("card", BASE.card),
+};
+const serif = { ...BASE_SERIF, fontFamily: v("display-font", BASE_SERIF.fontFamily as string), fontWeight: v("display-weight", "400") as unknown as number };
+const sans = { fontFamily: v("font", BASE_SANS.fontFamily as string) };
 
 // ── The Logistics Performance Score shiplet ──────────────────────────────────
 // Michael's 16-question framework as a self-contained embeddable unit: one
@@ -101,7 +124,7 @@ function PillarRadar({ scores }: { scores: number[] }) {
       <polygon
         className="lps-radar"
         points={poly(scores.map((v) => Math.max(v, 3) / 100))}
-        fill="rgba(236,90,38,0.16)"
+        fill={P.accentSoft}
         stroke={P.orange}
         strokeWidth="2"
         strokeLinejoin="round"
@@ -139,7 +162,7 @@ function BandScale({ total }: { total: number }) {
           const lo = i * 20;
           const active = total >= lo && total < b.to + (i === 4 ? 1 : 0);
           return (
-            <div key={b.n} style={{ flex: 1, borderRadius: 3, background: active ? P.orange : "#E7E9EE", transition: "background 0.4s ease" }} />
+            <div key={b.n} style={{ flex: 1, borderRadius: 3, background: active ? P.orange : P.bandOff, transition: "background 0.4s ease" }} />
           );
         })}
       </div>
@@ -178,8 +201,8 @@ function GapChart({ gaps }: { gaps: { question: { title: string }; level: number
         {top.map((g, i) => (
           <div key={g.question.title} style={{ display: "grid", gridTemplateColumns: "minmax(120px, 0.9fr) 1fr auto", gap: 14, alignItems: "center" }} className="lps-gaprow">
             <span style={{ ...sans, fontSize: 13.5, fontWeight: 600, color: P.ink }}>{g.question.title}</span>
-            <div aria-hidden style={{ height: 9, borderRadius: 999, background: "#EDEFF3", overflow: "hidden" }}>
-              <div className="lps-bar" style={{ height: "100%", width: `${(g.lost / max) * 100}%`, background: i === 0 ? P.orange : "rgba(236,90,38,0.5)", borderRadius: 999, animationDelay: `${i * 80}ms` }} />
+            <div aria-hidden style={{ height: 9, borderRadius: 999, background: P.track, overflow: "hidden" }}>
+              <div className="lps-bar" style={{ height: "100%", width: `${(g.lost / max) * 100}%`, background: i === 0 ? P.orange : P.accentHalf, borderRadius: 999, animationDelay: `${i * 80}ms` }} />
             </div>
             <span style={{ ...sans, fontSize: 13, fontWeight: 700, color: P.orange, whiteSpace: "nowrap" }}>+{g.lost}</span>
           </div>
@@ -402,7 +425,7 @@ function LpsShipletStages({
         <h2 style={{ ...serif, fontSize: "clamp(1.9rem, 3.4vw, 2.7rem)", lineHeight: 1.08, color: P.ink, margin: "14px 0 0" }}>
           How close is your logistics to <span style={{ fontStyle: "italic" }}>world class?</span>
         </h2>
-        <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.62, color: "#4A5060", margin: "14px 0 0", maxWidth: "56ch" }}>
+        <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.62, color: P.body, margin: "14px 0 0", maxWidth: "56ch" }}>
           Sixteen questions. Five minutes. You get a Logistics Performance Score out of 100, a score for each of the
           three pillars, and a personalized read on where the leverage actually is.
         </p>
@@ -462,7 +485,7 @@ function LpsShipletStages({
         <h3 style={{ ...serif, fontSize: "clamp(1.5rem, 2.4vw, 2rem)", lineHeight: 1.14, color: P.ink, margin: "22px 0 0" }}>
           {q.title}
         </h3>
-        <p style={{ ...sans, fontSize: 15, lineHeight: 1.6, color: "#4A5060", margin: "8px 0 0" }}>{q.prompt}</p>
+        <p style={{ ...sans, fontSize: 15, lineHeight: 1.6, color: P.body, margin: "8px 0 0" }}>{q.prompt}</p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 22 }}>
           {q.levels.map((label, i) => {
@@ -489,7 +512,7 @@ function LpsShipletStages({
                   padding: "14px 16px",
                   fontSize: 14.5,
                   lineHeight: 1.5,
-                  color: active ? P.ink : "#4A5060",
+                  color: active ? P.ink : P.body,
                 }}
               >
                 <span style={{ ...sans, flex: "none", width: 22, height: 22, borderRadius: "50%", border: `1px solid ${active ? P.orange : P.line}`, background: active ? P.orange : "#fff", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>
@@ -525,7 +548,7 @@ function LpsShipletStages({
         {microLoading || !micro ? (
           <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "40px 0 34px" }}>
             <Loader2 size={18} className="lps-spin" color={P.orange} />
-            <span style={{ ...sans, fontSize: 15.5, color: "#4A5060" }}>
+            <span style={{ ...sans, fontSize: 15.5, color: P.body }}>
               Reading your answers…
             </span>
           </div>
@@ -546,7 +569,7 @@ function LpsShipletStages({
                   type="button"
                   onClick={() => answerMicro(opt)}
                   className="lps-opt"
-                  style={{ ...sans, textAlign: "left", cursor: "pointer", width: "100%", background: P.panelSoft, border: `1px solid ${P.line}`, borderRadius: 13, padding: "14px 16px", fontSize: 14.5, lineHeight: 1.5, color: "#4A5060" }}
+                  style={{ ...sans, textAlign: "left", cursor: "pointer", width: "100%", background: P.panelSoft, border: `1px solid ${P.line}`, borderRadius: 13, padding: "14px 16px", fontSize: 14.5, lineHeight: 1.5, color: P.body }}
                 >
                   {opt}
                 </button>
@@ -584,7 +607,7 @@ function LpsShipletStages({
                 type="button"
                 onClick={() => setPriority(opt)}
                 className="lps-opt"
-                style={{ ...sans, cursor: "pointer", fontSize: 14, fontWeight: 600, borderRadius: 999, padding: "10px 18px", background: active ? P.orange : P.panelSoft, color: active ? "#fff" : "#4A5060", border: `1px solid ${active ? P.orange : P.line}` }}
+                style={{ ...sans, cursor: "pointer", fontSize: 14, fontWeight: 600, borderRadius: 999, padding: "10px 18px", background: active ? P.orange : P.panelSoft, color: active ? "#fff" : P.body, border: `1px solid ${active ? P.orange : P.line}` }}
               >
                 {opt}
               </button>
@@ -632,7 +655,7 @@ function LpsShipletStages({
         <h3 style={{ ...serif, fontSize: "clamp(1.6rem, 2.6vw, 2.1rem)", lineHeight: 1.12, color: P.ink, margin: "14px 0 0" }}>
           Where should we send it?
         </h3>
-        <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.6, color: "#4A5060", margin: "10px 0 0", maxWidth: "50ch" }}>
+        <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.6, color: P.body, margin: "10px 0 0", maxWidth: "50ch" }}>
           {byEmail
             ? "You'll see your score on the next screen. Your written report follows by email, so you have something to forward internally."
             : "You'll see your full result on the next screen. We'll send a copy so you can share it internally."}
@@ -683,7 +706,7 @@ function LpsShipletStages({
           <h2 style={{ ...serif, fontSize: "clamp(1.9rem, 3.2vw, 2.6rem)", lineHeight: 1.1, color: P.ink, margin: "10px 0 0" }}>
             {report?.headline || `${r.band}.`}
           </h2>
-          <p style={{ ...sans, fontSize: 15, lineHeight: 1.62, color: "#4A5060", margin: "10px 0 0", maxWidth: "52ch" }}>
+          <p style={{ ...sans, fontSize: 15, lineHeight: 1.62, color: P.body, margin: "10px 0 0", maxWidth: "52ch" }}>
             {r.bandBlurb}
           </p>
         </div>
@@ -702,7 +725,7 @@ function LpsShipletStages({
                   {p.score}<span style={{ fontSize: 13, color: P.faint }}>/100</span>
                 </span>
               </div>
-              <div aria-hidden style={{ height: 7, borderRadius: 999, background: "#EDEFF3", marginTop: 8, overflow: "hidden" }}>
+              <div aria-hidden style={{ height: 7, borderRadius: 999, background: P.track, marginTop: 8, overflow: "hidden" }}>
                 <div className="lps-bar" style={{ height: "100%", width: `${p.score}%`, background: P.orange, borderRadius: 999 }} />
               </div>
               <div style={{ ...sans, fontSize: 11.5, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: P.faint, marginTop: 6 }}>
@@ -722,7 +745,7 @@ function LpsShipletStages({
           <h3 style={{ ...serif, fontSize: "clamp(1.4rem, 2.1vw, 1.7rem)", lineHeight: 1.14, color: P.ink, margin: "14px 0 0" }}>
             It&rsquo;s being written now.
           </h3>
-          <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.68, color: "#4A5060", margin: "10px 0 0", maxWidth: "54ch" }}>
+          <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.68, color: P.body, margin: "10px 0 0", maxWidth: "54ch" }}>
             The read on your answer pattern, the three gaps costing you the most, and the first concrete move for each,
             on its way to{" "}
             <span style={{ fontWeight: 700, color: P.ink, wordBreak: "break-word" }}>{form.email || "your inbox"}</span>.
@@ -742,14 +765,14 @@ function LpsShipletStages({
         {report && !report.headline && (
           <div style={{ display: "flex", alignItems: "center", gap: 11, marginTop: 16 }}>
             <Loader2 size={15} className="lps-spin" color={P.orange} />
-            <span key={thinkStep} className="lps-fade" style={{ ...sans, fontSize: 15, color: "#4A5060" }}>
+            <span key={thinkStep} className="lps-fade" style={{ ...sans, fontSize: 15, color: P.body }}>
               {THINKING[thinkStep]}…
             </span>
           </div>
         )}
 
         {report?.strengths?.[0] && (
-          <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.68, color: "#4A5060", margin: "16px 0 0" }}>
+          <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.68, color: P.body, margin: "16px 0 0" }}>
             {report.strengths[0]}
             {report.streaming && !report.priorities.length && <span className="lps-caret" />}
           </p>
@@ -766,7 +789,7 @@ function LpsShipletStages({
                   <span style={{ ...serif, fontSize: 19, color: P.orange, flex: "none", width: 28 }}>{String(i + 1).padStart(2, "0")}</span>
                   <div>
                     <h4 style={{ ...serif, fontSize: 19, color: P.ink, margin: 0 }}>{pr.title}</h4>
-                    {pr.why && <p style={{ ...sans, fontSize: 14, lineHeight: 1.6, color: "#4A5060", margin: "5px 0 0" }}>{pr.why}</p>}
+                    {pr.why && <p style={{ ...sans, fontSize: 14, lineHeight: 1.6, color: P.body, margin: "5px 0 0" }}>{pr.why}</p>}
                     {pr.move && <p style={{ ...sans, fontSize: 14, lineHeight: 1.6, color: P.ink, fontWeight: 600, margin: "5px 0 0" }}>{pr.move}</p>}
                   </div>
                 </div>
@@ -776,7 +799,7 @@ function LpsShipletStages({
         )}
 
         {report?.closing && (
-          <p style={{ ...sans, fontSize: 15, lineHeight: 1.65, color: "#4A5060", margin: "18px 0 0", paddingTop: 18, borderTop: `1px solid ${P.line}` }}>
+          <p style={{ ...sans, fontSize: 15, lineHeight: 1.65, color: P.body, margin: "18px 0 0", paddingTop: 18, borderTop: `1px solid ${P.line}` }}>
             {report.closing}
           </p>
         )}
@@ -811,7 +834,7 @@ function LpsShipletStages({
               <div key={i}>
                 <p style={{ ...sans, fontSize: 14.5, fontWeight: 700, color: P.ink, margin: 0 }}>{t.q}</p>
                 {t.a ? (
-                  <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.65, color: "#4A5060", margin: "7px 0 0" }}>{t.a}</p>
+                  <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.65, color: P.body, margin: "7px 0 0" }}>{t.a}</p>
                 ) : (
                   <p style={{ ...sans, display: "flex", alignItems: "center", gap: 9, fontSize: 14, color: P.sub, margin: "7px 0 0" }}>
                     <Loader2 size={14} className="lps-spin" /> Thinking…

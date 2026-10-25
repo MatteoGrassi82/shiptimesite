@@ -119,7 +119,7 @@ export function TargetTriangle() {
             ref={svg}
             viewBox={`0 0 ${W} ${H}`}
             role="img"
-            aria-label={`Your triangle: ${AXES.map((a, n) => `${a.corner.toLowerCase()} ${a.fmt(values[n])} ${a.unit}`).join(", ")}. Quick score ${full} out of 100.`}
+            aria-label={`Your triangle: ${AXES.map((a, n) => `${a.corner.toLowerCase()} ${a.fmt(values[n])} ${a.unit}`).join(", ")}. ${touched ? "Your quick estimate" : "Example score"} ${full} out of 100.`}
             style={{ width: "100%", height: "auto", display: "block", overflow: "visible", userSelect: "none", WebkitUserSelect: "none" }}
           >
             <defs>
@@ -197,7 +197,9 @@ export function TargetTriangle() {
       </div>
 
       <div>
-        <Label onDark>Your quick score</Label>
+        {/* the defaults are an example, not the visitor's score, until they
+            put in a number */}
+        <Label onDark>{touched ? "Your quick estimate" : "Example"}</Label>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 12 }}>
           <span style={{ ...mono, fontSize: "clamp(3.6rem, 6.4vw, 5rem)", fontWeight: 500, lineHeight: 0.9, letterSpacing: "-0.04em", color: C.onDark, fontVariantNumeric: "tabular-nums" }}>{score}</span>
           <span style={{ ...mono, fontSize: 16, color: C.lilac }}>/100</span>
@@ -234,9 +236,9 @@ export function TargetTriangle() {
         </div>
 
         <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.6, color: C.onDarkDim, margin: "16px 0 0" }}>
-          A quick estimate from three numbers. The full score takes sixteen questions and five minutes, and shows where you&rsquo;re losing money.
+          A quick estimate from three numbers. The full score takes sixteen questions and five minutes, and shows where the leverage is.
         </p>
-        <Link href="/plus/assessment" className="k-btn" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 9, fontSize: 15.5, fontWeight: 700, color: C.plum, background: C.paper, borderRadius: 6, padding: "14px 22px", textDecoration: "none", marginTop: 20 }}>
+        <Link href="/koherent/score" className="k-btn" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 9, fontSize: 15.5, fontWeight: 700, color: C.plum, background: C.paper, borderRadius: 6, padding: "14px 22px", textDecoration: "none", marginTop: 20 }}>
           Get your full score <ArrowRight size={16} />
         </Link>
       </div>
@@ -265,7 +267,8 @@ export function TargetTriangle() {
         }
         @media (max-width: 900px) { .kt { grid-template-columns: 1fr !important; } }
         @media (max-width: 640px) {
-          .kt-tag-l { font-size: 9px !important; letter-spacing: 0.06em !important; }
+          /* the slider rows below already name each pillar */
+          .kt-tag-l { display: none !important; }
           .kt-tag-v { font-size: 15px !important; margin-top: 2px !important; }
           .kt-tag-u { display: none !important; }
         }

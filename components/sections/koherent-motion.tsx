@@ -145,8 +145,10 @@ export function ConsoleView() {
           <div className="kd-rise" style={{ padding: "18px 18px 16px", borderRight: `1px solid ${C.line}`, animationDelay: "0.2s" }}>
             <Label>Cost per order</Label>
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 10 }}>
-              <span style={{ ...mono, fontSize: 36, fontWeight: 500, lineHeight: 1, color: C.ink, fontVariantNumeric: "tabular-nums" }}>${cost.toFixed(2)}</span>
-              <span style={{ ...mono, fontSize: 13, color: C.stone, textDecoration: "line-through", textDecorationColor: C.violet }}>$12.30</span>
+              {/* the count and the old price are for the eye; screen readers get one sentence */}
+              <span className="sr-only">$11.21 per order, down from $12.30</span>
+              <span aria-hidden style={{ ...mono, fontSize: 36, fontWeight: 500, lineHeight: 1, color: C.ink, fontVariantNumeric: "tabular-nums" }}>${cost.toFixed(2)}</span>
+              <span aria-hidden style={{ ...mono, fontSize: 13, color: C.stone, textDecoration: "line-through", textDecorationColor: C.violet }}>$12.30</span>
             </div>
             <p style={{ ...sans, fontSize: 12.5, lineHeight: 1.45, color: C.stone, margin: "8px 0 0" }}>Shipping, warehousing and fee, in one number. Illustrative figures.</p>
           </div>
@@ -196,7 +198,8 @@ export function ConsoleView() {
           @keyframes kd-tri-kf { from { transform: scale(.2); } to { transform: none; } }
           .kd-wrap.is-in .kd-tri { transform-origin: 54px 33px; animation: kd-tri-kf .9s cubic-bezier(.22,1,.36,1) .7s both; }
           @keyframes kd-approve-kf { 0%, 100% { box-shadow: 0 0 0 0 rgba(110,58,128,.45); } 50% { box-shadow: 0 0 0 7px rgba(110,58,128,0); } }
-          .kd-wrap.is-in .kd-approve { animation: kd-approve-kf 2.4s ease 1.8s infinite; }
+          /* three pulses, then still: motion only as an accent (Michael, Aug 6) */
+          .kd-wrap.is-in .kd-approve { animation: kd-approve-kf 2.4s ease 1.8s 3; }
         }
         @media (max-width: 520px) {
           .kd-grid { grid-template-columns: 1fr !important; }

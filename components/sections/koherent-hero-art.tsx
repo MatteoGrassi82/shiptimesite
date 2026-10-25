@@ -10,7 +10,9 @@ import type { CSSProperties } from "react";
 //      coming together at one point", slide 16),
 //   3. the photo opens from that point, left to right, behind the steps,
 //      which sweep across once and stop (slide 26),
-//   4. the cost card rises and counts $25.00 → $13.22 (PG Golf, proposed).
+//   4. the cost card rises and counts $25.00 → $13.22: the delivered cost per
+//      shipment from our proposal for the US golf brand (koherent-cases.ts),
+//      labelled proposed. Its phase 1 is bulk shipping, with no warehousing.
 // With reduced motion everything renders in its final state. All motion is
 // CSS except the count, which needs a few frames of JS.
 
@@ -69,8 +71,10 @@ export function KoherentHeroArt({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="kh-art" style={{ position: "relative", width: "100%" }}>
       {/* the photo, opened from the arrow tip */}
-      <div className="kh-photo" style={{ clipPath: "polygon(30% 0, 100% 0, 100% 100%, 30% 100%, 0 50%)", background: C.mist }}>
+      <div className="kh-photo" style={{ position: "relative", clipPath: "polygon(30% 0, 100% 0, 100% 100%, 30% 100%, 0 50%)", background: C.mist }}>
         <img src={src} alt={alt} width={1024} height={1024} style={{ width: "100%", height: "auto", aspectRatio: "1 / 1", objectFit: "cover", display: "block" }} />
+        {/* an AI placeholder until our own shoot, so it says so (as the bento's do) */}
+        <span style={{ ...mono, position: "absolute", top: 14, right: 14, fontSize: 10.5, lineHeight: 1.4, letterSpacing: "0.04em", color: C.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 8, padding: "5px 10px" }}>Illustrative photo</span>
       </div>
 
       {/* the steps, sweeping across once */}
@@ -120,18 +124,21 @@ export function KoherentHeroArt({ src, alt }: { src: string; alt: string }) {
         </svg>
       </div>
 
-      {/* one number per order */}
+      {/* the golf case's proposed cost per shipment (koherent-cases.ts) */}
       <div className="kh-card k-numcard" style={{ position: "absolute", right: "4%", bottom: "-5%", width: "min(300px, 72%)", background: C.ink, color: C.onDark, borderRadius: 4, padding: "20px 22px 18px", boxShadow: "0 30px 60px -30px rgba(23,16,28,0.6)" }}>
-        <p style={{ ...mono, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: C.lilac, margin: 0 }}>Your cost per order</p>
+        <p style={{ ...mono, fontSize: 11, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: C.lilac, margin: 0 }}>Cost per shipment · proposed</p>
         <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10 }}>
-          <span style={{ ...mono, fontSize: 40, fontWeight: 500, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>${value.toFixed(2)}</span>
-          <span className="kh-was" style={{ ...mono, position: "relative", fontSize: 15, color: C.onDarkDim }}>
+          {/* the count and the struck-out figure are visual; a screen reader
+              gets the one stable sentence, never "$25.00 $25.00" mid-count */}
+          <span aria-hidden style={{ ...mono, fontSize: 40, fontWeight: 500, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>${value.toFixed(2)}</span>
+          <span aria-hidden className="kh-was" style={{ ...mono, position: "relative", fontSize: 15, color: C.onDarkDim }}>
             $25.00
             <span className="kh-strike" style={{ position: "absolute", left: 0, top: "52%", height: 1.5, width: "100%", background: C.lilac, transformOrigin: "left center" }} />
           </span>
+          <span className="sr-only">$13.22, down from $25.00</span>
         </div>
         <p style={{ ...sans, fontSize: 13, lineHeight: 1.5, color: C.onDarkDim, margin: "10px 0 0" }}>
-          Shipping, warehousing and our fee in one number. Proposed for PG Golf, not yet realized.
+          Delivered cost per shipment, from our proposal for a US golf brand entering Canada. Not yet realized.
         </p>
       </div>
 

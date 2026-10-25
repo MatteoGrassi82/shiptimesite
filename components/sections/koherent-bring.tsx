@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { CITY_POINTS, US_STATES, VIEWBOX } from "@/components/console/geo-data";
 import { C, CHEV, K_ARROW, K_BAR, mono, sans, title, useInView, useReducedMotion } from "./koherent-motion";
 
@@ -25,7 +24,7 @@ import { C, CHEV, K_ARROW, K_BAR, mono, sans, title, useInView, useReducedMotion
 
 type Key = "carriers" | "rates" | "warehouses" | "integrations" | "shiplets" | "people";
 const B: Record<Key, { title: string; body: string; tag?: string }> = {
-  carriers: { title: "Integrated carriers", body: "Couriers, regional carriers, LTL and FTL, compared on every shipment for cost and speed." },
+  carriers: { title: "Integrated carriers", body: "Couriers, regional carriers, LTL, FTL and ocean, compared on every shipment for cost and speed." },
   rates: { title: "Discounted rates", body: "Our buying power, passed through to you. Or bring your own rates and we'll use those too." },
   warehouses: { title: "A warehouse network", body: "Certified partner warehouses in Canada and the US. We don't own them; we pick the right ones for you." },
   integrations: { title: "The integration library", body: "Shopify, Amazon, NetSuite, QuickBooks and 30 more. It plugs into what you already run." },
@@ -192,12 +191,13 @@ function Tag({ children, dark = false }: { children: ReactNode; dark?: boolean }
   );
 }
 
-function TileHead({ k, n, dark = false }: { k: Key; n: number; dark?: boolean }) {
+// No tile numbers: on the grid they read 03, 01, 06…, right under the
+// section's own label.
+function TileHead({ k, dark = false }: { k: Key; dark?: boolean }) {
   const b = B[k];
   return (
     <div>
-      <span style={{ ...mono, fontSize: 11, fontWeight: 500, letterSpacing: "0.12em", color: dark ? C.lilac : C.violet }}>{String(n).padStart(2, "0")}</span>
-      <h3 style={{ ...title, display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10, fontSize: "1.35rem", color: dark ? C.onDark : C.ink, margin: "8px 0 0" }}>
+      <h3 style={{ ...title, display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10, fontSize: "1.35rem", color: dark ? C.onDark : C.ink, margin: 0 }}>
         {b.title}
         {b.tag && <Tag dark={dark}>{b.tag}</Tag>}
       </h3>
@@ -226,7 +226,7 @@ function Tile({ area, tone = "card", delay, children, className = "" }: { area: 
   const t = TONE[tone];
   const { ref, cls } = useTileIn();
   return (
-    <div ref={ref} className={`${cls} ${className}`} style={{ gridArea: area, position: "relative", overflow: "hidden", background: t.bg, border: `1px solid ${t.dark ? t.bg : C.line}`, borderRadius: 12, padding: 24, display: "flex", flexDirection: "column", gap: 20, textAlign: "left", ...vars({ "--d": `${delay}ms` }) }}>
+    <div ref={ref} data-k-dark={t.dark ? "" : undefined} className={`${cls} ${className}`} style={{ gridArea: area, position: "relative", overflow: "hidden", background: t.bg, border: `1px solid ${t.dark ? t.bg : C.line}`, borderRadius: 8, padding: 24, display: "flex", flexDirection: "column", gap: 20, textAlign: "left", ...vars({ "--d": `${delay}ms` }) }}>
       {children}
     </div>
   );
@@ -246,11 +246,12 @@ function PhotoChevrons({ size, style }: { size: number; style: CSSProperties }) 
 }
 
 // credit: the deck's rule for photos (slide 28): operators always with their
-// name, partner sites always credited. Bracketed until the real shoot.
+// name, partner sites always credited. Until our own shoot the photos are AI
+// placeholders, so the credit says so instead of showing [brackets].
 function PhotoTile({ area, delay, src, focus, shade, chevrons, credit, className = "", children }: { area: string; delay: number; src: string; focus: string; shade: string; chevrons: { size: number; style: CSSProperties }; credit: string; className?: string; children: ReactNode }) {
   const { ref, cls } = useTileIn();
   return (
-    <div ref={ref} className={`${cls} kb-photo ${className}`} style={{ gridArea: area, position: "relative", overflow: "hidden", background: C.ink, borderRadius: 12, textAlign: "left", ...vars({ "--d": `${delay}ms` }) }}>
+    <div ref={ref} data-k-dark="" className={`${cls} kb-photo ${className}`} style={{ gridArea: area, position: "relative", overflow: "hidden", background: C.ink, borderRadius: 8, textAlign: "left", ...vars({ "--d": `${delay}ms` }) }}>
       <div className="kb-media" style={{ position: "absolute", inset: 0 }}>
         <img className="kb-img" src={src} alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: focus }} />
         <div className="kb-shade" aria-hidden style={{ position: "absolute", inset: 0, background: shade }} />
@@ -318,9 +319,18 @@ const APPS: [string, string][] = [
   ["Exception Radar", "Problems flagged early"],
 ];
 
-export function BringBento() {
-  const darkPill: CSSProperties = { ...sans, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13.5, fontWeight: 600, color: C.onDark, background: "rgba(246,243,238,0.1)", border: "1px solid rgba(199,174,230,0.35)", borderRadius: 999, padding: "9px 12px" };
+// The six blocks in the "One network" tile, each a link to its own section of
+// the detail page (the ids on /koherent/what-we-bring).
+const BLOCKS: [string, string][] = [
+  ["Carriers", "carriers"],
+  ["Rates", "rates"],
+  ["Warehouses", "warehouses"],
+  ["Integrations", "integrations"],
+  ["Shiplets", "shiplets"],
+  ["People", "people"],
+];
 
+export function BringBento() {
   return (
     <div className="kb" style={{ maxWidth: 1120, margin: "clamp(36px, 5vw, 56px) auto 0" }}>
       {/* Two tall photo tiles on a diagonal (carriers top right, people bottom
@@ -328,33 +338,31 @@ export function BringBento() {
           order, which is also the phone order. */}
       <div className="kb-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gridTemplateAreas: `"map map map map map map map car car car car car" "map map map map map map map car car car car car" "ppl ppl ppl ppl rat rat rat rat int int int int" "ppl ppl ppl ppl shp shp shp shp one one one one"`, gap: 14 }}>
         {/* 01 · carriers: the comparison over a photo */}
-        <PhotoTile area="car" delay={120} src="/generated/koherent-bring-carriers-a.webp" focus="50% 14%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="[Partner name], [City]">
-          <TileHead k="carriers" n={1} dark />
+        <PhotoTile area="car" delay={120} src="/generated/koherent-bring-carriers-a.webp" focus="50% 14%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="Illustrative photo">
+          <TileHead k="carriers" dark />
           <RateCard />
         </PhotoTile>
 
-        {/* 02 · rates: the buying power behind them */}
+        {/* 02 · rates: the buying power behind them. Best value, not
+            cheapest: the carrier tile drops the cheapest option as too slow,
+            and the entry point is cost out, not "cheaper rates" (Chris). */}
         <Tile area="rat" tone="plum" delay={120}>
-          <TileHead k="rates" n={2} dark />
+          <TileHead k="rates" dark />
           <div style={{ marginTop: "auto", display: "grid", gap: 14 }}>
             <Stat value="2M+" label="shipments managed a year: the buying power behind your rates" dark />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              <span style={darkPill}>Our rates</span>
-              <span style={darkPill}>Your contracts</span>
-            </div>
-            <div style={{ ...sans, textAlign: "center", fontSize: 14, fontWeight: 700, color: C.plum, background: C.paper, borderRadius: 999, padding: "10px 14px" }}>Shopped side by side. Cheapest wins.</div>
+            <p style={{ ...sans, fontSize: 15, fontWeight: 600, lineHeight: 1.5, color: C.onDark, margin: 0 }}>Our rates and your contracts, compared on every shipment. Best value wins.</p>
           </div>
         </Tile>
 
         {/* 03 · warehouses: the map */}
         <Tile area="map" delay={0}>
-          <TileHead k="warehouses" n={3} />
+          <TileHead k="warehouses" />
           <NetworkMap />
         </Tile>
 
         {/* 04 · integrations */}
         <Tile area="int" delay={240}>
-          <TileHead k="integrations" n={4} />
+          <TileHead k="integrations" />
           <div style={{ marginTop: "auto", display: "grid", gap: 18 }}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {["Shopify", "Amazon", "NetSuite", "QuickBooks"].map((n, i) => (
@@ -373,7 +381,7 @@ export function BringBento() {
 
         {/* 05 · Shiplets */}
         <Tile area="shp" tone="mist" delay={120}>
-          <TileHead k="shiplets" n={5} />
+          <TileHead k="shiplets" />
           <div style={{ marginTop: "auto", background: C.card, border: `1px solid ${C.line}`, borderRadius: 8, padding: "2px 12px" }}>
             {APPS.map(([n, job], i) => (
               <div key={n} style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 0", borderTop: i ? `1px solid ${C.line}` : "none" }}>
@@ -390,8 +398,8 @@ export function BringBento() {
         </Tile>
 
         {/* 06 · people: a photo, the steps, one example message */}
-        <PhotoTile area="ppl" delay={0} src="/generated/koherent-bring-people-b.webp" focus="60% 12%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="[Name] · [Role]">
-          <TileHead k="people" n={6} dark />
+        <PhotoTile area="ppl" delay={0} src="/generated/koherent-bring-people-b.webp" focus="60% 12%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="Illustrative photo">
+          <TileHead k="people" dark />
           <div style={{ background: "rgba(246,243,238,0.1)", border: "1px solid rgba(199,174,230,0.25)", borderRadius: "4px 14px 14px 14px", padding: "10px 14px" }}>
             <div style={{ ...mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.lilac }}>Your account team · example message</div>
             <div style={{ ...sans, fontSize: 14, lineHeight: 1.5, color: C.onDark, marginTop: 4 }}>Reno receiving is a day behind: a truck arrived late. Back on schedule Thursday.</div>
@@ -415,33 +423,32 @@ export function BringBento() {
             </p>
           </div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "12px 16px" }}>
-            {(["Carriers", "Rates", "Warehouses", "Integrations", "Shiplets", "People"] as const).map((name, i) => (
-              <li key={name} className="kb-step" style={{ ...sans, display: "flex", alignItems: "center", gap: 9, fontSize: 14.5, fontWeight: 600, color: C.onDark, ...vars({ "--i": `${i * 140}ms` }) }}>
+            {BLOCKS.map(([name, id], i) => (
+              <li key={id} className="kb-step" style={{ ...sans, display: "flex", alignItems: "center", gap: 9, fontSize: 14.5, fontWeight: 600, color: C.onDark, ...vars({ "--i": `${i * 140}ms` }) }}>
                 <svg viewBox="0 0 8 12" style={{ width: 9, height: 13, flex: "none" }} aria-hidden>
                   <path d={CHEV} fill={C.lilac} />
                 </svg>
-                {name}
+                <Link href={`/koherent/what-we-bring#${id}`} className="kb-link" style={{ color: "inherit", textDecoration: "none" }}>
+                  {name}
+                </Link>
               </li>
             ))}
           </ul>
+          {/* the section's "Every block, in detail" link sits under the grid */}
           <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", borderTop: "1px solid rgba(246,243,238,0.14)", paddingTop: 16 }}>
             <span style={{ ...mono, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: C.lilac }}>6 of 6 connected</span>
-            <Link href="/plus/technology" className="kb-more" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 7, fontSize: 15, fontWeight: 700, color: C.onDark, textDecoration: "none" }}>
-              See the platform <ArrowRight size={15} />
-            </Link>
           </div>
         </Tile>
       </div>
 
       <style>{`
-        .kb-seg:focus-visible, .kb-more:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
+        .kb-seg:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
+        .kb-link:hover { text-decoration: underline !important; text-underline-offset: 4px; }
         .kb-img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
         .kb-chev { transition: transform .4s cubic-bezier(.22,1,.36,1); }
-        .kb-more svg { transition: transform .2s ease; }
         @media (hover: hover) {
           .kb-photo:hover .kb-img { transform: scale(1.04); }
           .kb-photo:hover .kb-chev { transform: translateX(6px); }
-          .kb-more:hover svg { transform: translateX(3px); }
         }
         @media (prefers-reduced-motion: no-preference) {
           .kb-tile.armed:not(.is-in) { opacity: 0; }

@@ -23,7 +23,7 @@ const STEPS: { name: string; body: string }[] = [
   { name: "Design", body: "Carriers, warehouses and routes, priced before you commit." },
   { name: "Test", body: "We prove it on your real shipments before anything changes." },
   { name: "Go live", body: "Switched on alongside your team. Nothing pauses." },
-  { name: "Improve", body: "Reviewed with you every month, and tuned as you grow." },
+  { name: "Improve", body: "Reviewed with you every month, and optimized as you grow." },
 ];
 const STEP_MS = 4200;
 const STAGE = "polygon(7% 0, 100% 0, 100% 100%, 7% 100%, 0 50%)";
@@ -96,9 +96,9 @@ function AssessView() {
         <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 88, marginTop: 14 }}>
           {regions.map(([r, v], n) => (
             <div key={r} style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, height: "100%", justifyContent: "flex-end" }}>
-              <span style={{ ...mono, fontSize: 10, color: n === 0 ? C.plum : C.stone }}>{v}%</span>
+              <span style={{ ...mono, fontSize: 11, color: n === 0 ? C.plum : C.stone }}>{v}%</span>
               <div className="km-grow" style={{ width: "100%", height: `${(v / 33) * 62}%`, background: n === 0 ? C.plum : C.lilac, borderRadius: "3px 3px 0 0", animationDelay: `${0.9 + n * 0.1}s` }} />
-              <span style={{ ...mono, fontSize: 10, color: C.stone }}>{r}</span>
+              <span className="km-region" style={{ ...mono, fontSize: 11, color: C.stone }}>{r}</span>
             </div>
           ))}
         </div>
@@ -135,36 +135,46 @@ const MAP_H = 290;
 const onMap = (x: number, y: number): CSSProperties => ({ position: "absolute", left: `${(x / MAP_W) * 100}%`, top: `${(y / MAP_H) * 100}%` });
 
 function DesignView() {
-  // Reno's label hangs below its marker, clear of the route coming in.
+  // Reno's label hangs below its marker, clear of the route coming in. On a
+  // phone Columbus's does too (phoneBelow), or it runs into the card's edge.
   const sites = [
-    { x: 118, y: 120, r: 72, name: "Reno, NV", note: "New · partner warehouse", planned: false, below: true },
-    { x: 410, y: 96, r: 78, name: "Columbus, OH", note: "Your warehouse", planned: false, below: false },
-    { x: 392, y: 206, r: 64, name: "Atlanta, GA", note: "Planned · Nov 25", planned: true, below: false },
+    { x: 118, y: 120, r: 72, name: "Reno, NV", note: "New · partner warehouse", planned: false, below: true, phoneBelow: false },
+    { x: 410, y: 96, r: 78, name: "Columbus, OH", note: "Your warehouse", planned: false, below: false, phoneBelow: true },
+    { x: 392, y: 206, r: 64, name: "Atlanta, GA", note: "Planned · Nov 25", planned: true, below: false, phoneBelow: false },
   ];
+  const under = (s: { x: number; y: number }) => onMap(s.x - 7, s.y + 12);
   return (
     <Card>
       <AppHead name="Your network, designed" right="2-day reach" />
       {/* dot grid as a CSS background: an SVG <pattern> id would repeat in the
-          hidden copies MethodPlayer renders for sizing */}
-      <div style={{ position: "relative", background: C.paper, backgroundImage: `radial-gradient(circle, ${C.line} 1.2px, transparent 1.6px)`, backgroundSize: "16px 16px" }}>
-        <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} style={{ width: "100%", height: "auto", display: "block" }} aria-label="Reno, Columbus and Atlanta, with how far each reaches in 2 days" role="img">
-          {sites.map((s, n) => (
-            <circle key={s.name} className="km-ring" cx={s.x} cy={s.y} r={s.r} fill={s.planned ? "rgba(199,174,230,0.22)" : "rgba(110,58,128,0.16)"} stroke={s.planned ? C.lilac : C.violet} strokeDasharray={s.planned ? "4 6" : undefined} style={{ transformOrigin: `${s.x}px ${s.y}px`, animationDelay: `${0.3 + n * 0.3}s` }} />
-          ))}
-          <path className="km-draw" d="M 403 92 C 320 40, 200 50, 126 114" stroke={C.plum} strokeWidth="2" fill="none" strokeDasharray="5 7" />
+          hidden copies MethodPlayer renders for sizing. The route label sits
+          outside the map's own box: on a phone the map is too small for it
+          to clear the rings, so it moves to a band above (.km-map). */}
+      <div className="km-map" style={{ position: "relative", background: C.paper, backgroundImage: `radial-gradient(circle, ${C.line} 1.2px, transparent 1.6px)`, backgroundSize: "16px 16px" }}>
+        <div style={{ position: "relative" }}>
+          <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} style={{ width: "100%", height: "auto", display: "block" }} aria-label="Reno, Columbus and Atlanta, with how far each reaches in 2 days" role="img">
+            {sites.map((s, n) => (
+              <circle key={s.name} className="km-ring" cx={s.x} cy={s.y} r={s.r} fill={s.planned ? "rgba(199,174,230,0.22)" : "rgba(110,58,128,0.16)"} stroke={s.planned ? C.lilac : C.violet} strokeDasharray={s.planned ? "4 6" : undefined} style={{ transformOrigin: `${s.x}px ${s.y}px`, animationDelay: `${0.3 + n * 0.3}s` }} />
+            ))}
+            <path className="km-draw" d="M 403 92 C 320 40, 200 50, 126 114" stroke={C.plum} strokeWidth="2" fill="none" strokeDasharray="5 7" />
+            {sites.map((s) => (
+              <rect key={s.name} x={s.x - 7} y={s.y - 7} width="14" height="14" fill={s.planned ? C.violet : C.plum} />
+            ))}
+          </svg>
           {sites.map((s) => (
-            <rect key={s.name} x={s.x - 7} y={s.y - 7} width="14" height="14" fill={s.planned ? C.violet : C.plum} />
+            <span
+              key={s.name}
+              className={s.phoneBelow ? "km-map-below" : undefined}
+              style={{ ...(s.below ? under(s) : { ...onMap(s.x + 14, s.y), transform: "translateY(-50%)" }), ...(s.phoneBelow ? ({ "--bl": under(s).left, "--bt": under(s).top } as CSSProperties) : {}), whiteSpace: "nowrap", lineHeight: 1.25 }}
+            >
+              <span className="km-map-name" style={{ ...sans, display: "block", fontSize: 13.5, fontWeight: 700, color: C.ink }}>{s.name}</span>
+              <span className="km-map-note" style={{ ...mono, display: "block", fontSize: 10, letterSpacing: "0.04em", textTransform: "uppercase", color: C.stone }}>{s.note}</span>
+            </span>
           ))}
-        </svg>
+        </div>
         <span className="km-fade km-map-route" style={{ ...onMap(262, 40), transform: "translate(-50%, -50%)", ...mono, fontSize: 10.5, letterSpacing: "0.06em", textTransform: "uppercase", color: C.plum, whiteSpace: "nowrap", animationDelay: "1.7s" }}>
           West orders · 2.4 days faster
         </span>
-        {sites.map((s) => (
-          <span key={s.name} style={{ ...(s.below ? onMap(s.x - 7, s.y + 12) : { ...onMap(s.x + 14, s.y), transform: "translateY(-50%)" }), whiteSpace: "nowrap", lineHeight: 1.25 }}>
-            <span className="km-map-name" style={{ ...sans, display: "block", fontSize: 13.5, fontWeight: 700, color: C.ink }}>{s.name}</span>
-            <span className="km-map-note" style={{ ...mono, display: "block", fontSize: 10, letterSpacing: "0.04em", textTransform: "uppercase", color: C.stone }}>{s.note}</span>
-          </span>
-        ))}
       </div>
       <div style={foot}>West orders ship from Reno · priced before you commit</div>
     </Card>
@@ -231,9 +241,9 @@ function ImproveView() {
         <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 96 }}>
           {months.map(([m, v], n) => (
             <div key={m} style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%", justifyContent: "flex-end" }}>
-              <span style={{ ...mono, fontSize: 10, color: n === months.length - 1 ? C.plum : C.stone }}>{v.toFixed(2)}</span>
+              <span style={{ ...mono, fontSize: 11, color: n === months.length - 1 ? C.plum : C.stone }}>{v.toFixed(2)}</span>
               <div className="km-grow" style={{ width: "100%", height: `${((v - lo) / (hi - lo)) * 100}%`, background: n === months.length - 1 ? C.plum : C.lilac, borderRadius: "3px 3px 0 0", animationDelay: `${0.2 + n * 0.1}s` }} />
-              <span style={{ ...mono, fontSize: 10, color: C.stone }}>{m}</span>
+              <span style={{ ...mono, fontSize: 11, color: C.stone }}>{m}</span>
             </div>
           ))}
         </div>
@@ -248,6 +258,51 @@ function ImproveView() {
 }
 
 const VIEWS = [AssessView, PlanView, DesignView, TestView, GoLiveView, ImproveView];
+
+const KM_CSS = `
+        .km-step:hover { border-color: ${C.violet} !important; }
+        .km-step:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
+        @media (prefers-reduced-motion: no-preference) {
+          @keyframes km-progress-kf { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+          .km-progress { animation: km-progress-kf ${STEP_MS}ms linear both; }
+          @keyframes km-in-kf { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+          .km-in { animation: km-in-kf .55s cubic-bezier(.22,1,.36,1) both; }
+          @keyframes km-fill-kf { from { width: 0; } to { width: 100%; } }
+          .km-fill { animation: km-fill-kf 1s cubic-bezier(.65,0,.35,1) .2s both; }
+          @keyframes km-grow-kf { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+          .km-grow { transform-origin: bottom; animation: km-grow-kf .6s cubic-bezier(.22,1,.36,1) both; }
+          @keyframes km-rise-kf { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+          .km-rise { animation: km-rise-kf .45s cubic-bezier(.22,1,.36,1) both; }
+          @keyframes km-fade-kf { from { opacity: 0; } to { opacity: 1; } }
+          .km-fade { animation: km-fade-kf .5s ease both; }
+          @keyframes km-tick-kf { 0% { transform: scale(0); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+          .km-tick { animation: km-tick-kf .4s cubic-bezier(.22,1,.36,1) both; }
+          @keyframes km-ring-kf { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+          .km-ring { animation: km-ring-kf .9s cubic-bezier(.22,1,.36,1) both; }
+          @keyframes km-draw-kf { from { stroke-dashoffset: 400; opacity: 0; } to { stroke-dashoffset: 0; opacity: 1; } }
+          .km-draw { animation: km-draw-kf 1.2s ease .9s both; }
+          @keyframes km-live-kf { 0%, 100% { box-shadow: 0 0 0 0 rgba(70,25,72,.5); } 50% { box-shadow: 0 0 0 6px rgba(70,25,72,0); } }
+          .km-live { animation: km-live-kf 1.8s ease 3; } /* three pulses, then still */
+        }
+        @media (max-width: 900px) {
+          .km-slide { grid-template-columns: 1fr !important; gap: 22px !important; }
+          .km-steps { grid-template-columns: repeat(3, 1fr) !important; }
+        }
+        @media (max-width: 640px) {
+          .km-steps { gap: 8px !important; }
+          .km-map-name { font-size: 11.5px !important; }
+          /* the notes go (the card's footer already says West ships from Reno)
+             so the route label can stay readable */
+          .km-map-note { display: none !important; }
+          .km-map-route { font-size: 10.5px !important; letter-spacing: 0.04em !important; top: 12px !important; }
+          .km-map { padding-top: 24px; }
+          .km-map-below { left: var(--bl) !important; top: var(--bt) !important; transform: none !important; }
+        }
+        /* "Southeast" and "Elsewhere" meet at 11px on the narrowest phones */
+        @media (max-width: 380px) {
+          .km-region { font-size: 10px !important; }
+        }
+`;
 
 function Slide({ n }: { n: number }) {
   const View = VIEWS[n];
@@ -330,41 +385,24 @@ export function MethodPlayer() {
         Alder &amp; Stone is an example account · figures are illustrative
       </p>
 
-      <style>{`
-        .km-step:hover { border-color: ${C.violet} !important; }
-        .km-step:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
-        @media (prefers-reduced-motion: no-preference) {
-          @keyframes km-progress-kf { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-          .km-progress { animation: km-progress-kf ${STEP_MS}ms linear both; }
-          @keyframes km-in-kf { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-          .km-in { animation: km-in-kf .55s cubic-bezier(.22,1,.36,1) both; }
-          @keyframes km-fill-kf { from { width: 0; } to { width: 100%; } }
-          .km-fill { animation: km-fill-kf 1s cubic-bezier(.65,0,.35,1) .2s both; }
-          @keyframes km-grow-kf { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-          .km-grow { transform-origin: bottom; animation: km-grow-kf .6s cubic-bezier(.22,1,.36,1) both; }
-          @keyframes km-rise-kf { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-          .km-rise { animation: km-rise-kf .45s cubic-bezier(.22,1,.36,1) both; }
-          @keyframes km-fade-kf { from { opacity: 0; } to { opacity: 1; } }
-          .km-fade { animation: km-fade-kf .5s ease both; }
-          @keyframes km-tick-kf { 0% { transform: scale(0); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
-          .km-tick { animation: km-tick-kf .4s cubic-bezier(.22,1,.36,1) both; }
-          @keyframes km-ring-kf { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-          .km-ring { animation: km-ring-kf .9s cubic-bezier(.22,1,.36,1) both; }
-          @keyframes km-draw-kf { from { stroke-dashoffset: 400; opacity: 0; } to { stroke-dashoffset: 0; opacity: 1; } }
-          .km-draw { animation: km-draw-kf 1.2s ease .9s both; }
-          @keyframes km-live-kf { 0%, 100% { box-shadow: 0 0 0 0 rgba(70,25,72,.5); } 50% { box-shadow: 0 0 0 6px rgba(70,25,72,0); } }
-          .km-live { animation: km-live-kf 1.8s ease infinite; }
-        }
-        @media (max-width: 900px) {
-          .km-slide { grid-template-columns: 1fr !important; gap: 22px !important; }
-          .km-steps { grid-template-columns: repeat(3, 1fr) !important; }
-        }
-        @media (max-width: 640px) {
-          .km-steps { gap: 8px !important; }
-          .km-map-name { font-size: 11.5px !important; }
-          .km-map-note, .km-map-route { font-size: 8.5px !important; letter-spacing: 0.02em !important; }
-        }
-      `}</style>
+      <style>{KM_CSS}</style>
+    </div>
+  );
+}
+
+// ── MethodScreen — one step's screen on its own ──────────────────────────────
+// For /koherent/how-we-work, where each step gets a row of its own. The screen
+// plays its build-up when it scrolls into view; until then an invisible copy
+// holds its place, so the page never jumps.
+export function MethodScreen({ n }: { n: number }) {
+  const { ref, inView } = useInView<HTMLDivElement>(0.3);
+  const View = VIEWS[n];
+  return (
+    <div ref={ref} style={{ display: "grid" }}>
+      <div aria-hidden={!inView} style={{ gridArea: "1 / 1", visibility: inView ? "visible" : "hidden" }}>
+        {inView ? <View key="in" /> : <View />}
+      </div>
+      <style>{KM_CSS}</style>
     </div>
   );
 }
