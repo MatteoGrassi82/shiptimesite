@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/reveal";
 import { ScrollIndex } from "@/components/sections/koherent-index";
+import { NetworkLattice } from "@/components/sections/koherent-lattice";
 import { inner, K, KoherentShell, Label, PAGES, PageHead, ScoreClose, Sect, mono, sans, title } from "@/components/sections/koherent-ui";
 
 // /koherent/what-we-bring — Michael's six building blocks (email "New
@@ -24,12 +25,17 @@ const STATS: [string, string][] = [
   ["20 yrs", "in shipping and logistics"],
 ];
 
-const BLOCKS: { id: string; name: string; line: string; fact?: [string, string, string]; points: string[]; tag?: string }[] = [
+// The live /dashboard mockup, where the Koherent example account (Alder &
+// Stone) shows Shiplets at work: Michael (Aug 6) wanted the custom dashboard
+// with Shiplets shown as a deliverable, with an example.
+const EXAMPLE_ACCOUNT = "https://lp.shiptime.com/dashboard";
+
+const BLOCKS: { id: string; name: string; line: string; fact?: [string, string, string]; points: string[]; tag?: string; link?: { href: string; label: string } }[] = [
   {
     id: "carriers",
     name: "Integrated carriers",
     fact: ["4", "modes", "courier, LTL, FTL and ocean, in one place"],
-    line: "Couriers, regional carriers, LTL, FTL and ocean, compared on every shipment for cost and speed.",
+    line: "Couriers, regional carriers, last-mile partners, LTL, FTL and ocean, compared on every shipment for cost and speed.",
     points: [
       "Nothing goes out on a default carrier by habit.",
       "Freight can go to the spot market: carriers bid, and you book the price that wins.",
@@ -65,7 +71,8 @@ const BLOCKS: { id: string; name: string; line: string; fact?: [string, string, 
       "Connects to what you already run: your stores, ERP, warehouse system, carrier accounts and finance tools.",
       "Nothing gets ripped out. What you have starts talking to each other.",
       "A full API for teams that build: rating, booking, tracking and documents.",
-      "Your data is yours. It shapes your network and never trains anyone else's.",
+      "Analytics on every shipment: cost per lane, carrier performance and exceptions, each scored against what it should have cost.",
+      "Your data is yours. It trains your network's AI, for carrier choice, exception alerts and cost scoring, and never anyone else's.",
     ],
   },
   {
@@ -79,6 +86,7 @@ const BLOCKS: { id: string; name: string; line: string; fact?: [string, string, 
       "Each one starts by suggesting. It acts on its own only once it has proven right, and every action is logged.",
       "One example: a “send a case” page that lets any dental office ship to its lab in a few clicks.",
     ],
+    link: { href: EXAMPLE_ACCOUNT, label: "See Shiplets in the example account" },
   },
   {
     id: "people",
@@ -88,6 +96,7 @@ const BLOCKS: { id: string; name: string; line: string; fact?: [string, string, 
     points: [
       "Experts on the ground at your sites, and a daily rhythm with your team.",
       "Calls, texts and email, answered by people who know your operation.",
+      "Behind them, logistics engineers who model your operation and design your network.",
     ],
   },
 ];
@@ -102,8 +111,19 @@ export default function KoherentWhatWeBringPage() {
         lead="We connect the ones you use into one network you can see in one place."
       />
 
+      {/* Michael's lattice (Oct 19): the network of carriers and warehouses we
+          design with, then the three numbers behind it */}
       <Sect bg={K.ink}>
-        <Reveal className="k-three" style={{ maxWidth: 1000, margin: "0 auto", padding: "clamp(36px, 4.5vw, 52px) clamp(20px, 4vw, 56px)", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, textAlign: "center" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 56px) 0", textAlign: "center" }}>
+          <Label onDark>Our network</Label>
+          <p style={{ ...title, fontSize: "clamp(1.5rem, 2.6vw, 2.1rem)", color: K.onDark, margin: "14px auto 0", maxWidth: "30ch" }}>
+            Carriers, warehouses and your own systems, connected into one network.
+          </p>
+          <div style={{ marginTop: "clamp(24px, 3vw, 40px)" }}>
+            <NetworkLattice />
+          </div>
+        </div>
+        <Reveal className="k-three" style={{ maxWidth: 1000, margin: "0 auto", padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 4vw, 56px) clamp(40px, 5vw, 60px)", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, textAlign: "center" }}>
           {STATS.map(([v, l]) => (
             <div key={l}>
               <div style={{ ...mono, fontSize: "clamp(2rem, 3.6vw, 2.8rem)", fontWeight: 500, lineHeight: 1, color: K.onDark }}>{v}</div>
@@ -148,6 +168,13 @@ export default function KoherentWhatWeBringPage() {
                           {p}
                         </li>
                       ))}
+                      {b.link && (
+                        <li style={{ marginTop: 4 }}>
+                          <a href={b.link.href} className="k-more" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 7, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
+                            {b.link.label} &rarr;
+                          </a>
+                        </li>
+                      )}
                     </ul>
                   </div>
                 </Reveal>

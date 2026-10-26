@@ -194,6 +194,11 @@ export default function KoherentHowWeWorkPage() {
             <div style={{ marginTop: 26 }}>
               <ConsoleView />
             </div>
+            {/* Michael (Aug 6): show the custom dashboard, with Shiplets, as a
+                deliverable, with an example: the live /dashboard mockup */}
+            <a href="https://lp.shiptime.com/dashboard" className="k-more" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 7, marginTop: 30, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
+              Open the example account &rarr;
+            </a>
           </div>
         </div>
       </Sect>

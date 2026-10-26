@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { Marquee } from "@/components/ui/marquee";
 import { KoherentHeroArt } from "./koherent-hero-art";
 import { BringBento } from "./koherent-bring";
 import { MethodPlayer } from "./koherent-method";
 import { TargetTriangle } from "./koherent-target";
 import { CASES } from "./koherent-cases";
-import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, Secondary, Sect, display, mono, sans, title } from "./koherent-ui";
+import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, Secondary, Sect, Steps, display, mono, sans, title } from "./koherent-ui";
 
 // ── /koherent — first revision (Oct 23, 2026) ────────────────────────────────
 // The enterprise site under the Koherent name, replacing ShipTime One (Oct 22
@@ -94,10 +95,13 @@ function Hero() {
 // ── the problem ──────────────────────────────────────────────────────────────
 // Michael: one sentence that sums up the problem, then the questions become
 // the specifics of it. His three questions are in (bold), and "one system
-// answers all nine" becomes "these, and more". One static set, readable at
-// once: the marquee froze cut off under reduced motion and read every
-// question four times to a screen reader. A phone shows the six marked
-// `phone`, Michael's three among them.
+// answers all nine" becomes "these, and more".
+// The questions move on a desktop, as Michael asked ("I like the idea of the
+// moving questions", Oct 19), and pause under the pointer so any one can be
+// read. On a phone, with reduced motion and for screen readers they are one
+// still list instead (the six marked `phone` on a phone, his three among
+// them), because a marquee there shows a chip and a half and reads every
+// question four times.
 const QUESTIONS: { q: string; michael?: boolean; phone?: boolean }[] = [
   { q: "Why do our shipping costs keep rising?", phone: true },
   { q: "Should we be using regional carriers?", michael: true, phone: true },
@@ -134,7 +138,18 @@ function Problem() {
         </Reveal>
 
         <Reveal delay={120}>
-          <ul style={{ listStyle: "none", padding: 0, margin: "clamp(36px, 4.5vw, 52px) auto 0", maxWidth: 1040, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+          <div aria-hidden className="k-mq" style={{ position: "relative", margin: "clamp(36px, 4.5vw, 52px) calc(-1 * clamp(20px, 4vw, 56px)) 0", display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "clamp(40px, 8vw, 140px)", zIndex: 2, background: `linear-gradient(90deg, ${K.mist}, transparent)` }} />
+            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "clamp(40px, 8vw, 140px)", zIndex: 2, background: `linear-gradient(270deg, ${K.mist}, transparent)` }} />
+            {[0, 1, 2].map((row) => (
+              <Marquee key={row} pauseOnHover reverse={row === 1} className={["[--duration:52s]", "[--duration:60s]", "[--duration:48s]"][row] + " [--gap:0.75rem]"} repeat={4}>
+                {QUESTIONS.filter((_, i) => i % 3 === row).map((q) => (
+                  <QuestionChip key={q.q} strong={q.michael}>{q.q}</QuestionChip>
+                ))}
+              </Marquee>
+            ))}
+          </div>
+          <ul className="k-qlist" style={{ listStyle: "none", padding: 0, margin: "clamp(36px, 4.5vw, 52px) auto 0", maxWidth: 1040, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
             {QUESTIONS.map((q) => (
               <li key={q.q} className={q.phone ? undefined : "k-q-more"}>
                 <QuestionChip strong={q.michael}>{q.q}</QuestionChip>
@@ -157,6 +172,13 @@ function Problem() {
         </Reveal>
       </div>
       <style>{`
+        /* desktop with motion: the moving rows show, the list is for screen readers */
+        @media (min-width: 641px) and (prefers-reduced-motion: no-preference) {
+          .k-qlist { position: absolute !important; width: 1px; height: 1px; margin: 0 !important; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        }
+        @media (max-width: 640px), (prefers-reduced-motion: reduce) {
+          .k-mq { display: none !important; }
+        }
         @media (max-width: 640px) {
           .k-q-more { display: none !important; }
           .k-qchip { white-space: normal !important; text-align: center; }
@@ -170,11 +192,21 @@ function Problem() {
 // Michael: broaden past e-commerce to anyone with a lot of orders going to
 // consumers (InnoWave is a gift-box shipper, not a DTC brand), and replace the
 // "$100M+" banner, which read as if we only work with very large companies.
-// One visual, the 500+ band; the lead is the first of Jennie's enterprise-fit
-// profiles. The 500-a-month line is the deck's ShipTime → Koherent fork
+// Michael (Aug 6) found "who we work with" too generic, and Chris wants the
+// first panels to answer "is this built for companies like me?", so the three
+// enterprise-fit profiles (Jennie's) say who, at what stage, and why. The
+// third carries Chris's line, "Grow your network, not your overhead" (Oct 22),
+// the bigger promise behind the first step. The lead is Michael's Aug 4 brief
+// in a sentence. The 500-a-month line is the deck's ShipTime → Koherent fork
 // (slide 15), stated in plain words. The band also carries how Koherent sits
 // next to ShipTime (Michael: re-orient this with ShipTime's offering). The
 // 500–5,000 rule comes from the deck and is flagged for Michael.
+const TRAITS: { title: string; body: string }[] = [
+  { title: "You ship to people's doors.", body: "Online brands, and businesses that deliver to consumers for someone else: gifts, programs, subscriptions, store to door." },
+  { title: "You've outgrown a shipping app.", body: "A warehouse or a 3PL today, more than one site soon, and a shipping bill that matters to the plan." },
+  { title: "Grow your network, not your overhead.", body: "New regions, faster delivery, a new channel, without adding the people and systems to run it all." },
+];
+
 const PATH: { who: string; body: ReactNode }[] = [
   {
     who: "Under 500 a month",
@@ -196,12 +228,23 @@ function WhoItsFor() {
           <Head
             label="Who it's for"
             heading={<>For businesses with a lot of orders going to consumers.</>}
-            lead="Online brands, and businesses that deliver to consumers for someone else: gifts, programs, subscriptions, store to door."
+            lead="Growing businesses that want their logistics to make them more money, not hold their growth back."
           />
         </Reveal>
+        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(36px, 4.5vw, 52px)" }}>
+          {TRAITS.map((t, i) => (
+            <Reveal key={t.title} delay={i * 90}>
+              <div style={{ height: "100%", background: K.card, border: `1px solid ${K.line}`, borderRadius: 4, padding: "28px 28px 30px", textAlign: "center" }}>
+                <Steps total={3} done={i + 1} />
+                <h3 style={{ ...title, fontSize: "clamp(1.3rem, 1.9vw, 1.55rem)", color: K.ink, margin: "20px 0 0" }}>{t.title}</h3>
+                <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "10px 0 0" }}>{t.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
 
         <Reveal delay={120}>
-          <div className="k-band" data-k-dark="" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 14, marginTop: "clamp(36px, 4.5vw, 52px)", background: K.plum, borderRadius: 4, padding: "clamp(30px, 3.6vw, 44px) clamp(26px, 3.4vw, 44px)", position: "relative", overflow: "hidden" }}>
+          <div className="k-band" data-k-dark="" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 14, marginTop: 18, background: K.plum, borderRadius: 4, padding: "clamp(30px, 3.6vw, 44px) clamp(26px, 3.4vw, 44px)", position: "relative", overflow: "hidden" }}>
             <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "26%", background: K.violet, clipPath: "polygon(48% 0, 100% 0, 100% 100%, 48% 100%, 0 50%)", opacity: 0.45 }} />
             <div style={{ ...mono, position: "relative", fontSize: "clamp(2.2rem, 4.2vw, 3.2rem)", fontWeight: 500, lineHeight: 1, color: K.onDark }}>500+</div>
             <p style={{ ...sans, position: "relative", fontSize: "clamp(1rem, 1.35vw, 1.14rem)", lineHeight: 1.6, color: K.onDarkDim, margin: 0, maxWidth: "56ch" }}>
@@ -229,6 +272,8 @@ function WhoItsFor() {
 // (koherent-bring.tsx). Matteo picked the bento on Oct 23 over the lattice in
 // the arrowhead frame, which How we work right below already uses. It hands
 // off to the detail page the same way How we work and Case studies do.
+// The lead is Chris's point (Aug 7): we don't sell warehouses, rates or
+// technology; they're the capabilities that prove we can design the whole.
 function WhatWeBring() {
   return (
     <Sect id="bring">
@@ -237,7 +282,7 @@ function WhatWeBring() {
           <Head
             label="What we bring"
             heading={<>Everything a coherent operation needs.{" "}<span className="k-br">Already connected.</span></>}
-            lead="The building blocks we design with. You use the ones you need, and we connect them into one network you can see in one place."
+            lead="Not what we sell, but what we design with. You use the blocks you need, and we connect them into one network you can see in one place."
           />
         </Reveal>
         <BringBento />
@@ -255,7 +300,14 @@ function WhatWeBring() {
 // Chris: "how we work" is the enterprise product. His method, in his words:
 // assess, plan, design, test, strategize and execute alongside the customer,
 // "as if it was our business"; we suggest, they stay in control. His four
-// ingredients (Oct 22) are on /koherent/how-we-work, not repeated here.
+// ingredients, "the secret sauce" (Oct 22), sit under the player.
+const INGREDIENTS: string[] = [
+  "A control tower watching every order",
+  "Experts on the ground at your sites",
+  "A daily rhythm with your team",
+  "Technology that shows you everything",
+];
+
 function HowWeWork() {
   return (
     <Sect id="how" bg={K.mist}>
@@ -273,7 +325,14 @@ function HowWeWork() {
           </div>
         </Reveal>
         <Reveal delay={160}>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 26, marginTop: 30 }}>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+              {INGREDIENTS.map((t) => (
+                <li key={t} style={{ ...sans, fontSize: 14.5, fontWeight: 500, color: K.ink, border: `1px solid ${K.line}`, background: K.paper, borderRadius: 999, padding: "9px 16px" }}>
+                  {t}
+                </li>
+              ))}
+            </ul>
             <More href={PAGES.how}>How an engagement runs</More>
           </div>
         </Reveal>
@@ -323,7 +382,7 @@ function People() {
           <Head
             label="The people behind it"
             heading={<>Experienced operators, not account managers.</>}
-            lead="Every account has named people on it: an operator, a support lead and a project manager."
+            lead="Our technology is the superpower. The people make it work for you: every account has named people on it, an operator, a support lead and a project manager, who get to know your business and where you want to take it."
           />
         </Reveal>
         <Reveal delay={140}>
@@ -364,7 +423,7 @@ function People() {
 function WhyDifferent() {
   const cols: { label: string; head: string; body: string; us?: boolean }[] = [
     { label: "Independent 3PLs", head: "Willing, but limited.", body: "A small network, and no one to design the whole operation or the technology to run it." },
-    { label: "Koherent", head: "Deliberately in between.", body: "The design and technology of the global giants, with named people who know your operation.", us: true },
+    { label: "Koherent", head: "Deliberately in between.", body: "The design and technology of the global giants, named people who know your operation, and Shiplets built for the way you work.", us: true },
     { label: "The global giants", head: "Capable, but you're a number.", body: "One account among thousands, at prices built for the very largest shippers." },
   ];
   return (
