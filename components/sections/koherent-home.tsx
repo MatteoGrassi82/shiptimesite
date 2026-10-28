@@ -385,6 +385,8 @@ function People() {
         </Reveal>
         <Reveal delay={140}>
           <blockquote style={{ margin: "clamp(32px, 4vw, 48px) auto 0", padding: 0, maxWidth: 720, textAlign: "center" }}>
+            {/* his LinkedIn photo (Matteo, Oct 28): a real face on the one quote */}
+            <img src="/team/michael-trueman.jpg" alt="Michael Trueman" width={200} height={200} loading="lazy" style={{ width: 76, height: 76, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto 18px", border: `3px solid ${K.card}`, boxShadow: `0 0 0 1px ${K.line}, 0 12px 30px -16px rgba(23,16,28,0.5)` }} />
             <p style={{ ...title, fontSize: "clamp(1.35rem, 2.2vw, 1.75rem)", lineHeight: 1.3, color: K.ink, margin: 0 }}>
               &ldquo;Our team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
             </p>

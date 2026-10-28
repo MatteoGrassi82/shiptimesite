@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CITY_POINTS, US_STATES, VIEWBOX } from "@/components/console/geo-data";
 import { C, CHEV, K_ARROW, K_BAR, mono, sans, title, useInView, useReducedMotion } from "./koherent-motion";
 import { CountUp } from "./koherent-fx";
+import { INTEGRATIONS, LogoChip } from "./koherent-logos";
 
 // ── BringBento — "What we bring" ─────────────────────────────────────────────
 // Michael's six building blocks, in his order, as one grid. Matteo picked the
@@ -302,14 +303,6 @@ function RateCard() {
   );
 }
 
-function Check({ color = C.paper }: { color?: string }) {
-  return (
-    <svg viewBox="0 0 12 12" style={{ width: 9, height: 9, display: "block" }} aria-hidden>
-      <path d="M2.2 6.3 L4.8 8.8 L9.8 3.4" fill="none" stroke={color} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 // Photo tiles keep the picture clear at the top and the words on a fade below.
 const SHADE = "linear-gradient(180deg, rgba(23,16,28,0) 0%, rgba(23,16,28,0.1) 26%, rgba(23,16,28,0.78) 50%, rgba(23,16,28,0.96) 70%)";
 
@@ -366,15 +359,10 @@ export function BringBento() {
           <TileHead k="integrations" />
           <div style={{ marginTop: "auto", display: "grid", gap: 18 }}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {["Shopify", "Amazon", "NetSuite", "QuickBooks"].map((n, i) => (
-                <span key={n} style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 600, color: C.ink, background: C.paper, border: `1px solid ${C.line}`, borderRadius: 999, padding: "6px 12px 6px 7px" }}>
-                  <span className="kb-tick" style={{ width: 18, height: 18, borderRadius: 99, background: C.plum, display: "inline-flex", alignItems: "center", justifyContent: "center", ...vars({ "--i": `${i * 120}ms` }) }}>
-                    <Check />
-                  </span>
-                  {n}
-                </span>
+              {INTEGRATIONS.map((l, i) => (
+                <LogoChip key={l.name} {...l} className="kb-step" style={{ ...vars({ "--i": `${i * 110}ms` }) }} />
               ))}
-              <span style={{ ...sans, fontSize: 13.5, fontWeight: 600, color: C.stone, border: `1px dashed ${C.lilac}`, borderRadius: 999, padding: "6px 12px" }}>+ 30 more</span>
+              <span className="kb-step" style={{ ...sans, display: "inline-flex", alignItems: "center", height: 36, fontSize: 13.5, fontWeight: 600, color: C.stone, border: `1px dashed ${C.lilac}`, borderRadius: 999, padding: "0 14px", ...vars({ "--i": "660ms" }) }}>+ 30 more</span>
             </div>
             <Stat value="1,000+" label="businesses on the platform" />
           </div>

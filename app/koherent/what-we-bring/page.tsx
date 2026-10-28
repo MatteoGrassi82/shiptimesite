@@ -3,6 +3,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { ScrollIndex } from "@/components/sections/koherent-index";
 import { NetworkLattice } from "@/components/sections/koherent-lattice";
 import { CountUp } from "@/components/sections/koherent-fx";
+import { LogoRow } from "@/components/sections/koherent-logos";
 import { inner, K, KoherentShell, Label, PAGES, PageHead, ScoreClose, Sect, mono, sans, title } from "@/components/sections/koherent-ui";
 
 // /koherent/what-we-bring — Michael's six building blocks (email "New
@@ -160,6 +161,7 @@ export default function KoherentWhatWeBringPage() {
                     <div>
                       <h2 style={{ ...title, fontSize: "clamp(2rem, 3.4vw, 2.7rem)", color: K.ink, margin: 0 }}>{b.name}</h2>
                       <p style={{ ...sans, fontSize: "clamp(1.02rem, 1.3vw, 1.12rem)", lineHeight: 1.6, color: K.stone, margin: "12px 0 0", maxWidth: "36ch" }}>{b.line}</p>
+                      {b.id === "integrations" && <LogoRow more="+ 30 more" style={{ marginTop: 18 }} />}
                       {b.fact && (
                         <div style={{ marginTop: 26, paddingTop: 18, borderTop: `2px solid ${K.plum}`, maxWidth: 300 }}>
                           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>

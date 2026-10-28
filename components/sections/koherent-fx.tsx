@@ -35,7 +35,8 @@ export function CountUp({ value, ms = 1100, style }: { value: string; ms?: numbe
     const t0 = performance.now();
     let frame = 0;
     const tick = (now: number) => {
-      const p = Math.min(1, (now - t0) / ms);
+      // the first frame's timestamp can predate t0, so clamp at 0 too
+      const p = Math.max(0, Math.min(1, (now - t0) / ms));
       const eased = 1 - Math.pow(1 - p, 3);
       setShown(target * eased);
       if (p < 1) frame = requestAnimationFrame(tick);
