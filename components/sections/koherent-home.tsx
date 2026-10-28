@@ -368,6 +368,12 @@ function DesignTarget() {
 // "New website", Oct 19), with "optimized" over "tuned" as he asked. The photo
 // (koherent-bring-people-a, made with the bento's) is a labelled placeholder
 // until our own shoot.
+const TEAM: { role: string; does: string }[] = [
+  { role: "Account manager", does: "Owns the relationship, knows your plans. One call for anything." },
+  { role: "Operator on the ground", does: "At your sites, in the daily rhythm with your team." },
+  { role: "Support lead", does: "Direct lines to customer service, technical and logistics support." },
+];
+
 function People() {
   return (
     <Sect id="people">
@@ -377,25 +383,58 @@ function People() {
             n={6}
             label="The people behind it"
             heading={<>Experienced operators, not account managers.</>}
-            lead="Our technology is the superpower. Our people make it work for you: a named account manager who owns the relationship, direct access to the operators and support teams behind them, and one partner accountable for the whole. And we look after your customers as if they were our own."
+            lead="Our technology is the superpower. Our people make it work for you, and we look after your customers as if they were our own."
           />
         </Reveal>
-        <Reveal delay={140}>
-          <blockquote style={{ margin: "clamp(32px, 4vw, 48px) auto 0", padding: 0, maxWidth: 720, textAlign: "center" }}>
-            {/* his LinkedIn photo (Matteo, Oct 28): a real face on the one quote */}
-            <img src="/team/michael-trueman.jpg" alt="Michael Trueman" width={200} height={200} loading="lazy" style={{ width: 76, height: 76, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto 18px", border: `3px solid ${K.card}`, boxShadow: `0 0 0 1px ${K.line}, 0 12px 30px -16px rgba(23,16,28,0.5)` }} />
-            <p style={{ ...title, fontSize: "clamp(1.35rem, 2.2vw, 1.75rem)", lineHeight: 1.3, color: K.ink, margin: 0 }}>
-              &ldquo;Our team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
-            </p>
-            <footer style={{ ...mono, fontSize: 12.5, letterSpacing: "0.08em", color: K.stone, marginTop: 14 }}>MICHAEL TRUEMAN · PRESIDENT</footer>
-          </blockquote>
-          {/* why we get up every day (Michael, Oct 27) */}
-          <p style={{ ...sans, fontSize: "clamp(1.02rem, 1.3vw, 1.12rem)", lineHeight: 1.6, color: K.stone, textAlign: "center", margin: "28px auto 0", maxWidth: "52ch" }}>
-            Why we get up every day: to help our customers grow their business through logistics done smarter. Same side of the table, for the long run.
+
+        {/* the account team: three named roles on every account (deck slide
+            11, the Strategic Account Support overview). The K stands in for
+            a face until the people are named when a customer joins. */}
+        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, maxWidth: 1000, margin: "clamp(32px, 4vw, 48px) auto 0" }}>
+          {TEAM.map((t, i) => (
+            <Reveal key={t.role} delay={i * 90}>
+              <div style={{ height: "100%", display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left", background: K.card, border: `1px solid ${K.line}`, borderRadius: 4, padding: "18px 18px 18px 16px" }}>
+                <span aria-hidden style={{ width: 44, height: 44, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                  <KMark color={K.plum} style={{ width: 18, height: 18 }} />
+                </span>
+                <div>
+                  <p style={{ ...title, fontSize: "1.08rem", color: K.ink, margin: 0 }}>{t.role}</p>
+                  <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.5, color: K.stone, margin: "5px 0 0" }}>{t.does}</p>
+                  <p style={{ ...mono, fontSize: 10.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, margin: "10px 0 0" }}>Named when you join</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={200}>
+          <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, textAlign: "center", margin: "18px auto 0", maxWidth: "58ch" }}>
+            One partner accountable for the whole: we take the issue, own it, and keep you informed until it&rsquo;s resolved.
           </p>
         </Reveal>
+
+        {/* Michael: the one real face on the page, his line, and why we get
+            up every day (both his, Oct 19 and Oct 27) */}
+        <Reveal delay={120}>
+          <figure data-k-dark="" style={{ position: "relative", overflow: "hidden", maxWidth: 1000, margin: "clamp(36px, 4.5vw, 56px) auto 0", background: K.plum, borderRadius: 4, padding: "clamp(32px, 4vw, 52px) clamp(22px, 4vw, 64px)", textAlign: "center" }}>
+            <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "30%", background: K.violet, clipPath: "polygon(48% 0, 100% 0, 100% 100%, 48% 100%, 0 50%)", opacity: 0.45 }} />
+            <div style={{ position: "relative" }}>
+              <img src="/team/michael-trueman.jpg" alt="Michael Trueman" width={200} height={200} loading="lazy" style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto", border: `3px solid ${K.paper}`, boxShadow: "0 16px 36px -16px rgba(23,16,28,0.7)" }} />
+              <blockquote style={{ margin: "22px auto 0", padding: 0, maxWidth: 680 }}>
+                <p style={{ ...title, fontSize: "clamp(1.3rem, 2.1vw, 1.7rem)", lineHeight: 1.3, color: K.onDark, margin: 0 }}>
+                  &ldquo;Our team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
+                </p>
+                <footer style={{ ...mono, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac, marginTop: 14 }}>Michael Trueman · President</footer>
+              </blockquote>
+              <p style={{ ...sans, fontSize: "clamp(1rem, 1.25vw, 1.08rem)", lineHeight: 1.6, color: K.onDarkDim, margin: "26px auto 0", maxWidth: "50ch", paddingTop: 22, borderTop: `1px solid ${K.darkLine}` }}>
+                <strong style={{ color: K.onDark }}>Why we get up every day:</strong> to help our customers grow their business through logistics done smarter. Same side of the table, for the long run.
+              </p>
+            </div>
+          </figure>
+        </Reveal>
+
+        {/* the team picture, a placeholder until our own shoot */}
         <Reveal delay={200}>
-          <div style={{ position: "relative", maxWidth: 1000, margin: "clamp(44px, 5.5vw, 72px) auto 0", clipPath: "polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%)", background: K.mist }}>
+          <div style={{ position: "relative", maxWidth: 1000, margin: "clamp(36px, 4.5vw, 56px) auto 0", clipPath: "polygon(10% 0, 100% 0, 100% 100%, 10% 100%, 0 50%)", background: K.mist }}>
             <Drift amount={32}>
             <img
               src="/generated/koherent-bring-people-a.webp"
@@ -403,13 +442,18 @@ function People() {
               width={1024}
               height={1536}
               loading="lazy"
-              className="k-wideimg" style={{ width: "100%", height: "auto", aspectRatio: "16 / 7", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
+              className="k-wideimg" style={{ width: "100%", height: "auto", aspectRatio: "21 / 9", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
             />
             </Drift>
             <span style={{ ...mono, position: "absolute", top: 14, right: 14, fontSize: 10.5, lineHeight: 1.4, letterSpacing: "0.04em", color: K.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 8, padding: "5px 10px" }}>Illustrative photo</span>
           </div>
         </Reveal>
       </div>
+      <style>{`
+        @media (max-width: 640px) {
+          .k-root #people .k-wideimg { aspect-ratio: 4 / 3 !important; }
+        }
+      `}</style>
     </Sect>
   );
 }
