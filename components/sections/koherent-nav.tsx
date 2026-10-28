@@ -19,7 +19,7 @@ export function KoherentNav() {
   // fourth text link. On the score page itself the button would point at the
   // page you're on, so there it falls back to the team.
   const onScore = isOn(PAGES.score);
-  const ask = onScore ? { href: PAGES.contact, label: "Talk to our team" } : { href: PAGES.score, label: "Get your score" };
+  const ask = onScore ? { href: PAGES.contact, label: "Talk to our team" } : { href: PAGES.score, label: "Get your logistics score" };
   const links = CHAPTERS.slice(0, 3);
 
   return (

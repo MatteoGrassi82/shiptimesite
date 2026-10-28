@@ -239,7 +239,7 @@ export function TargetTriangle() {
           A quick estimate from three numbers. The full score takes sixteen questions and five minutes, and shows where the leverage is.
         </p>
         <Link href="/koherent/score" className="k-btn" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 9, fontSize: 15.5, fontWeight: 700, color: C.plum, background: C.paper, borderRadius: 6, padding: "14px 22px", textDecoration: "none", marginTop: 20 }}>
-          Get your full score <ArrowRight size={16} />
+          Get your full logistics score <ArrowRight size={16} />
         </Link>
       </div>
 

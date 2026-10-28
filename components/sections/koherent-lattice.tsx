@@ -13,18 +13,20 @@ import { C, K_ARROW, K_BAR, sans, useInView, useReducedMotion } from "./koherent
 // cities. Orders ride the lines into the K once the graphic is in view; with
 // reduced motion it's a still picture.
 
-const W = 1000;
+const W = 1100;
 const H = 440;
 const HUB = { x: 190, y: 220 };
 const NODES: { x: number; y: number; label: string; kind: "carrier" | "site" | "system" | "door" }[] = [
-  { x: 430, y: 62, label: "Couriers", kind: "carrier" },
-  { x: 560, y: 150, label: "Regional carriers", kind: "carrier" },
+  { x: 430, y: 62, label: "National couriers", kind: "carrier" },
+  { x: 560, y: 150, label: "Regional couriers", kind: "carrier" },
   { x: 470, y: 290, label: "LTL & FTL", kind: "carrier" },
   { x: 430, y: 392, label: "Last-mile partners", kind: "carrier" },
   { x: 745, y: 80, label: "Partner warehouses", kind: "site" },
   { x: 790, y: 222, label: "Your store & ERP", kind: "system" },
-  { x: 690, y: 360, label: "Customs & borders", kind: "system" },
-  { x: 830, y: 296, label: "Your customers", kind: "door" },
+  { x: 690, y: 360, label: "Customs", kind: "system" },
+  // set apart from the network, and reached by a dashed line: they're where it
+  // all ends up, not a piece of it (Michael, Oct 27)
+  { x: 930, y: 300, label: "Your customers", kind: "door" },
 ];
 const LEGEND: [string, (typeof NODES)[number]["kind"]][] = [
   ["Carriers", "carrier"],
@@ -69,7 +71,7 @@ export function NetworkLattice() {
         <rect width={W} height={H} fill="url(#kl-dots)" />
         <rect width={W} height={H} fill="url(#kl-glow)" />
         {NODES.map((n) => (
-          <path key={`p${n.label}`} d={path(n)} stroke="rgba(199,174,230,0.32)" strokeWidth="1.5" fill="none" />
+          <path key={`p${n.label}`} d={path(n)} stroke="rgba(199,174,230,0.32)" strokeWidth="1.5" fill="none" strokeDasharray={n.kind === "door" ? "6 7" : undefined} />
         ))}
         {moving &&
           NODES.map((n, i) => (

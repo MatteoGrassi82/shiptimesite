@@ -12,7 +12,7 @@ import { inner, K, KoherentShell, Label, PageHead, ScoreClose, Sect, mono, sans,
 
 export const metadata: Metadata = {
   title: "Case studies",
-  description: "Three businesses, three shapes of the same problem: what we're designing right now.",
+  description: "Three businesses, three goals: what we're designing right now.",
 };
 
 export default function KoherentCaseStudiesPage() {
@@ -21,7 +21,7 @@ export default function KoherentCaseStudiesPage() {
       <PageHead
         chapter={3}
         label="Case studies"
-        heading={<>Three shapes of the same problem.</>}
+        heading={<>Three businesses, three goals.</>}
         lead="Names stay private until the work is live, and every figure is from our proposals."
       />
       {CASES.map((c, i) => (
@@ -56,7 +56,7 @@ export default function KoherentCaseStudiesPage() {
             <Reveal delay={100}>
               <dl style={{ margin: 0, textAlign: "left" }}>
                 {c.detail.map(([k, v], n) => (
-                  <div key={k} className="k-caserow" style={{ display: "grid", gridTemplateColumns: "minmax(140px, 0.36fr) 1fr", gap: 18, padding: "18px 0", borderTop: `1px solid ${K.line}`, borderBottom: n === c.detail.length - 1 ? `1px solid ${K.line}` : undefined }}>
+                  <div key={k} className="k-caserow" style={{ display: "grid", gridTemplateColumns: "minmax(140px, 0.36fr) 1fr", alignItems: "center", gap: 18, padding: "18px 0", borderTop: `1px solid ${K.line}`, borderBottom: n === c.detail.length - 1 ? `1px solid ${K.line}` : undefined }}>
                     <dt style={{ ...mono, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, paddingTop: 3 }}>{k}</dt>
                     <dd style={{ ...sans, fontSize: 16, lineHeight: 1.6, color: K.ink, margin: 0 }}>{v}</dd>
                   </div>

@@ -24,10 +24,10 @@ import { C, CHEV, K_ARROW, K_BAR, mono, sans, title, useInView, useReducedMotion
 
 type Key = "carriers" | "rates" | "warehouses" | "integrations" | "shiplets" | "people";
 const B: Record<Key, { title: string; body: string; tag?: string }> = {
-  carriers: { title: "Integrated carriers", body: "Couriers, regional carriers, LTL, FTL and ocean, compared on every shipment for cost and speed." },
-  rates: { title: "Discounted rates", body: "Our buying power, passed through to you. Or bring your own rates and we'll use those too." },
+  carriers: { title: "Integrated carriers", body: "National and regional couriers, last-mile partners, LTL and FTL, compared on every shipment for cost and speed." },
+  rates: { title: "Discounted rates", body: "Our buying power, passed through to you. Bring your own rates too: we compare yours and ours on every shipment, and the best value wins." },
   warehouses: { title: "A warehouse network", body: "Certified partner warehouses in Canada and the US. We don't own them; we pick the right ones for you." },
-  integrations: { title: "The integration library", body: "Shopify, Amazon, NetSuite, QuickBooks and 30 more. It plugs into what you already run." },
+  integrations: { title: "The integration library", body: "Shopify, Amazon, NetSuite, QuickBooks and 30 more, plus an open API for anything else you run." },
   shiplets: { title: "Shiplets", body: "Small custom apps for the one workflow that's yours alone, built in days on the same platform.", tag: "Rolling out" },
   people: { title: "People and support", body: "Experienced operators and a support team that knows your account. Calls, texts and email." },
 };
@@ -404,7 +404,7 @@ export function BringBento() {
             <div style={{ ...mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.lilac }}>Your account team · example message</div>
             <div style={{ ...sans, fontSize: 14, lineHeight: 1.5, color: C.onDark, marginTop: 4 }}>Reno receiving is a day behind: a truck arrived late. Back on schedule Thursday.</div>
           </div>
-          <Stat value="20 yrs" label="in shipping and logistics" dark />
+          <Stat value="20 years" label="in shipping and logistics, and hundreds more across our team" dark />
         </PhotoTile>
 
         {/* one network, one view: the six blocks, a step each, lit in order */}

@@ -15,7 +15,7 @@ import { ScoreFlow } from "./score-flow";
 // the page stops selling (the result screen has its own talk button).
 
 const LEAD =
-  "Sixteen questions, five minutes. A score out of 100 against world-class logistics, across cost, operations and customer experience, and where the leverage is.";
+  "Sixteen questions, five minutes. Each answer scores a level from 1 to 5 across three pillars, logistics costs, operational excellence and customer experience, weighted into one score out of 100 against world-class logistics. You get the score, a read on each pillar, and a short written report on where the leverage is.";
 
 export const metadata: Metadata = {
   title: "Your Logistics Performance Score",
@@ -54,7 +54,7 @@ export default function KoherentScorePage() {
             </div>
           </ScoreFlow>
           <p style={{ ...sans, fontSize: 13, lineHeight: 1.6, color: K.stone, textAlign: "center", margin: "22px auto 0", maxWidth: "52ch" }}>
-            No cost. Your answers contribute anonymously to the Logistics Performance Index.
+            No cost. We use your answers to write your report, and we keep them with your contact details so we can follow up. The Logistics Performance Index uses totals only, never a company&rsquo;s name.
           </p>
         </div>
       </Sect>

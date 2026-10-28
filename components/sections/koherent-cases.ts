@@ -33,7 +33,7 @@ export const CASES: Case[] = [
     status: "Proposed, not yet realized",
     detail: [
       ["The business", "A US golf brand with a growing base of customers in Canada."],
-      ["The problem", "Every Canadian order shipped from Texas at cross-border parcel rates, and customs delays reached the customer."],
+      ["The goal", "Sell into Canada at a delivered cost that works. Every order was shipping from Texas at cross-border parcel rates, with customs delays reaching the customer."],
       ["What we designed", "A phased entry: bulk shipments into Canada first, then fulfillment from inside the country, then last-mile delivery, then the rest of our network as demand grows."],
       ["Where it stands", "Starting with bulk shipping into Canada. Every figure here is from our proposal."],
       ["What we'll track", "Delivered cost per shipment, days to the customer and customs holds, month by month."],
@@ -47,7 +47,7 @@ export const CASES: Case[] = [
     status: "In design",
     detail: [
       ["The business", "A large promotional company running campaigns for its clients, with gift boxes shipped straight to consumers. Not an e-commerce brand, but a lot of orders going to people's homes."],
-      ["The demand", "Each campaign comes with its own rules for how the products are distributed."],
+      ["The goal", "Deliver each client's campaign to people's homes at the lowest cost and time, with every campaign's own distribution rules met."],
       ["What we designed", "The right location and the right carriers, chosen to cut both the cost and the time to deliver."],
       ["Where it stands", "We start at their own dock on our platform, then add a warehouse from our partner network at the location we designed."],
       ["How it grows", "As the program grows, it becomes a multi-warehouse network that keeps lowering cost and delivery time. New campaigns get the same design work."],
@@ -62,7 +62,7 @@ export const CASES: Case[] = [
     status: "In design",
     detail: [
       ["The business", "A dental lab that receives cases from dental offices every day."],
-      ["The problem", "Getting cases from many offices to one lab, without each office arranging its own shipping."],
+      ["The goal", "Let any office send a case to the lab in a few clicks, without arranging its own shipping."],
       ["What we're building", "A “send a case” page on our network: an office opens a link or scans a code, and the label is ready in a few clicks."],
       ["Why it matters", "It's a Shiplet: a small app for the one workflow that's this lab's alone, built on the same platform as everything else."],
       ["What we'll track", "Cases sent by each office, and the days from office to lab."],

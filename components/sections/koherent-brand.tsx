@@ -49,7 +49,7 @@ export const CHAPTERS: { href: string; name: string }[] = [
   { href: PAGES.bring, name: "What we bring" },
   { href: PAGES.how, name: "How we work" },
   { href: PAGES.cases, name: "Case studies" },
-  { href: PAGES.score, name: "Your score" },
+  { href: PAGES.score, name: "Your logistics score" },
 ];
 
 // ── the K and the shapes cut from it (deck slides 16–17, 26) ─────────────────

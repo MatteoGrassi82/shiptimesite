@@ -60,14 +60,15 @@ function Hero() {
       <div className="k-hero" style={{ ...inner, paddingTop: "clamp(40px, 5vw, 72px)", display: "grid", gridTemplateColumns: "1.12fr 0.88fr", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
         <div>
           <div className="k-fade" style={{ animationDelay: "0.05s" }}>
-            <Label>Managed logistics network</Label>
+            {/* Michael (Oct 27): more prominent, and "Your" to make it personal */}
+            <Label style={{ fontSize: 14.5, fontWeight: 600, color: K.plum }}>Your managed logistics network</Label>
           </div>
           <h1 className="k-fade" style={{ ...display, fontSize: "clamp(3.3rem, 8.4vw, 6.6rem)", color: K.plum, margin: "22px 0 0", animationDelay: "0.12s" }}>
             Make it coherent.
           </h1>
           {/* who it's for and what we do, first: Michael's 15-second test */}
           <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.2rem, 1.8vw, 1.42rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "26px 0 0", maxWidth: "36ch", animationDelay: "0.24s" }}>
-            We cut shipping costs and simplify fulfillment for businesses sending 500+ orders a month to consumers.
+            We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to consumers.
           </p>
           {/* Chris's category, in the first panel */}
           <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.02rem, 1.3vw, 1.12rem)", lineHeight: 1.65, color: K.stone, margin: "16px 0 0", maxWidth: "50ch", animationDelay: "0.32s" }}>
@@ -77,7 +78,7 @@ function Hero() {
           <div className="k-fade k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 34, animationDelay: "0.42s" }}>
             <Primary href={PAGES.score}>
               <span className="k-long">Get your Logistics Performance Score</span>
-              <span className="k-short">Get your score</span> <ArrowRight size={16} />
+              <span className="k-short">Get your logistics score</span> <ArrowRight size={16} />
             </Primary>
             <Secondary href={PAGES.contact}>Talk to our team</Secondary>
           </div>
@@ -85,7 +86,9 @@ function Hero() {
 
         <div className="k-heroart" style={{ paddingLeft: 38 }}>
           {/* illustrative: the photo carries a visible label instead */}
-          <KoherentHeroArt src="/generated/plus-ops-team.webp" alt="" />
+          {/* a packing bench, so the first picture says logistics (Michael, Oct 28:
+              a cold reader took the laptop photo and the score button for personal finance) */}
+          <KoherentHeroArt src="/generated/pf-proof-packing.webp" alt="" />
         </div>
       </div>
     </Sect>
@@ -163,10 +166,10 @@ function Problem() {
           <div style={{ marginTop: "clamp(44px, 5.5vw, 64px)", textAlign: "center" }}>
             <p style={{ ...title, fontSize: "clamp(1.3rem, 2vw, 1.65rem)", lineHeight: 1.3, color: K.ink, maxWidth: "36ch", margin: "0 auto" }}>
               We&rsquo;ve heard every one. It&rsquo;s a design problem.{" "}
-              <span style={{ color: K.plum }}>One system answers these, and more.</span>
+              <span style={{ color: K.plum }}>One coherent system answers these, and more.</span>
             </p>
             <p style={{ ...sans, fontSize: 16, lineHeight: 1.6, color: K.stone, maxWidth: "52ch", margin: "12px auto 0" }}>
-              Carriers, warehouses, inventory, returns and data, designed together instead of patched one by one.
+              Carriers, warehouses, inventory, returns and data, designed together instead of piecemeal.
             </p>
           </div>
         </Reveal>
@@ -212,7 +215,7 @@ const PATH: { who: string; body: ReactNode }[] = [
     who: "Under 500 a month",
     body: (
       <>
-        <a href="https://www.shiptime.com" style={{ color: K.onDark, textDecoration: "underline", textDecorationColor: K.lilac, textUnderlineOffset: 3 }}>ShipTime</a>: discounted labels, every carrier, one dashboard.
+        <a href="https://www.shiptime.com" style={{ color: K.onDark, textDecoration: "underline", textDecorationColor: K.lilac, textUnderlineOffset: 3 }}>ShipTime</a>, our shipping platform: discounted labels from every carrier, in one dashboard.
       </>
     ),
   },
@@ -282,7 +285,7 @@ function WhatWeBring() {
           <Head
             label="What we bring"
             heading={<>Everything a coherent operation needs.{" "}<span className="k-br">Already connected.</span></>}
-            lead="Not what we sell, but what we design with. You use the blocks you need, and we connect them into one network you can see in one place."
+            lead="Not what we sell, but what we design and run with. We connect the blocks you need into a single network, and you see all of it in one place."
           />
         </Reveal>
         <BringBento />
@@ -382,16 +385,20 @@ function People() {
           <Head
             label="The people behind it"
             heading={<>Experienced operators, not account managers.</>}
-            lead="Our technology is the superpower. The people make it work for you: every account has named people on it, an operator, a support lead and a project manager, who get to know your business and where you want to take it."
+            lead="Our technology is the superpower. Our people make it work for you: a named account manager who owns the relationship, direct access to the operators and support teams behind them, and one partner accountable for the whole. And we look after your customers as if they were our own."
           />
         </Reveal>
         <Reveal delay={140}>
           <blockquote style={{ margin: "clamp(32px, 4vw, 48px) auto 0", padding: 0, maxWidth: 720, textAlign: "center" }}>
             <p style={{ ...title, fontSize: "clamp(1.35rem, 2.2vw, 1.75rem)", lineHeight: 1.3, color: K.ink, margin: 0 }}>
-              &ldquo;One team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
+              &ldquo;Our team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
             </p>
             <footer style={{ ...mono, fontSize: 12.5, letterSpacing: "0.08em", color: K.stone, marginTop: 14 }}>MICHAEL TRUEMAN · PRESIDENT</footer>
           </blockquote>
+          {/* why we get up every day (Michael, Oct 27) */}
+          <p style={{ ...sans, fontSize: "clamp(1.02rem, 1.3vw, 1.12rem)", lineHeight: 1.6, color: K.stone, textAlign: "center", margin: "28px auto 0", maxWidth: "52ch" }}>
+            Why we get up every day: to help our customers grow their business through logistics done smarter. Same side of the table, for the long run.
+          </p>
         </Reveal>
         <Reveal delay={200}>
           <div style={{ position: "relative", maxWidth: 1000, margin: "clamp(44px, 5.5vw, 72px) auto 0", clipPath: "polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%)", background: K.mist }}>
@@ -461,7 +468,7 @@ function WhyDifferent() {
         </div>
         <Reveal delay={240}>
           <p style={{ ...title, fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)", lineHeight: 1.25, color: K.ink, margin: "clamp(36px, 4.5vw, 52px) auto 0", maxWidth: "44ch" }}>
-            <span style={{ color: K.plum }}>A partner that designs your logistics and runs it with you.</span>
+            <span style={{ color: K.plum }}>Operations, technology and a network, combined in one team that designs your logistics and runs it with you.</span>{" "}Most providers bring one of the three.
           </p>
         </Reveal>
       </div>
@@ -485,7 +492,7 @@ function Proof() {
     <Sect id="proof">
       <div style={{ ...inner }}>
         <Reveal>
-          <Head label="Case studies" heading={<>What we&rsquo;re designing right now.</>} lead="Three businesses, three shapes of the same problem. Names stay private until the work is live, and every figure is from our proposals." />
+          <Head label="Case studies" heading={<>What we&rsquo;re designing right now.</>} lead="Three businesses, three goals. Names stay private until the work is live, and every figure is from our proposals." />
         </Reveal>
         <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(40px, 5vw, 60px)" }}>
           {CASES.map((c, i) => (

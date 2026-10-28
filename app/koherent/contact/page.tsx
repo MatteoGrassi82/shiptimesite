@@ -62,7 +62,7 @@ export default function KoherentContactPage() {
                 { name: "firstname", label: "Name", type: "text", required: true },
                 { name: "company", label: "Company", type: "text", required: true },
                 { name: "email", label: "Work email", type: "email", required: true },
-                { name: "monthly_volume", label: "Monthly shipment volume", type: "select", required: true, options: ["Under 500/mo", "500–2,000/mo", "2,000–10,000/mo", "10,000+/mo"] },
+                { name: "monthly_volume", label: "Monthly shipment volume", type: "select", required: true, options: ["Under 500/mo", "500–1,999/mo", "2,000–9,999/mo", "10,000+/mo"] },
                 { name: "uses_warehouse", label: "Do you use a warehouse or 3PL today?", type: "select", required: false, options: ["Yes", "No", "Our own"] },
                 { name: "notes", label: "Anything specific you want to solve?", type: "textarea", placeholder: "Optional" },
               ]}
@@ -99,7 +99,7 @@ export default function KoherentContactPage() {
             Not ready to talk? Start with your Logistics Performance Score.
           </p>
           <div style={{ marginTop: 16 }}>
-            <More href={PAGES.score}>Get your score</More>
+            <More href={PAGES.score}>Get your logistics score</More>
           </div>
         </Reveal>
       </Sect>

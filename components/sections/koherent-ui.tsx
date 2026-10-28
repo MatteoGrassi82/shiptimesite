@@ -43,7 +43,7 @@ export function Sect({ id, children, bg = K.paper, style }: { id?: string; child
 
 export function Label({ children, onDark = false, style }: { children: ReactNode; onDark?: boolean; style?: CSSProperties }) {
   return (
-    <p style={{ ...mono, fontSize: 12.5, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: onDark ? K.lilac : K.violet, margin: 0, ...style }}>
+    <p style={{ ...mono, fontSize: 13.5, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: onDark ? K.lilac : K.violet, margin: 0, ...style }}>
       {children}
     </p>
   );
@@ -106,7 +106,7 @@ function Footer() {
   return (
     <footer data-k-dark="" style={{ background: K.ink, color: K.onDarkDim, overflow: "hidden" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(56px, 7vw, 88px) clamp(20px, 4vw, 56px) 0", textAlign: "center" }}>
-        <Label onDark style={{ fontSize: 12 }}>Managed logistics network</Label>
+        <Label onDark style={{ fontSize: 12 }}>Your managed logistics network</Label>
         <p style={{ ...title, fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)", color: K.onDark, margin: "16px 0 0" }}>Make it coherent.</p>
         <nav aria-label="Footer" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px 28px", marginTop: 30 }}>
           {links.map(([l, h]) => (
@@ -270,7 +270,7 @@ export function ScoreClose({ next }: { next?: { href: string; name: string } } =
           </p>
           <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 32 }}>
             <Primary href={PAGES.score} onDark>
-              Get your score <ArrowRight size={16} />
+              Get your logistics score <ArrowRight size={16} />
             </Primary>
             <Secondary href={PAGES.contact} onDark>
               Talk to our team
