@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/reveal";
 import { ScrollIndex } from "@/components/sections/koherent-index";
 import { NetworkLattice } from "@/components/sections/koherent-lattice";
+import { CountUp } from "@/components/sections/koherent-fx";
 import { inner, K, KoherentShell, Label, PAGES, PageHead, ScoreClose, Sect, mono, sans, title } from "@/components/sections/koherent-ui";
 
 // /koherent/what-we-bring — Michael's six building blocks (email "New
@@ -134,7 +135,7 @@ export default function KoherentWhatWeBringPage() {
         <Reveal className="k-three" style={{ maxWidth: 1000, margin: "0 auto", padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 4vw, 56px) clamp(40px, 5vw, 60px)", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, textAlign: "center" }}>
           {STATS.map(([v, l]) => (
             <div key={l}>
-              <div style={{ ...mono, fontSize: "clamp(2rem, 3.6vw, 2.8rem)", fontWeight: 500, lineHeight: 1, color: K.onDark }}>{v}</div>
+              <div style={{ ...mono, fontSize: "clamp(2rem, 3.6vw, 2.8rem)", fontWeight: 500, lineHeight: 1, color: K.onDark }}><CountUp value={v} /></div>
               <p style={{ ...sans, fontSize: 15, color: K.onDarkDim, margin: "10px 0 0" }}>{l}</p>
             </div>
           ))}
@@ -162,7 +163,7 @@ export default function KoherentWhatWeBringPage() {
                       {b.fact && (
                         <div style={{ marginTop: 26, paddingTop: 18, borderTop: `2px solid ${K.plum}`, maxWidth: 300 }}>
                           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                            <span style={{ ...mono, fontSize: "clamp(2.4rem, 3.9vw, 3.1rem)", fontWeight: 500, lineHeight: 1, color: K.plum }}>{b.fact[0]}</span>
+                            <CountUp value={b.fact[0]} style={{ ...mono, fontSize: "clamp(2.4rem, 3.9vw, 3.1rem)", fontWeight: 500, lineHeight: 1, color: K.plum }} />
                             <span style={{ ...title, fontSize: "clamp(1.15rem, 1.6vw, 1.35rem)", color: K.plum }}>{b.fact[1]}</span>
                           </div>
                           <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.5, color: K.stone, margin: "8px 0 0" }}>{b.fact[2]}</p>

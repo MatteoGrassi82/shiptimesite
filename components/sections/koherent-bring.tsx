@@ -5,6 +5,7 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import { CITY_POINTS, US_STATES, VIEWBOX } from "@/components/console/geo-data";
 import { C, CHEV, K_ARROW, K_BAR, mono, sans, title, useInView, useReducedMotion } from "./koherent-motion";
+import { CountUp } from "./koherent-fx";
 
 // ── BringBento — "What we bring" ─────────────────────────────────────────────
 // Michael's six building blocks, in his order, as one grid. Matteo picked the
@@ -209,7 +210,7 @@ function TileHead({ k, dark = false }: { k: Key; dark?: boolean }) {
 function Stat({ value, label, dark = false }: { value: string; label: string; dark?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
-      <span style={{ ...mono, fontSize: "clamp(2rem, 3vw, 2.5rem)", fontWeight: 500, lineHeight: 1, color: dark ? C.onDark : C.plum }}>{value}</span>
+      <CountUp value={value} style={{ ...mono, fontSize: "clamp(2rem, 3vw, 2.5rem)", fontWeight: 500, lineHeight: 1, color: dark ? C.onDark : C.plum }} />
       <span style={{ ...sans, fontSize: 14, lineHeight: 1.4, color: dark ? C.lilac : C.stone }}>{label}</span>
     </div>
   );

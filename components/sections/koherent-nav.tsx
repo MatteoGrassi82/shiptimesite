@@ -19,7 +19,9 @@ export function KoherentNav() {
   // fourth text link. On the score page itself the button would point at the
   // page you're on, so there it falls back to the team.
   const onScore = isOn(PAGES.score);
-  const ask = onScore ? { href: PAGES.contact, label: "Talk to our team" } : { href: PAGES.score, label: "Get your logistics score" };
+  // `short` is the phone label: the full one no longer fits beside the logo
+  // and the menu button at 390px.
+  const ask = onScore ? { href: PAGES.contact, label: "Talk to our team", short: "Talk to us" } : { href: PAGES.score, label: "Get your logistics score", short: "Logistics score" };
   const links = CHAPTERS.slice(0, 3);
 
   return (
@@ -43,7 +45,8 @@ export function KoherentNav() {
 
         <div className="kn-actions" style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Link href={ask.href} className="k-btn kn-cta" style={{ ...sans, fontSize: 14.5, fontWeight: 700, color: K.paper, background: K.plum, borderRadius: 6, padding: "10px 16px", textDecoration: "none", whiteSpace: "nowrap" }}>
-            {ask.label}
+            <span className="kn-long">{ask.label}</span>
+            <span className="kn-short">{ask.short}</span>
           </Link>
           <button
             type="button"
@@ -90,6 +93,7 @@ export function KoherentNav() {
       </div>
 
       <style>{`
+        .kn-short { display: none; }
         .kn-bar { transform-origin: left center; transition: transform .25s cubic-bezier(.22,1,.36,1); }
         .kn-link:hover .kn-bar { transform: scaleX(1) !important; }
         .kn-link:focus-visible, .kn-toggle:focus-visible { outline: 2px solid ${K.violet}; outline-offset: 3px; }
@@ -105,6 +109,8 @@ export function KoherentNav() {
           .kn-row { gap: 12px !important; }
           .kn-actions { gap: 8px !important; }
           .kn-cta { padding: 9px 10px !important; font-size: 14px !important; }
+          .kn-long { display: none; }
+          .kn-short { display: inline; }
           .kn-toggle-text { display: none; }
           .kn-toggle { width: 40px; padding: 0 !important; justify-content: center; }
         }

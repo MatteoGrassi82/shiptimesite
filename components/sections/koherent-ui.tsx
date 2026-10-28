@@ -49,11 +49,20 @@ export function Label({ children, onDark = false, style }: { children: ReactNode
   );
 }
 
-export function Head({ label, heading, lead, onDark = false, center = true }: { label: string; heading: ReactNode; lead?: ReactNode; onDark?: boolean; center?: boolean }) {
+export function Head({ n, label, heading, lead, onDark = false, center = true }: { n?: number; label: string; heading: ReactNode; lead?: ReactNode; onDark?: boolean; center?: boolean }) {
   // Wide and a step smaller, so a two-sentence heading sets as two lines
-  // (one per sentence, via .k-br) instead of three ragged ones.
+  // (one per sentence, via .k-br) instead of three ragged ones. `n` sets a
+  // faint oversized chapter numeral behind the heading (below the label, so
+  // the label stays clean): editorial, and it makes the section titles read
+  // bigger (Michael, Oct 27) without shouting.
   return (
-    <div style={{ maxWidth: center ? 1088 : 760, margin: center ? "0 auto" : undefined, textAlign: center ? "center" : "left" }}>
+    <div style={{ position: "relative", maxWidth: center ? 1088 : 760, margin: center ? "0 auto" : undefined, textAlign: center ? "center" : "left" }}>
+      {n !== undefined && (
+        <span aria-hidden style={{ ...mono, position: "absolute", left: center ? "50%" : 0, top: 30, transform: center ? "translateX(-50%)" : undefined, fontSize: "clamp(5rem, 11vw, 8.5rem)", fontWeight: 500, lineHeight: 1, letterSpacing: "-0.04em", color: onDark ? "rgba(199,174,230,0.09)" : "rgba(70,25,72,0.065)", userSelect: "none", pointerEvents: "none", zIndex: 0 }}>
+          {String(n).padStart(2, "0")}
+        </span>
+      )}
+      <div style={{ position: "relative", zIndex: 1 }}>
       <Label onDark={onDark}>{label}</Label>
       <h2 style={{ ...title, fontSize: "clamp(2rem, 3.6vw, 3rem)", color: onDark ? K.onDark : K.ink, margin: "18px 0 0" }}>{heading}</h2>
       {lead && (
@@ -61,6 +70,7 @@ export function Head({ label, heading, lead, onDark = false, center = true }: { 
           {lead}
         </p>
       )}
+      </div>
     </div>
   );
 }

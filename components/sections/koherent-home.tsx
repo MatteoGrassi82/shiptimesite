@@ -7,6 +7,8 @@ import { BringBento } from "./koherent-bring";
 import { MethodPlayer } from "./koherent-method";
 import { TargetTriangle } from "./koherent-target";
 import { CASES } from "./koherent-cases";
+import { FitSlider } from "./koherent-fit";
+import { ChapterProgress, Drift } from "./koherent-fx";
 import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, Secondary, Sect, Steps, display, mono, sans, title } from "./koherent-ui";
 
 // ── /koherent — first revision (Oct 23, 2026) ────────────────────────────────
@@ -132,10 +134,11 @@ function QuestionChip({ children, strong = false }: { children: ReactNode; stron
 
 function Problem() {
   return (
-    <Sect bg={K.mist}>
+    <Sect id="problem" bg={K.mist}>
       <div style={{ ...inner }}>
         <Reveal>
           <Head
+            n={1}
             label="The problem"
             heading={<>Logistics isn&rsquo;t hard because it&rsquo;s big.{" "}<span className="k-br">It&rsquo;s hard because it&rsquo;s in pieces.</span></>}
             lead="Carriers here, warehouses there, spreadsheets everywhere, and nobody accountable for the whole. So the same questions keep coming back."
@@ -215,25 +218,14 @@ const TRAITS: { title: string; body: string }[] = [
   { title: "Grow your network, not your overhead.", body: "New regions, faster delivery, a new channel, without adding the people and systems to run it all." },
 ];
 
-const PATH: { who: string; body: ReactNode }[] = [
-  {
-    who: "Under 500 a month",
-    body: (
-      <>
-        <a href="https://www.shiptime.com" style={{ color: K.onDark, textDecoration: "underline", textDecorationColor: K.lilac, textUnderlineOffset: 3 }}>ShipTime</a>, our shipping platform: discounted labels from every carrier, in one dashboard.
-      </>
-    ),
-  },
-  { who: "500 to 5,000", body: "Koherent, starting at your own dock: we take cost out of what you ship today, with our rates and our engine. No new warehouse yet." },
-  { who: "5,000+, or more than one site", body: "Koherent runs the whole network with you, partner warehouses included." },
-];
 
 function WhoItsFor() {
   return (
-    <Sect>
+    <Sect id="who">
       <div style={{ ...inner }}>
         <Reveal>
           <Head
+            n={2}
             label="Who it's for"
             heading={<>For businesses with a lot of orders going to individuals.</>}
             lead="Growing businesses that want their logistics to make them more money, not hold their growth back."
@@ -259,14 +251,8 @@ function WhoItsFor() {
               <strong style={{ color: K.onDark }}>You don&rsquo;t need to be huge.</strong>{" "}Koherent starts to pay off at
               around 500 orders a month, and there&rsquo;s no ceiling.
             </p>
-            <div className="k-three" style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, width: "100%", maxWidth: 900, marginTop: 10 }}>
-              {PATH.map((p, i) => (
-                <div key={p.who} style={{ borderTop: `2px solid ${i === 2 ? K.lilac : K.darkLine}`, paddingTop: 14 }}>
-                  <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>{p.who}</p>
-                  <p style={{ ...sans, fontSize: 15, lineHeight: 1.5, color: i === 2 ? K.onDark : K.onDarkDim, fontWeight: i === 2 ? 600 : 400, margin: "6px 0 0" }}>{p.body}</p>
-                </div>
-              ))}
-            </div>
+            {/* the three tiers as a slider: drag your volume, see where you start */}
+            <FitSlider />
           </div>
         </Reveal>
       </div>
@@ -288,6 +274,7 @@ function WhatWeBring() {
       <div style={{ ...inner, paddingTop: 0 }}>
         <Reveal>
           <Head
+            n={3}
             label="What we bring"
             heading={<>Everything a coherent operation needs.{" "}<span className="k-br">Already connected.</span></>}
             lead="Not what we sell, but what we design and run with. We connect the blocks you need into a single network, and you see all of it in one place."
@@ -322,6 +309,7 @@ function HowWeWork() {
       <div style={{ ...inner }}>
         <Reveal>
           <Head
+            n={4}
             label="How we work"
             heading={<>Alongside your team, as if it were our business.{" "}<span className="k-br">You stay in control.</span></>}
             lead="We suggest, you approve. Start with one piece, like your shipping costs, or design the whole network. Either way it's the same six steps."
@@ -356,10 +344,11 @@ function HowWeWork() {
 // numbers and see their triangle against the target (koherent-target.tsx).
 function DesignTarget() {
   return (
-    <Sect bg={K.ink}>
+    <Sect id="target" bg={K.ink}>
       <div style={{ ...inner }}>
         <Reveal>
           <Head
+            n={5}
             label="The design target"
             onDark
             heading={<>Always all three. Never pick two.</>}
@@ -384,10 +373,11 @@ function DesignTarget() {
 // until our own shoot.
 function People() {
   return (
-    <Sect>
+    <Sect id="people">
       <div style={{ ...inner }}>
         <Reveal>
           <Head
+            n={6}
             label="The people behind it"
             heading={<>Experienced operators, not account managers.</>}
             lead="Our technology is the superpower. Our people make it work for you: a named account manager who owns the relationship, direct access to the operators and support teams behind them, and one partner accountable for the whole. And we look after your customers as if they were our own."
@@ -407,6 +397,7 @@ function People() {
         </Reveal>
         <Reveal delay={200}>
           <div style={{ position: "relative", maxWidth: 1000, margin: "clamp(44px, 5.5vw, 72px) auto 0", clipPath: "polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%)", background: K.mist }}>
+            <Drift amount={32}>
             <img
               src="/generated/koherent-bring-people-a.webp"
               alt=""
@@ -415,6 +406,7 @@ function People() {
               loading="lazy"
               className="k-wideimg" style={{ width: "100%", height: "auto", aspectRatio: "16 / 7", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
             />
+            </Drift>
             <span style={{ ...mono, position: "absolute", top: 14, right: 14, fontSize: 10.5, lineHeight: 1.4, letterSpacing: "0.04em", color: K.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 8, padding: "5px 10px" }}>Illustrative photo</span>
           </div>
         </Reveal>
@@ -439,10 +431,11 @@ function WhyDifferent() {
     { label: "The global giants", head: "Capable, but you're a number.", body: "One account among thousands, at prices built for the very largest shippers." },
   ];
   return (
-    <Sect bg={K.mist}>
+    <Sect id="different" bg={K.mist}>
       <div style={{ ...inner, textAlign: "center" }}>
         <Reveal>
           <Head
+            n={7}
             label="Why we're different"
             heading={<>More capable than the independents.{" "}<span className="k-br">More personal than the giants.</span></>}
             lead="That's how our customers describe us, and it's the gap we're built for."
@@ -497,7 +490,7 @@ function Proof() {
     <Sect id="proof">
       <div style={{ ...inner }}>
         <Reveal>
-          <Head label="Case studies" heading={<>What we&rsquo;re designing right now.</>} lead="Three businesses, three goals. Names stay private until the work is live, and every figure is from our proposals." />
+          <Head n={8} label="Case studies" heading={<>What we&rsquo;re designing right now.</>} lead="Three businesses, three goals. Names stay private until the work is live, and every figure is from our proposals." />
         </Reveal>
         <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(40px, 5vw, 60px)" }}>
           {CASES.map((c, i) => (
@@ -541,6 +534,7 @@ function Proof() {
 export function KoherentHome() {
   return (
     <KoherentShell>
+      <ChapterProgress ids={["problem", "who", "bring", "how", "target", "people", "different", "proof"]} />
       <Hero />
       <Problem />
       <WhoItsFor />
