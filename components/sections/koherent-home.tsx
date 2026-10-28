@@ -47,7 +47,9 @@ import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, Scor
 // (koherent-ui.tsx).
 
 // ── hero ─────────────────────────────────────────────────────────────────────
-// The headline says what we are, "Your managed logistics network" (Michael,
+// Hero C from the Oct 28 lab (Matteo's pick): words left, the picture right,
+// tall and off the page edge. The headline says what we are, "Your managed
+// logistics network" (Michael,
 // Oct 27: make it prominent; Oct 28: "Make it coherent" reads as generic, a
 // cold reader took the site for personal finance). The deck's line stays as
 // the tagline in the footer and in the question lines. Then who it's for and
@@ -59,41 +61,36 @@ import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, Scor
 // below the hero stays centered.
 function Hero() {
   return (
-    <Sect>
-      {/* top padding kept small enough that the score button sits above the
-          fold on a 1280×720 laptop */}
-      <div className="k-hero" style={{ ...inner, paddingTop: "clamp(40px, 5vw, 72px)", display: "grid", gridTemplateColumns: "1.12fr 0.88fr", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
-        <div>
+    <Sect style={{ overflow: "hidden" }}>
+      <div className="k-hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 0 0 clamp(20px, 4vw, 56px)", display: "grid", gridTemplateColumns: "0.95fr 1.05fr", gap: "clamp(24px, 4vw, 56px)", alignItems: "center", minHeight: "min(84vh, 760px)" }}>
+        <div className="k-hero-text" style={{ padding: "clamp(44px, 6vw, 80px) 0" }}>
           <div className="k-fade" style={{ animationDelay: "0.05s" }}>
             <Label>Logistics, designed and run with you</Label>
           </div>
-          <h1 className="k-fade" style={{ ...display, fontSize: "clamp(2.9rem, 7vw, 5.5rem)", color: K.plum, margin: "22px 0 0", animationDelay: "0.12s" }}>
+          <h1 className="k-fade" style={{ ...display, fontSize: "clamp(2.7rem, 5.6vw, 4.7rem)", color: K.plum, margin: "20px 0 0", animationDelay: "0.12s" }}>
             Your managed logistics network.
           </h1>
           {/* who it's for and what we do, first: Michael's 15-second test */}
-          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.2rem, 1.8vw, 1.42rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "26px 0 0", maxWidth: "36ch", animationDelay: "0.24s" }}>
+          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "22px 0 0", maxWidth: "34ch", animationDelay: "0.24s" }}>
             We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to individuals.
           </p>
           {/* Chris's category, in the first panel */}
-          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.02rem, 1.3vw, 1.12rem)", lineHeight: 1.65, color: K.stone, margin: "16px 0 0", maxWidth: "50ch", animationDelay: "0.32s" }}>
+          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1rem, 1.2vw, 1.08rem)", lineHeight: 1.6, color: K.stone, margin: "14px 0 0", maxWidth: "46ch", animationDelay: "0.32s" }}>
             Not another 3PL, not another shipping platform. One team designs your network from your own order data and
             runs it with you: no rebuild, and you stay in control.
           </p>
-          <div className="k-fade k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 34, animationDelay: "0.42s" }}>
+          <div className="k-fade k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30, animationDelay: "0.42s" }}>
             <Primary href={PAGES.score}>
-              <span className="k-long">Get your Logistics Performance Score</span>
-              <span className="k-short">Get your logistics score</span> <ArrowRight size={16} />
+              Get your logistics score <ArrowRight size={16} />
             </Primary>
             <Secondary href={PAGES.contact}>Talk to our team</Secondary>
           </div>
         </div>
 
-        <div className="k-heroart" style={{ paddingLeft: 38 }}>
-          {/* illustrative: the photo carries a visible label instead */}
-          {/* a packing bench, so the first picture says logistics (Michael, Oct 28:
-              a cold reader took the laptop photo and the score button for personal finance) */}
-          <KoherentHeroArt src="/generated/pf-proof-packing.webp" alt="" />
-        </div>
+        {/* Hero C (Matteo, Oct 28): the picture tall and off the right edge,
+            with the pieces, the K, the sweep and the cost card; the dusk aisle
+            is a generated placeholder, labelled, until our own shoot */}
+        <KoherentHeroArt src="/generated/koherent-hero-a.webp" alt="" />
       </div>
     </Sect>
   );

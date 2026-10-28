@@ -182,7 +182,6 @@ export function KoherentShell({ children }: { children: ReactNode }) {
         @media (prefers-reduced-motion: reduce) { .k-mq [class*="animate-"] { animation: none !important; } }
         @media (max-width: 960px) {
           .k-hero { grid-template-columns: 1fr !important; }
-          .k-heroart { max-width: 540px; width: 100%; }
           .k-three { grid-template-columns: 1fr !important; }
           .k-two { grid-template-columns: 1fr !important; }
           .k-six { grid-template-columns: repeat(2, 1fr) !important; }
