@@ -126,7 +126,7 @@ export function ConsoleView() {
   const score = useCount(0, 68, inView, 700, 1100);
   return (
     <div ref={ref} className={`kd-wrap${armed ? " armed" : ""}${inView ? " is-in" : ""}`} style={{ position: "relative", width: "100%", maxWidth: 640, margin: "0 auto", textAlign: "left" }}>
-      <div aria-hidden style={{ position: "absolute", inset: "7% -5% -7% 22%", background: C.plum, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 30% 100%, 0 50%)", opacity: 0.95 }} />
+      <div aria-hidden className="kd-slab" style={{ position: "absolute", inset: "7% -5% -2% 22%", background: C.plum, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 30% 100%, 0 50%)", opacity: 0.95 }} />
       <div className="kd-card" style={{ position: "relative", background: C.card, border: `1px solid ${C.line}`, borderRadius: 6, boxShadow: "0 40px 80px -40px rgba(23,16,28,0.55)", overflow: "hidden" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "14px 18px", borderBottom: `1px solid ${C.line}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

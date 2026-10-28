@@ -279,7 +279,7 @@ function RateCard() {
   ];
   return (
     <div style={{ background: C.card, borderRadius: 8, padding: "12px 14px 4px", boxShadow: "0 24px 48px -24px rgba(23,16,28,0.7)" }}>
-      <div style={{ ...mono, display: "flex", justifyContent: "space-between", gap: 10, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.stone, paddingBottom: 8 }}>
+      <div className="kb-ohead" style={{ ...mono, display: "flex", justifyContent: "space-between", gap: 10, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.stone, paddingBottom: 8 }}>
         <span>One order to Seattle · due in 2 days</span>
         <span>Illustrative</span>
       </div>
@@ -344,7 +344,6 @@ export function BringBento() {
           <TileHead k="rates" dark />
           <div style={{ marginTop: "auto", display: "grid", gap: 14 }}>
             <Stat value="2M+" label="shipments managed a year: the buying power behind your rates" dark />
-            <p style={{ ...sans, fontSize: 15, fontWeight: 600, lineHeight: 1.5, color: C.onDark, margin: 0 }}>Our rates and your contracts, compared on every shipment. Best value wins.</p>
           </div>
         </Tile>
 
@@ -462,6 +461,7 @@ export function BringBento() {
           .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-areas: "map map" "car rat" "car int" "shp ppl" "one ppl" !important; }
         }
         @media (max-width: 760px) {
+          .kb-ohead { flex-direction: column; gap: 2px !important; }
           .kb-grid { display: flex !important; flex-direction: column; }
           .kb-photo .kb-media { position: relative !important; height: 230px; }
           .kb-photo .kb-shade { background: linear-gradient(180deg, rgba(23,16,28,0) 50%, rgba(23,16,28,0.9) 100%) !important; }

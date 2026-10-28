@@ -70,7 +70,7 @@ const foot: CSSProperties = { ...mono, fontSize: 10.5, letterSpacing: "0.08em", 
 function Stat({ value, label, delay }: { value: string; label: string; delay: number }) {
   return (
     <div className="km-rise" style={{ border: `1px solid ${C.line}`, borderRadius: 4, padding: "10px 12px", animationDelay: `${delay}s` }}>
-      <div style={{ ...mono, fontSize: 21, color: C.plum }}>{value}</div>
+      <div className="km-statv" style={{ ...mono, fontSize: 21, color: C.plum, whiteSpace: "nowrap" }}>{value}</div>
       <div style={{ ...sans, fontSize: 12, color: C.stone, marginTop: 2 }}>{label}</div>
     </div>
   );
@@ -261,6 +261,7 @@ function ImproveView() {
 const VIEWS = [AssessView, PlanView, DesignView, TestView, GoLiveView, ImproveView];
 
 const KM_CSS = `
+        @media (max-width: 640px) { .km-statv { font-size: 17px !important; } }
         .km-step:hover { border-color: ${C.violet} !important; }
         .km-step:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
         @media (prefers-reduced-motion: no-preference) {
