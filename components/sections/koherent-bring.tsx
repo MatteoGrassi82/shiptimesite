@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import Link from "next/link";
 import { CITY_POINTS, US_STATES, VIEWBOX } from "@/components/console/geo-data";
 import { C, CHEV, K_ARROW, K_BAR, mono, sans, title, useInView, useReducedMotion } from "./koherent-motion";
 import { CountUp } from "./koherent-fx";
@@ -306,44 +305,96 @@ function RateCard() {
 // Photo tiles keep the picture clear at the top and the words on a fade below.
 const SHADE = "linear-gradient(180deg, rgba(23,16,28,0) 0%, rgba(23,16,28,0.1) 26%, rgba(23,16,28,0.78) 50%, rgba(23,16,28,0.96) 70%)";
 
-// Names and jobs from the Shiplets page (plus-shiplets.tsx).
-const APPS: [string, string][] = [
-  ["Returns Desk", "Prepaid, scan-based returns"],
-  ["ShipAudit", "Every carrier invoice checked"],
-  ["Exception Radar", "Problems flagged early"],
-];
+// The rates tile as what it is: our rates and your contracts, both on, and
+// the best value wins on every shipment (Michael, Oct 27: say we rate-shop
+// across both). The 2M+ is the buying power behind ours.
+function RateSwitches() {
+  const rows: [string, string][] = [
+    ["Our rates", "Buying power from 2M+ shipments a year"],
+    ["Your contracts", "Bring your own; we use them where they win"],
+  ];
+  return (
+    <div style={{ background: "rgba(246,243,238,0.08)", border: "1px solid rgba(199,174,230,0.25)", borderRadius: 8, padding: "2px 14px" }}>
+      {rows.map(([n, job], i) => (
+        <div key={n} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 0", borderTop: i ? "1px solid rgba(199,174,230,0.18)" : "none" }}>
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <span style={{ ...sans, display: "block", fontSize: 14, fontWeight: 700, color: C.onDark }}>{n}</span>
+            <span style={{ ...sans, display: "block", fontSize: 12.5, color: C.onDarkDim }}>{job}</span>
+          </span>
+          <span className="kb-sw" style={{ position: "relative", width: 32, height: 18, flex: "none", borderRadius: 99, background: C.lilac, ...vars({ "--i": `${i * 160}ms` }) }}>
+            <span className="kb-knob" style={{ position: "absolute", top: 2, left: 16, width: 14, height: 14, borderRadius: 99, background: C.plum }} />
+          </span>
+        </div>
+      ))}
+      <div style={{ ...mono, display: "flex", alignItems: "center", gap: 8, fontSize: 10.5, letterSpacing: "0.08em", textTransform: "uppercase", color: C.lilac, padding: "10px 0 9px", borderTop: "1px solid rgba(199,174,230,0.18)" }}>
+        <svg viewBox="0 0 8 12" style={{ width: 7, height: 11, flex: "none" }} aria-hidden>
+          <path d={CHEV} fill={C.lilac} />
+        </svg>
+        Compared on every shipment · best value wins
+      </div>
+    </div>
+  );
+}
 
-// The six blocks in the "One network" tile, each a link to its own section of
-// the detail page (the ids on /koherent/what-we-bring).
-const BLOCKS: [string, string][] = [
-  ["Carriers", "carriers"],
-  ["Rates", "rates"],
-  ["Warehouses", "warehouses"],
-  ["Integrations", "integrations"],
-  ["Shiplets", "shiplets"],
-  ["People", "people"],
-];
+// The Shiplet Michael named (Oct 27): the "send a job" page built for two
+// national retail chains' store counters (koherent-cases.ts, case 3), as
+// the small screen a counter sees. Details are illustrative and say so.
+function ShipletScreen() {
+  const rows: [string, string][] = [
+    ["Job", "2 pieces"],
+    ["To", "The workshop"],
+    ["Pickup", "Tomorrow, from the store"],
+  ];
+  return (
+    <div style={{ background: C.card, border: `1px solid ${C.line}`, borderRadius: 8, overflow: "hidden" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 12px", borderBottom: `1px solid ${C.line}` }}>
+        <span style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: C.ink }}>
+          <span style={{ width: 18, height: 18, flex: "none", background: C.plum, borderRadius: 4, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+            <svg viewBox="0 0 12 12" style={{ width: 9, height: 9 }} aria-hidden>
+              <path d={K_BAR} fill={C.paper} />
+              <path d={K_ARROW} fill={C.paper} />
+            </svg>
+          </span>
+          Send a job
+        </span>
+        <span style={{ ...mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.stone }}>Store counter</span>
+      </div>
+      <div style={{ padding: "10px 12px 12px", display: "grid", gap: 8 }}>
+        {rows.map(([k, v], i) => (
+          <div key={k} className="kb-step" style={{ ...sans, display: "flex", justifyContent: "space-between", gap: 10, fontSize: 13, ...vars({ "--i": `${i * 120}ms` }) }}>
+            <span style={{ color: C.stone }}>{k}</span>
+            <span style={{ color: C.ink, fontWeight: 600 }}>{v}</span>
+          </div>
+        ))}
+        <span className="kb-step" style={{ ...sans, marginTop: 4, display: "flex", justifyContent: "center", fontSize: 13, fontWeight: 700, color: C.paper, background: C.plum, borderRadius: 5, padding: "9px 12px", ...vars({ "--i": "420ms" }) }}>Print the label</span>
+      </div>
+      <div style={{ ...mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.stone, padding: "8px 12px", borderTop: `1px solid ${C.line}`, background: C.mist }}>Built for two retail chains&rsquo; counters · illustrative</div>
+    </div>
+  );
+}
+
+const ROLES = ["Account manager", "Operator on the ground", "Support lead"];
 
 export function BringBento() {
   return (
     <div className="kb" style={{ maxWidth: 1120, margin: "clamp(36px, 5vw, 56px) auto 0" }}>
-      {/* Two tall photo tiles on a diagonal (carriers top right, people bottom
-          left), so photos never sit side by side. DOM order is Michael's
-          order, which is also the phone order. */}
-      <div className="kb-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gridTemplateAreas: `"map map map map map map map car car car car car" "map map map map map map map car car car car car" "ppl ppl ppl ppl rat rat rat rat int int int int" "ppl ppl ppl ppl shp shp shp shp one one one one"`, gap: 14 }}>
+      {/* Six tiles for the six blocks, nothing else: the map and the carriers
+          on top, three equal tiles in the middle, people as one wide tile at
+          the bottom. DOM order is Michael's order, which is also the phone
+          order. */}
+      <div className="kb-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gridTemplateAreas: `"map map map map map map map car car car car car" "map map map map map map map car car car car car" "rat rat rat rat int int int int shp shp shp shp" "ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl"`, gap: 14 }}>
         {/* 01 · carriers: the comparison over a photo */}
         <PhotoTile area="car" delay={120} src="/generated/koherent-bring-carriers-a.webp" focus="50% 14%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="Illustrative photo">
           <TileHead k="carriers" dark />
           <RateCard />
         </PhotoTile>
 
-        {/* 02 · rates: the buying power behind them. Best value, not
-            cheapest: the carrier tile drops the cheapest option as too slow,
-            and the entry point is cost out, not "cheaper rates" (Chris). */}
+        {/* 02 · rates: both sources on, best value wins. Not "cheaper rates"
+            (Chris): the carrier tile drops the cheapest option as too slow. */}
         <Tile area="rat" tone="plum" delay={120}>
           <TileHead k="rates" dark />
-          <div style={{ marginTop: "auto", display: "grid", gap: 14 }}>
-            <Stat value="2M+" label="shipments managed a year: the buying power behind your rates" dark />
+          <div style={{ marginTop: "auto" }}>
+            <RateSwitches />
           </div>
         </Tile>
 
@@ -367,64 +418,42 @@ export function BringBento() {
           </div>
         </Tile>
 
-        {/* 05 · Shiplets */}
-        <Tile area="shp" tone="mist" delay={120}>
+        {/* 05 · Shiplets: the real example */}
+        <Tile area="shp" tone="mist" delay={360}>
           <TileHead k="shiplets" />
-          <div style={{ marginTop: "auto", background: C.card, border: `1px solid ${C.line}`, borderRadius: 8, padding: "2px 12px" }}>
-            {APPS.map(([n, job], i) => (
-              <div key={n} style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 0", borderTop: i ? `1px solid ${C.line}` : "none" }}>
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ ...sans, display: "block", fontSize: 13.5, fontWeight: 700, color: C.ink }}>{n}</span>
-                  <span style={{ ...sans, display: "block", fontSize: 12, color: C.stone }}>{job}</span>
-                </span>
-                <span className="kb-sw" style={{ position: "relative", width: 32, height: 18, flex: "none", borderRadius: 99, background: C.plum, ...vars({ "--i": `${i * 160}ms` }) }}>
-                  <span className="kb-knob" style={{ position: "absolute", top: 2, left: 16, width: 14, height: 14, borderRadius: 99, background: C.paper }} />
-                </span>
-              </div>
-            ))}
+          <div style={{ marginTop: "auto" }}>
+            <ShipletScreen />
           </div>
         </Tile>
 
-        {/* 06 · people: a photo, the steps, one example message */}
-        <PhotoTile area="ppl" delay={0} src="/generated/koherent-bring-people-b.webp" focus="60% 12%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="Illustrative photo">
-          <TileHead k="people" dark />
-          <div style={{ background: "rgba(246,243,238,0.1)", border: "1px solid rgba(199,174,230,0.25)", borderRadius: "4px 14px 14px 14px", padding: "10px 14px" }}>
-            <div style={{ ...mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.lilac }}>Your account team · example message</div>
-            <div style={{ ...sans, fontSize: 14, lineHeight: 1.5, color: C.onDark, marginTop: 4 }}>Reno receiving is a day behind: a truck arrived late. Back on schedule Thursday.</div>
-          </div>
-          <Stat value="20 years" label="in shipping and logistics, and hundreds more across our team" dark />
-        </PhotoTile>
-
-        {/* one network, one view: the six blocks, a step each, lit in order */}
-        <Tile area="one" tone="ink" delay={240}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <span style={{ width: 44, height: 44, flex: "none", borderRadius: 9, background: C.plum, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-              <svg viewBox="0 0 12 12" style={{ width: 20, height: 20 }} aria-hidden>
-                <path d={K_BAR} fill={C.paper} />
-                <path d={K_ARROW} fill={C.paper} />
-              </svg>
-            </span>
-            <p style={{ ...title, fontSize: "clamp(1.35rem, 2vw, 1.6rem)", color: C.onDark, margin: 0 }}>
-              One network.
-              <br />
-              One view.
-            </p>
-          </div>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "12px 16px" }}>
-            {BLOCKS.map(([name, id], i) => (
-              <li key={id} className="kb-step" style={{ ...sans, display: "flex", alignItems: "center", gap: 9, fontSize: 14.5, fontWeight: 600, color: C.onDark, ...vars({ "--i": `${i * 140}ms` }) }}>
-                <svg viewBox="0 0 8 12" style={{ width: 9, height: 13, flex: "none" }} aria-hidden>
-                  <path d={CHEV} fill={C.lilac} />
-                </svg>
-                <Link href={`/koherent/what-we-bring#${id}`} className="kb-link" style={{ color: "inherit", textDecoration: "none" }}>
-                  {name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {/* the section's "Every block, in detail" link sits under the grid */}
-          <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", borderTop: "1px solid rgba(246,243,238,0.14)", paddingTop: 16 }}>
-            <span style={{ ...mono, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: C.lilac }}>6 of 6 connected</span>
+        {/* 06 · people: one wide tile, the photo on the left */}
+        <Tile area="ppl" tone="ink" delay={120} className="kb-people">
+          <div className="kb-people-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0, 0.85fr) minmax(0, 1.15fr)", gap: 24, margin: -24 }}>
+            <div className="kb-people-photo kb-photo" style={{ position: "relative", minHeight: 300 }}>
+              <img className="kb-img" src="/generated/koherent-bring-people-b.webp" alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "60% 20%" }} />
+              <PhotoChevrons size={58} style={{ right: 22, top: 22 }} />
+              <span style={{ ...mono, position: "absolute", left: 22, top: 24, fontSize: 10.5, lineHeight: 1.4, letterSpacing: "0.04em", color: C.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 8, padding: "5px 10px" }}>Illustrative photo</span>
+            </div>
+            <div className="kb-people-body" style={{ padding: "24px 24px 24px 0", display: "flex", flexDirection: "column", gap: 18 }}>
+              <TileHead k="people" dark />
+              <div style={{ background: "rgba(246,243,238,0.1)", border: "1px solid rgba(199,174,230,0.25)", borderRadius: "4px 14px 14px 14px", padding: "10px 14px" }}>
+                <div style={{ ...mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.lilac }}>Your account team · example message</div>
+                <div style={{ ...sans, fontSize: 14, lineHeight: 1.5, color: C.onDark, marginTop: 4 }}>Reno receiving is a day behind: a truck arrived late. Back on schedule Thursday.</div>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {ROLES.map((r, i) => (
+                  <span key={r} className="kb-step" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, color: C.onDark, border: "1px solid rgba(199,174,230,0.3)", borderRadius: 999, padding: "7px 12px", ...vars({ "--i": `${i * 120}ms` }) }}>
+                    <svg viewBox="0 0 8 12" style={{ width: 7, height: 11 }} aria-hidden>
+                      <path d={CHEV} fill={C.lilac} />
+                    </svg>
+                    {r}
+                  </span>
+                ))}
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Stat value="20 years" label="in shipping and logistics, and hundreds more across our team" dark />
+              </div>
+            </div>
           </div>
         </Tile>
       </div>
@@ -458,11 +487,14 @@ export function BringBento() {
           .kb-tile.is-in .kb-step { animation: kb-step-kf .3s ease both; animation-delay: calc(var(--d) + 300ms + var(--i)); }
         }
         @media (max-width: 1024px) {
-          .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-areas: "map map" "car rat" "car int" "shp ppl" "one ppl" !important; }
+          .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-areas: "map map" "car rat" "int shp" "ppl ppl" !important; }
         }
         @media (max-width: 760px) {
           .kb-ohead { flex-direction: column; gap: 2px !important; }
           .kb-grid { display: flex !important; flex-direction: column; }
+          .kb-people-grid { grid-template-columns: 1fr !important; }
+          .kb-people-photo { min-height: 220px !important; }
+          .kb-people-body { padding: 0 24px 24px !important; }
           .kb-photo .kb-media { position: relative !important; height: 230px; }
           .kb-photo .kb-shade { background: linear-gradient(180deg, rgba(23,16,28,0) 50%, rgba(23,16,28,0.9) 100%) !important; }
           .kb-photo .kb-body { height: auto !important; }
