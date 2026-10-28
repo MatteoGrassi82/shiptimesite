@@ -114,26 +114,26 @@ const BLOCKS: { id: string; name: string; line: string; fact?: [string, string, 
 export default function KoherentWhatWeBringPage() {
   return (
     <KoherentShell>
+      {/* Michael's lattice (Oct 19) is the hero object: the network of
+          carriers, warehouses and the customer's systems we design with */}
       <PageHead
         chapter={1}
         label="What we bring"
         heading={<>Six building blocks. Use the ones you need.</>}
-        lead="We connect the ones you use into one network you can see in one place."
+        lead="Carriers, warehouses and your own systems, connected into one network you can see in one place."
+        aside={
+          <div data-k-dark="" style={{ background: K.ink, borderRadius: 8, padding: "clamp(14px, 1.8vw, 22px) clamp(10px, 1.4vw, 18px)", overflow: "hidden" }}>
+            <Label onDark style={{ fontSize: 11.5, paddingLeft: 8 }}>Our network</Label>
+            <div style={{ marginTop: 6 }}>
+              <NetworkLattice compact />
+            </div>
+          </div>
+        }
       />
 
-      {/* Michael's lattice (Oct 19): the network of carriers and warehouses we
-          design with, then the three numbers behind it */}
+      {/* the three numbers behind the network */}
       <Sect bg={K.ink}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "clamp(48px, 6vw, 80px) clamp(20px, 4vw, 56px) 0", textAlign: "center" }}>
-          <Label onDark>Our network</Label>
-          <p style={{ ...title, fontSize: "clamp(1.5rem, 2.6vw, 2.1rem)", color: K.onDark, margin: "14px auto 0", maxWidth: "30ch" }}>
-            Carriers, warehouses and your own systems, connected into one network.
-          </p>
-          <div style={{ marginTop: "clamp(24px, 3vw, 40px)" }}>
-            <NetworkLattice />
-          </div>
-        </div>
-        <Reveal className="k-three" style={{ maxWidth: 1000, margin: "0 auto", padding: "clamp(28px, 3.5vw, 44px) clamp(20px, 4vw, 56px) clamp(40px, 5vw, 60px)", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, textAlign: "center" }}>
+        <Reveal className="k-three" style={{ maxWidth: 1000, margin: "0 auto", padding: "clamp(36px, 4.5vw, 52px) clamp(20px, 4vw, 56px)", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, textAlign: "center" }}>
           {STATS.map(([v, l]) => (
             <div key={l}>
               <div style={{ ...mono, fontSize: "clamp(2rem, 3.6vw, 2.8rem)", fontWeight: 500, lineHeight: 1, color: K.onDark }}><CountUp value={v} /></div>

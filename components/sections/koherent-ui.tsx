@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-import { CHAPTERS, CHEV, K, K_ARROW, Logo, PAGES, display, inner, mono, sans, title } from "./koherent-brand";
+import { CHAPTERS, CHEV, K, Logo, PAGES, display, inner, mono, sans, title } from "./koherent-brand";
 import { KoherentNav } from "./koherent-nav";
 
 // ── The pieces every /koherent page shares ───────────────────────────────────
@@ -210,29 +210,38 @@ export function KoherentShell({ children }: { children: ReactNode }) {
 // thing on the page, so it shouldn't wait for hydration, or for JS at all.
 // `compact` is for a page whose work starts right under the header (the score:
 // question one should sit above the fold).
-export function PageHead({ chapter, label, heading, lead, compact = false, children }: { chapter?: number; label: string; heading: ReactNode; lead?: ReactNode; compact?: boolean; children?: ReactNode }) {
+export function PageHead({ chapter, label, heading, lead, aside, children }: { chapter?: number; label: string; heading: ReactNode; lead?: ReactNode; aside?: ReactNode; children?: ReactNode }) {
+  // The sub-page hero, in the shape of the home hero (Matteo's pick, Oct 28):
+  // words on the left, the page's own object on the right (the lattice, the
+  // console, the cases, the questionnaire, the form). The chevrons show which
+  // chapter this is; no "01 / 04", which read as pagination. On phones the
+  // words come first and the object stacks under them.
   return (
-    <Sect>
-      <svg aria-hidden viewBox="4.5 0 7.5 12" preserveAspectRatio="xMaxYMid meet" style={{ position: "absolute", right: "-6vw", top: "-8%", height: "116%", width: "auto", opacity: 0.55 }}>
-        <path d={K_ARROW} fill={K.mist} />
-      </svg>
-      <div
-        className="k-fade"
-        style={{ ...inner, position: "relative", paddingTop: compact ? "clamp(36px, 4.5vw, 64px)" : "clamp(56px, 7vw, 104px)", paddingBottom: compact ? "clamp(24px, 3vw, 40px)" : "clamp(56px, 7vw, 96px)", textAlign: "center" }}
-      >
-        <div className="k-ph-chapter" style={{ display: "inline-flex", alignItems: "center", gap: 14 }}>
-          {chapter ? <Steps total={CHAPTERS.length} done={chapter} size={13} /> : null}
-          <Label>
-            {chapter ? `${String(chapter).padStart(2, "0")} / ${String(CHAPTERS.length).padStart(2, "0")} · ` : ""}
-            {label}
-          </Label>
+    <Sect style={{ overflow: "visible" }}>
+      <div className="k-ph" style={{ ...inner, paddingTop: "clamp(40px, 5vw, 72px)", paddingBottom: "clamp(40px, 5vw, 72px)", display: "grid", gridTemplateColumns: aside ? "minmax(0, 0.9fr) minmax(0, 1.1fr)" : "1fr", gap: "clamp(28px, 5vw, 72px)", alignItems: "center" }}>
+        <div className="k-fade" style={{ textAlign: aside ? "left" : "center" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+            {chapter ? <Steps total={CHAPTERS.length} done={chapter} size={13} /> : null}
+            <Label>{label}</Label>
+          </div>
+          <h1 style={{ ...display, fontSize: "clamp(2.5rem, 5vw, 4.2rem)", color: K.plum, margin: "20px 0 0", maxWidth: aside ? undefined : "17ch", marginLeft: aside ? 0 : "auto", marginRight: aside ? 0 : "auto" }}>{heading}</h1>
+          {lead && (
+            <p style={{ ...sans, fontSize: "clamp(1.05rem, 1.35vw, 1.2rem)", lineHeight: 1.6, color: K.stone, margin: "20px 0 0", maxWidth: "48ch", marginLeft: aside ? 0 : "auto", marginRight: aside ? 0 : "auto" }}>{lead}</p>
+          )}
+          {children && <div style={{ display: "flex", flexWrap: "wrap", justifyContent: aside ? "flex-start" : "center", gap: 12, marginTop: 30 }}>{children}</div>}
         </div>
-        <h1 style={{ ...display, fontSize: compact ? "clamp(2.2rem, 4.6vw, 3.6rem)" : "clamp(2.7rem, 6vw, 4.9rem)", color: K.ink, margin: "26px auto 0", maxWidth: compact ? "20ch" : "17ch" }}>{heading}</h1>
-        {lead && (
-          <p style={{ ...sans, fontSize: "clamp(1.08rem, 1.5vw, 1.28rem)", lineHeight: 1.6, color: K.stone, margin: compact ? "18px auto 0" : "26px auto 0", maxWidth: "54ch" }}>{lead}</p>
+        {aside && (
+          <div className="k-fade k-ph-aside" style={{ minWidth: 0, animationDelay: "0.15s" }}>
+            {aside}
+          </div>
         )}
-        {children && <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 34 }}>{children}</div>}
       </div>
+      <style>{`
+        @media (max-width: 960px) {
+          .k-ph { grid-template-columns: 1fr !important; }
+          .k-ph-aside { margin-top: 8px; }
+        }
+      `}</style>
     </Sect>
   );
 }

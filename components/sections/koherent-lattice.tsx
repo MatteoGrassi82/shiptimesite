@@ -13,41 +13,63 @@ import { C, K_ARROW, K_BAR, sans, useInView, useReducedMotion } from "./koherent
 // cities. Orders ride the lines into the K once the graphic is in view; with
 // reduced motion it's a still picture.
 
-const W = 1100;
-const H = 440;
-const HUB = { x: 190, y: 220 };
-const NODES: { x: number; y: number; label: string; kind: "carrier" | "site" | "system" | "door" }[] = [
-  { x: 430, y: 62, label: "National couriers", kind: "carrier" },
-  { x: 560, y: 150, label: "Regional couriers", kind: "carrier" },
-  { x: 470, y: 290, label: "LTL & FTL", kind: "carrier" },
-  { x: 430, y: 392, label: "Last-mile partners", kind: "carrier" },
-  { x: 745, y: 80, label: "Partner warehouses", kind: "site" },
-  { x: 790, y: 222, label: "Your store & ERP", kind: "system" },
-  { x: 690, y: 360, label: "Customs", kind: "system" },
-  // set apart from the network, and reached by a dashed line: they're where it
-  // all ends up, not a piece of it (Michael, Oct 27)
-  { x: 930, y: 300, label: "Your customers", kind: "door" },
-];
-const LEGEND: [string, (typeof NODES)[number]["kind"]][] = [
+// Two layouts for the same network. The wide one is the home-page-style
+// band; the compact one is for the What we bring hero, where the drawing sits
+// in half the page: a taller box, the K further left, nodes spread so every
+// label has room at its normal size, and the right-hand labels flipped to the
+// left of their marker so nothing runs off the edge.
+type Node = { x: number; y: number; label: string; kind: "carrier" | "site" | "system" | "door"; left?: boolean };
+const WIDE = {
+  w: 1100, h: 440, hub: { x: 190, y: 220 },
+  nodes: [
+    { x: 430, y: 62, label: "National couriers", kind: "carrier" },
+    { x: 560, y: 150, label: "Regional couriers", kind: "carrier" },
+    { x: 470, y: 290, label: "LTL & FTL", kind: "carrier" },
+    { x: 430, y: 392, label: "Last-mile partners", kind: "carrier" },
+    { x: 745, y: 80, label: "Partner warehouses", kind: "site" },
+    { x: 790, y: 222, label: "Your store & ERP", kind: "system" },
+    { x: 690, y: 360, label: "Customs", kind: "system" },
+    // set apart from the network, and reached by a dashed line: they're where it
+    // all ends up, not a piece of it (Michael, Oct 27)
+    { x: 930, y: 300, label: "Your customers", kind: "door" },
+  ] as Node[],
+};
+const COMPACT = {
+  w: 640, h: 520, hub: { x: 92, y: 260 },
+  nodes: [
+    { x: 250, y: 56, label: "National couriers", kind: "carrier" },
+    { x: 300, y: 150, label: "Regional couriers", kind: "carrier" },
+    { x: 250, y: 300, label: "LTL & FTL", kind: "carrier" },
+    { x: 260, y: 440, label: "Last-mile partners", kind: "carrier" },
+    { x: 606, y: 110, label: "Partner warehouses", kind: "site", left: true },
+    { x: 606, y: 230, label: "Your store & ERP", kind: "system", left: true },
+    { x: 560, y: 370, label: "Customs", kind: "system", left: true },
+    { x: 606, y: 480, label: "Your customers", kind: "door", left: true },
+  ] as Node[],
+};
+const LEGEND: [string, Node["kind"]][] = [
   ["Carriers", "carrier"],
   ["Warehouses", "site"],
   ["Your systems", "system"],
   ["Your customers", "door"],
 ];
 
-const path = (n: { x: number; y: number }) => {
-  const mx = (n.x + HUB.x) / 2;
-  return `M${n.x} ${n.y} C ${mx + 60} ${n.y}, ${mx - 60} ${HUB.y}, ${HUB.x + 46} ${HUB.y}`;
+const pathTo = (hub: { x: number; y: number }, n: { x: number; y: number }) => {
+  const mx = (n.x + hub.x) / 2;
+  return `M${n.x} ${n.y} C ${mx + 60} ${n.y}, ${mx - 60} ${hub.y}, ${hub.x + 46} ${hub.y}`;
 };
 
-function Mark({ kind, x, y }: { kind: (typeof NODES)[number]["kind"]; x: number; y: number }) {
+function Mark({ kind, x, y }: { kind: Node["kind"]; x: number; y: number }) {
   if (kind === "site") return <rect x={x - 8} y={y - 8} width="16" height="16" fill={C.lilac} />;
   if (kind === "carrier") return <circle cx={x} cy={y} r="8" fill={C.violet} stroke={C.lilac} strokeWidth="2" />;
   if (kind === "system") return <rect x={x - 8} y={y - 8} width="16" height="16" rx="3" fill="none" stroke={C.lilac} strokeWidth="2" />;
   return <circle cx={x} cy={y} r="6" fill={C.onDark} />;
 }
 
-export function NetworkLattice() {
+export function NetworkLattice({ compact = false }: { compact?: boolean } = {}) {
+  const L = compact ? COMPACT : WIDE;
+  const { w: W, h: H, hub: HUB } = L;
+  const path = (n: { x: number; y: number }) => pathTo(HUB, n);
   const reduced = useReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>(0.3);
   const moving = inView && !reduced;
@@ -70,23 +92,24 @@ export function NetworkLattice() {
         </defs>
         <rect width={W} height={H} fill="url(#kl-dots)" />
         <rect width={W} height={H} fill="url(#kl-glow)" />
-        {NODES.map((n) => (
+        {L.nodes.map((n) => (
           <path key={`p${n.label}`} d={path(n)} stroke="rgba(199,174,230,0.32)" strokeWidth="1.5" fill="none" strokeDasharray={n.kind === "door" ? "6 7" : undefined} />
         ))}
         {moving &&
-          NODES.map((n, i) => (
+          L.nodes.map((n, i) => (
             <circle key={`d${n.label}`} r="4.5" fill={C.lilac}>
               <animateMotion dur={`${2.4 + (i % 4) * 0.5}s`} begin={`${(i * 0.41) % 2}s`} repeatCount="indefinite" path={path(n)} />
             </circle>
           ))}
-        {NODES.map((n) => {
+        {L.nodes.map((n) => {
           const w = n.label.length * 7.9 + 24;
+          const left = Boolean(n.left);
           return (
             <g key={`n${n.label}`}>
               <Mark kind={n.kind} x={n.x} y={n.y} />
               <g className="kl-label">
-                <rect x={n.x + 16} y={n.y - 15} width={w} height="30" rx="15" fill="rgba(246,243,238,0.08)" stroke="rgba(199,174,230,0.28)" />
-                <text x={n.x + 27} y={n.y} dominantBaseline="central" style={sans} fontSize="14.5" fontWeight="600" fill={C.onDark}>
+                <rect x={left ? n.x - 16 - w : n.x + 16} y={n.y - 15} width={w} height="30" rx="15" fill="rgba(246,243,238,0.08)" stroke="rgba(199,174,230,0.28)" />
+                <text x={left ? n.x - 16 - w + 11 : n.x + 16 + 11} y={n.y} dominantBaseline="central" style={sans} fontSize="14.5" fontWeight="600" fill={C.onDark}>
                   {n.label}
                 </text>
               </g>

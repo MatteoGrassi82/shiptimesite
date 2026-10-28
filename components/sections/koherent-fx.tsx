@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { CHEV, K, mono } from "./koherent-brand";
+import { CHEV, K } from "./koherent-brand";
 import { useInView, useReducedMotion } from "./koherent-motion";
 
 // ── Small effects shared by the /koherent pages ──────────────────────────────
@@ -142,9 +142,7 @@ export function ChapterProgress({ ids }: { ids: string[] }) {
             </svg>
           ))}
         </span>
-        <span style={{ ...mono, fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase", color: K.stone }}>
-          {String(Math.max(1, done)).padStart(2, "0")} / {String(ids.length).padStart(2, "0")}
-        </span>
+        <span className="sr-only">Section {Math.max(1, done)} of {ids.length}</span>
       </div>
     </div>
   );

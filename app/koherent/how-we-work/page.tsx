@@ -91,11 +91,22 @@ const ASKS: { title: string; body: string }[] = [
 export default function KoherentHowWeWorkPage() {
   return (
     <KoherentShell>
+      {/* the one view (ConsoleView) is the hero object: what the customer
+          sees once we're live, we suggest and they approve. Michael (Aug 6):
+          show the dashboard as a deliverable, with an example. */}
       <PageHead
         chapter={2}
         label="How we work"
         heading={<>Alongside your team, as if it were our business.</>}
         lead="Six steps, from your own orders to go-live and beyond. We suggest, you approve, and you stay in control."
+        aside={
+          <div style={{ textAlign: "center" }}>
+            <ConsoleView />
+            <a href="https://lp.shiptime.com/dashboard" className="k-more" style={{ ...sans, position: "relative", display: "inline-flex", alignItems: "center", gap: 7, marginTop: 28, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
+              Open the example account &rarr;
+            </a>
+          </div>
+        }
       />
 
       {/* the six steps: what we do, what you get, and what it looks like */}
@@ -188,17 +199,6 @@ export default function KoherentHowWeWorkPage() {
                 </div>
               </Reveal>
             ))}
-          </div>
-          <div style={{ marginTop: "clamp(56px, 7vw, 88px)", textAlign: "center" }}>
-            <Label>What one view looks like</Label>
-            <div style={{ marginTop: 26 }}>
-              <ConsoleView />
-            </div>
-            {/* Michael (Aug 6): show the custom dashboard, with Shiplets, as a
-                deliverable, with an example: the live /dashboard mockup */}
-            <a href="https://lp.shiptime.com/dashboard" className="k-more" style={{ ...sans, position: "relative", display: "inline-flex", alignItems: "center", gap: 7, marginTop: 40, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
-              Open the example account &rarr;
-            </a>
           </div>
         </div>
       </Sect>

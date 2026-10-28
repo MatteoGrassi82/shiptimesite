@@ -49,9 +49,7 @@ export default function KoherentContactPage() {
         label="Talk to our team"
         heading={<>30 minutes on your operation.</>}
         lead="No deck, no pressure. We'll ask what you ship and where it hurts, and tell you honestly whether Koherent makes sense for you, or whether ShipTime does."
-      />
-      <Sect bg={K.mist}>
-        <div className="k-two" style={{ ...inner, paddingTop: "clamp(48px, 6vw, 80px)", display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: "clamp(28px, 4vw, 56px)", alignItems: "start" }}>
+        aside={
           <div className="k-form" style={formTheme}>
             <LeadForm
               source="koherent-contact"
@@ -68,29 +66,41 @@ export default function KoherentContactPage() {
               ]}
             />
           </div>
+        }
+      >
+        {calendarUrl && (
+          <a href={calendarUrl} target="_blank" rel="noopener" className="k-more" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 7, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
+            Or pick a time on our calendar <ArrowRight size={15} />
+          </a>
+        )}
+      </PageHead>
 
-          <div style={{ textAlign: "left" }}>
-            <Label>What happens next</Label>
-            <ol style={{ listStyle: "none", padding: 0, margin: "18px 0 0", display: "grid", gap: 22 }}>
-              {NEXT.map((n, i) => (
-                <li key={n.title} style={{ borderTop: `1px solid ${K.line}`, paddingTop: 18 }}>
+      {/* what happens after the call: the start of How we work */}
+      <Sect bg={K.mist}>
+        <div style={{ ...inner, paddingTop: "clamp(48px, 6vw, 72px)", paddingBottom: "clamp(48px, 6vw, 72px)" }}>
+          <Reveal>
+            <div style={{ textAlign: "center" }}>
+              <Label>What happens next</Label>
+            </div>
+          </Reveal>
+          <ol className="k-three" style={{ listStyle: "none", padding: 0, margin: "clamp(28px, 3.5vw, 40px) 0 0", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+            {NEXT.map((n, i) => (
+              <Reveal key={n.title} as="li" delay={i * 90}>
+                <div style={{ height: "100%", borderTop: `2px solid ${K.plum}`, paddingTop: 18, textAlign: "left" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <span style={{ ...mono, fontSize: 13, color: K.violet }}>{String(i + 1).padStart(2, "0")}</span>
                     <h2 style={{ ...title, fontSize: "1.3rem", color: K.ink, margin: 0 }}>{n.title}</h2>
                   </div>
                   <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "8px 0 0" }}>{n.body}</p>
-                </li>
-              ))}
-            </ol>
-            <div style={{ marginTop: 30, display: "grid", gap: 14 }}>
-              {calendarUrl && (
-                <a href={calendarUrl} target="_blank" rel="noopener" className="k-more" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 7, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
-                  Or pick a time on our calendar <ArrowRight size={15} />
-                </a>
-              )}
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+          <Reveal delay={200}>
+            <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
               <More href={PAGES.how}>How an engagement runs</More>
             </div>
-          </div>
+          </Reveal>
         </div>
       </Sect>
       <Sect>

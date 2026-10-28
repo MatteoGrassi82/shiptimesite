@@ -23,6 +23,30 @@ export default function KoherentCaseStudiesPage() {
         label="Case studies"
         heading={<>Three businesses, three goals.</>}
         lead="Names stay private until the work is live, and every figure is from our proposals."
+        aside={
+          <div data-k-dark="" style={{ background: K.ink, borderRadius: 8, padding: "10px 12px", display: "grid", gap: 10 }}>
+            {CASES.map((c, i) => (
+              <a key={c.id} href={`#${c.id}`} className="k-lift" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 14, alignItems: "center", textDecoration: "none", background: i === 0 ? K.plum : "rgba(246,243,238,0.06)", border: `1px solid ${i === 0 ? K.plum : "rgba(199,174,230,0.18)"}`, borderRadius: 6, padding: "16px 18px" }}>
+                <span style={{ minWidth: 0 }}>
+                  <span style={{ ...mono, display: "block", fontSize: 10.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac }}>{String(i + 1).padStart(2, "0")} · {c.sector}</span>
+                  <span style={{ ...title, display: "block", fontSize: "1.2rem", color: K.onDark, margin: "6px 0 0" }}>{c.shape}</span>
+                  <span style={{ ...sans, display: "block", fontSize: 13.5, lineHeight: 1.5, color: K.onDarkDim, margin: "6px 0 0" }}>{c.short.split(". ")[0]}.</span>
+                </span>
+                <span style={{ textAlign: "right" }}>
+                  {c.figure ? (
+                    <>
+                      <span style={{ ...mono, display: "block", fontSize: 26, fontWeight: 500, lineHeight: 1, color: K.onDark }}>{c.figure.to}</span>
+                      <span style={{ ...mono, display: "block", fontSize: 12, color: K.onDarkDim, textDecoration: "line-through", textDecorationColor: K.lilac, marginTop: 4 }}>{c.figure.from}</span>
+                      <span style={{ ...mono, display: "block", fontSize: 9.5, letterSpacing: "0.08em", textTransform: "uppercase", color: K.lilac, marginTop: 6 }}>proposed</span>
+                    </>
+                  ) : (
+                    <span style={{ ...mono, display: "inline-block", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac, border: "1px solid rgba(199,174,230,0.3)", borderRadius: 999, padding: "5px 10px" }}>{c.status}</span>
+                  )}
+                </span>
+              </a>
+            ))}
+          </div>
+        }
       />
       {CASES.map((c, i) => (
         <Sect key={c.id} id={c.id} bg={i % 2 === 0 ? K.mist : K.paper}>
