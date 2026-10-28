@@ -25,7 +25,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Koherent · Make it coherent.", template: "%s · Koherent" },
+  title: { default: "Koherent · Your managed logistics network", template: "%s · Koherent" },
   description:
     "Koherent is the managed logistics network that brings carriers, warehouses and data into one coherent operation, run with you by people who know logistics.",
   robots: "noindex",

@@ -36,9 +36,9 @@ const NOTE = `October, four months in:
 
 Reno: West Coast orders arrive in 1.6 days instead of 4.8. 2-day reach is 74%, past the 70% goal.
 
-Cost per order is $11.21, down from $12.30 in July. Atlanta should take it under the $11.00 goal.
+Cost per order is $11.21, down from $12.30 in July. Memphis should take it under the $11.00 goal.
 
-Next: approve the Atlanta SKUs by Oct 26 so the Jan 13 go-live holds.`;
+Next: approve the Memphis SKUs by Oct 26 so the Jan 13 go-live holds.`;
 
 export function TeamConsole({ onViewAs, onSignOut }: { onViewAs: ViewAs; onSignOut: () => void }) {
   const toast = useToast();

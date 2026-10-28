@@ -112,12 +112,12 @@ export function Chevrons({ total, done, size = 11, onDark = false }: { total: nu
 // ── ConsoleView — "Why we're different" ──────────────────────────────────────
 // A made-up account, Alder & Stone, with the same sites and numbers as the
 // /dashboard mockup (components/console/scenarios.ts): Columbus and Reno live,
-// Atlanta going live Nov 25, cost per order $11.21 (−$1.09). The score is the
+// Memphis going live Nov 25, cost per order $11.21 (−$1.09). The score is the
 // deck's illustrative 68 (slide 29). Illustrative throughout, and labelled.
 export const SITES: [string, string, boolean][] = [
   ["Columbus, OH", "Live", true],
   ["Reno, NV", "Live", true],
-  ["Atlanta, GA", "Going live Nov 25", false],
+  ["Memphis, TN", "Going live Nov 25", false],
 ];
 
 export function ConsoleView() {

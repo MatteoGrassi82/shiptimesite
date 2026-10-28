@@ -55,7 +55,7 @@ const POP = US_STATES.reduce((a, s) => a + s.pop, 0);
 const MAP_STEPS = [
   { label: "Columbus", sites: ["Columbus"] },
   { label: "+ Reno", sites: ["Columbus", "Reno"] },
-  { label: "+ Atlanta", sites: ["Columbus", "Reno", "Atlanta"] },
+  { label: "+ Memphis", sites: ["Columbus", "Reno", "Memphis"] },
 ].map((m) => {
   const days = daysFrom(m.sites);
   return { ...m, days, reach: Math.round((US_STATES.reduce((a, s) => a + (days[s.code] <= 2 ? s.pop : 0), 0) / POP) * 100) };
@@ -64,7 +64,7 @@ const MAP_STEPS = [
 const PINS = [
   { name: "Columbus", label: "Columbus, OH", kind: "own", east: true },
   { name: "Reno", label: "Reno, NV", kind: "partner", east: false },
-  { name: "Atlanta", label: "Atlanta, GA · Nov 25", kind: "planned", east: true },
+  { name: "Memphis", label: "Memphis, TN · Nov 25", kind: "planned", east: true },
 ] as const;
 const RAMP = [C.plum, C.violet, C.lilac, "#E2D6EE", C.mist]; // 1, 2, 3, 4, 5+ days
 const [VB_W, VB_H] = VIEWBOX.split(" ").slice(2).map(Number);

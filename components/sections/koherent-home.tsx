@@ -45,8 +45,11 @@ import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, Scor
 // (koherent-ui.tsx).
 
 // ── hero ─────────────────────────────────────────────────────────────────────
-// The deck's one idea as the headline, then who it's for and what we do in one
-// plain sentence (Michael's 15-second test), then Chris's category: not
+// The headline says what we are, "Your managed logistics network" (Michael,
+// Oct 27: make it prominent; Oct 28: "Make it coherent" reads as generic, a
+// cold reader took the site for personal finance). The deck's line stays as
+// the tagline in the footer and in the question lines. Then who it's for and
+// what we do in one plain sentence (Michael's 15-second test), then Chris's category: not
 // another 3PL, not another shipping platform. Text left, the visual right
 // (Matteo, Oct 23): the problem pieces pull together into the K, the photo
 // opens from the arrow tip behind the steps, and the cost card counts down to
@@ -60,15 +63,14 @@ function Hero() {
       <div className="k-hero" style={{ ...inner, paddingTop: "clamp(40px, 5vw, 72px)", display: "grid", gridTemplateColumns: "1.12fr 0.88fr", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
         <div>
           <div className="k-fade" style={{ animationDelay: "0.05s" }}>
-            {/* Michael (Oct 27): more prominent, and "Your" to make it personal */}
-            <Label style={{ fontSize: 14.5, fontWeight: 600, color: K.plum }}>Your managed logistics network</Label>
+            <Label>Logistics, designed and run with you</Label>
           </div>
-          <h1 className="k-fade" style={{ ...display, fontSize: "clamp(3.3rem, 8.4vw, 6.6rem)", color: K.plum, margin: "22px 0 0", animationDelay: "0.12s" }}>
-            Make it coherent.
+          <h1 className="k-fade" style={{ ...display, fontSize: "clamp(2.9rem, 7vw, 5.5rem)", color: K.plum, margin: "22px 0 0", animationDelay: "0.12s" }}>
+            Your managed logistics network.
           </h1>
           {/* who it's for and what we do, first: Michael's 15-second test */}
           <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.2rem, 1.8vw, 1.42rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "26px 0 0", maxWidth: "36ch", animationDelay: "0.24s" }}>
-            We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to consumers.
+            We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to individuals.
           </p>
           {/* Chris's category, in the first panel */}
           <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.02rem, 1.3vw, 1.12rem)", lineHeight: 1.65, color: K.stone, margin: "16px 0 0", maxWidth: "50ch", animationDelay: "0.32s" }}>
@@ -203,9 +205,12 @@ function Problem() {
 // in a sentence. The 500-a-month line is the deck's ShipTime → Koherent fork
 // (slide 15), stated in plain words. The band also carries how Koherent sits
 // next to ShipTime (Michael: re-orient this with ShipTime's offering). The
-// 500–5,000 rule comes from the deck and is flagged for Michael.
+// tiers were revised on Oct 28 after both flagged the 500 vs 5,000 clash:
+// Koherent starts at 500 at the customer's own dock (cost first, Chris's entry
+// point, and how InnoWave starts), and runs the whole network from 5,000 or a
+// second site. For Michael to confirm.
 const TRAITS: { title: string; body: string }[] = [
-  { title: "You ship to people's doors.", body: "Online brands, and businesses that deliver to consumers for someone else: gifts, programs, subscriptions, store to door." },
+  { title: "You ship to people's doors.", body: "Online brands, and businesses that deliver to individuals for someone else: gifts, programs, subscriptions, store to door." },
   { title: "You've outgrown a shipping app.", body: "A warehouse or a 3PL today, more than one site soon, and a shipping bill that matters to the plan." },
   { title: "Grow your network, not your overhead.", body: "New regions, faster delivery, a new channel, without adding the people and systems to run it all." },
 ];
@@ -219,8 +224,8 @@ const PATH: { who: string; body: ReactNode }[] = [
       </>
     ),
   },
-  { who: "500 to 5,000", body: "Start on ShipTime, and move up once your inventory is in our network." },
-  { who: "5,000+, or more than one site", body: "Koherent from day one." },
+  { who: "500 to 5,000", body: "Koherent, starting at your own dock: we take cost out of what you ship today, with our rates and our engine. No new warehouse yet." },
+  { who: "5,000+, or more than one site", body: "Koherent runs the whole network with you, partner warehouses included." },
 ];
 
 function WhoItsFor() {
@@ -230,7 +235,7 @@ function WhoItsFor() {
         <Reveal>
           <Head
             label="Who it's for"
-            heading={<>For businesses with a lot of orders going to consumers.</>}
+            heading={<>For businesses with a lot of orders going to individuals.</>}
             lead="Growing businesses that want their logistics to make them more money, not hold their growth back."
           />
         </Reveal>

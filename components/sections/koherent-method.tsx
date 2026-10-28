@@ -12,9 +12,10 @@ import { C, Chevrons, K_ARROW, K_BAR, Label, mono, sans, title, useInView, useRe
 // screen; picking a step stops it.
 //
 // The screens use the /dashboard mockup's example account, Alder & Stone
-// (components/console/scenarios.ts): Columbus and Reno live, Atlanta going
+// (components/console/scenarios.ts): Columbus and Reno live, Memphis going
 // live Nov 25; 18,240 orders a month; cost per order $12.30 → $11.21; on time
-// 95.6% → 96.4%; within 2 days 54% → 74%, 82% once Atlanta is live; 24% of
+// 95.6% → 96.4%; within 2 days 54% → 74%, 93% once Memphis is live (Michael,
+// Oct 27: a better south-east site beats Atlanta's 82%); 24% of
 // orders go west and took 4.8 days from Columbus. Captioned as illustrative.
 
 const STEPS: { name: string; body: string }[] = [
@@ -140,7 +141,7 @@ function DesignView() {
   const sites = [
     { x: 118, y: 120, r: 72, name: "Reno, NV", note: "New · partner warehouse", planned: false, below: true, phoneBelow: false },
     { x: 410, y: 96, r: 78, name: "Columbus, OH", note: "Your warehouse", planned: false, below: false, phoneBelow: true },
-    { x: 392, y: 206, r: 64, name: "Atlanta, GA", note: "Planned · Nov 25", planned: true, below: false, phoneBelow: false },
+    { x: 332, y: 212, r: 64, name: "Memphis, TN", note: "Planned · Nov 25", planned: true, below: false, phoneBelow: false },
   ];
   const under = (s: { x: number; y: number }) => onMap(s.x - 7, s.y + 12);
   return (
@@ -252,7 +253,7 @@ function ImproveView() {
           <Stat value="74%" label="within 2 days · +20 pts" delay={1.05} />
         </div>
       </div>
-      <div style={foot}>Next: Atlanta, Nov 25 · 82% within 2 days</div>
+      <div style={foot}>Next: Memphis, Nov 25 · 93% within 2 days</div>
     </Card>
   );
 }

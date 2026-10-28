@@ -2,7 +2,10 @@
 // Anonymized (Oct 25): none of these is signed or live, and Michael asked for
 // them "less specific" until we've proven the work (email "New website",
 // Oct 19). Behind them, for us only: the golf brand is PG Golf, the
-// promotional company is InnoWave, the dental lab is Plak-IT.
+// promotional company is InnoWave, the workshop is Plak-IT (Rokan Laminating):
+// per Michael (Oct 27) its Shiplet was built for Staples and Michaels store
+// counters, so the earlier "dental lab" framing was wrong. The chains stay
+// unnamed here.
 //
 // The detail follows Michael's case format (email "Case study – proof",
 // Sep 15): the business, the demand, what we designed, where it stands, how
@@ -55,17 +58,17 @@ export const CASES: Case[] = [
     ],
   },
   {
-    id: "cases-from-every-office",
-    sector: "Dental lab",
-    shape: "Cases from every office",
-    short: "Dental offices send cases to the lab every day. We're building a simple “send a case” page on our network, so any office can ship in a few clicks.",
-    status: "In design",
+    id: "jobs-from-every-counter",
+    sector: "Custom plaques and laminating",
+    shape: "Jobs from every store counter",
+    short: "Customers hand in orders at the counters of two national retail chains. We built a simple “send a job” page on our network, so any store can ship to the workshop in a few clicks.",
+    status: "Built",
     detail: [
-      ["The business", "A dental lab that receives cases from dental offices every day."],
-      ["The goal", "Let any office send a case to the lab in a few clicks, without arranging its own shipping."],
-      ["What we're building", "A “send a case” page on our network: an office opens a link or scans a code, and the label is ready in a few clicks."],
-      ["Why it matters", "It's a Shiplet: a small app for the one workflow that's this lab's alone, built on the same platform as everything else."],
-      ["What we'll track", "Cases sent by each office, and the days from office to lab."],
+      ["The business", "A workshop making custom plaques and laminated pieces for the customers of two national retail chains, hundreds of jobs a month."],
+      ["The goal", "Let any store counter send a job to the workshop in a few clicks, without each store arranging its own shipping."],
+      ["What we built", "A “send a job” page on our network: a store opens a link or scans a code, and the label is ready in a few clicks."],
+      ["Why it matters", "It's a Shiplet: a small app for the one workflow that's this workshop's alone, built on the same platform as everything else."],
+      ["What we track", "Jobs sent by each store, and the days from counter to workshop and back."],
     ],
   },
 ];

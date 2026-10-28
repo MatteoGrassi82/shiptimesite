@@ -256,12 +256,12 @@ export const scenarios: Record<BrandId, Scenario> = {
     rules: [
       { id: "a1", name: "Midwest orders on a regional carrier", if: ["Ship-to state is OH, IN, MI, IL, KY, PA or WV", "Weight under 20 lb"], site: "Columbus", carrier: "Regional carrier, ground", status: "Live", monthly: 6700, matched: 5600, share: 31, faster: "Same days", why: "31% of your orders go to seven states next door. A regional carrier gets them there in the same days for less.", by: "Priya Shah", since: "Jul 14" },
       { id: "a2", name: "West orders from Reno", if: ["Ship-to state is WA, OR, CA, NV, ID, UT or AZ", "Weight under 5 lb"], site: "Reno", carrier: "Cheapest 2-day", status: "Live", monthly: 6400, matched: 4312, share: 24, faster: "3.2 days faster", why: "24% of your orders go west, and from Columbus they took 4.8 days.", by: "Marc Leblanc", since: "Jul 21" },
-      { id: "a3", name: "Southeast orders from Atlanta", if: ["Ship-to state is GA, FL, SC, NC, AL, TN or MS"], site: "Atlanta", carrier: "Local carrier, next day", status: "Shadow", monthly: 2700, matched: 2100, share: 12, faster: "1 day faster", why: "Runs as a test until Atlanta goes live on Jan 13. It shows what it would do and changes nothing.", by: "Marc Leblanc", since: "Oct 19" },
+      { id: "a3", name: "Southeast orders from Memphis", if: ["Ship-to state is TN, AR, MS, AL, GA, LA or KY"], site: "Memphis", carrier: "Local carrier, next day", status: "Shadow", monthly: 2700, matched: 2100, share: 12, faster: "1 day faster", why: "Runs as a test until Memphis goes live on Jan 13. It shows what it would do and changes nothing.", by: "Marc Leblanc", since: "Oct 19" },
       { id: "a4", name: "Light parcels to the Northeast and South by USPS", if: ["Weight under 1 lb", "Ship-to state is NY, NJ, MA, TX or FL", "Not an express order"], site: "Columbus", carrier: "USPS Ground Advantage", status: "Suggested", monthly: 1900, matched: 620, share: 3, faster: "Same days", why: "620 parcels a month under a pound go to the Northeast and South by UPS. USPS is about $3 cheaper each, for the same days.", by: "Priya Shah", since: "Oct 16" },
     ],
     defaultRule: { text: "Cheapest rate from the nearest site, comparing your UPS account and ours on every label", monthly: 6500 },
-    nextSite: { name: "Atlanta, GA", date: "Jan 13", daysLeft: 83, atRisk: true },
-    map: { days: 2, before: ["Columbus"], now: ["Columbus", "Reno"], planned: ["Atlanta"], region: "West Coast (24% of your orders): 4.8 days → 1.6 days since Reno." },
+    nextSite: { name: "Memphis, TN", date: "Jan 13", daysLeft: 83, atRisk: true },
+    map: { days: 2, before: ["Columbus"], now: ["Columbus", "Reno"], planned: ["Memphis"], region: "West Coast (24% of your orders): 4.8 days → 1.6 days since Reno." },
     tower: { watched: 3412, caught: 14, fixed: 12, saved: "$1,840", asOf: "10:40 am", warning: "1 check couldn't run: the FedEx feed is late this morning.", events: [
       { time: "10:18 am", who: "Marc Leblanc", text: "Switched 6 labels from FedEx to UPS before pickup, after a hub delay in Memphis", impact: "$0 extra" },
       { time: "9:47 am", who: "ShipTime", text: "Got 3 labels repriced after weight overcharges", impact: "−$21" },
@@ -278,23 +278,23 @@ export const scenarios: Record<BrandId, Scenario> = {
     sites: [
       { name: "Columbus, OH", kind: "Your warehouse", status: "Live", orders: 14210, costPerOrder: "$11.42", onTime: "96.9%", days: "2.3", problems: 2 },
       { name: "Reno, NV", kind: "Partner warehouse", status: "Live", orders: 4030, costPerOrder: "$9.85", onTime: "95.1%", days: "1.6", problems: 2 },
-      { name: "Atlanta, GA", kind: "Partner warehouse", status: "Going live Jan 13", orders: 0, costPerOrder: "—", onTime: "—", days: "—", problems: 0 },
+      { name: "Memphis, TN", kind: "Partner warehouse", status: "Going live Jan 13", orders: 0, costPerOrder: "—", onTime: "—", days: "—", problems: 0 },
     ],
     problems: [
-      { id: "p0", who: "you", title: "Approve which SKUs go to Atlanta", detail: "We suggest 40 SKUs, 81% of the orders in the zone.", site: "Atlanta", due: "Oct 26", cta: "Review" },
-      { id: "p1", who: "you", title: "Approve the Atlanta delivery zones", detail: "We suggest 7 states from Atlanta, 2,100 orders a month.", site: "Atlanta", due: "Oct 30", cta: "Review" },
+      { id: "p0", who: "you", title: "Approve which SKUs go to Memphis", detail: "We suggest 40 SKUs, 81% of the orders in the zone.", site: "Memphis", due: "Oct 26", cta: "Review" },
+      { id: "p1", who: "you", title: "Approve the Memphis delivery zones", detail: "We suggest 7 states from Memphis, 2,100 orders a month.", site: "Memphis", due: "Oct 30", cta: "Review" },
       { id: "p2", who: "you", title: "Re-stock 4 SKUs running low in Reno", detail: "Out in 9 days at today's pace. Suggested transfer ready.", site: "Reno", due: "Today", cta: "Approve" },
       { id: "p3", who: "us", title: "Reno receiving 1 day behind", detail: "A truck arrived late. Back on schedule tomorrow.", site: "Reno", due: "Oct 23" },
       { id: "p4", who: "us", title: "2 parcels with no scan for 3 days", detail: "Traced with UPS. Reshipping if not found by tomorrow.", site: "Columbus", due: "Oct 22" },
     ],
     recs: [
-      { id: "r1", title: "Atlanta opens Jan 13", body: "Southeast orders a day sooner and about $2,700 a month less. Two things need you first.", cta: "Open the go-live", value: "Go-live", goLive: true },
+      { id: "r1", title: "Memphis opens Jan 13", body: "Southeast orders a day sooner and about $2,700 a month less. Two things need you first.", cta: "Open the go-live", value: "Go-live", goLive: true },
       { id: "r2", title: "Show delivery dates at checkout", body: "With Reno live, 74% of your customers can be promised 2 days.", cta: "See the numbers", value: "Shiplet", shiplet: "checkout" },
       { id: "r3", title: "Turn on your branded tracking page", body: "Customers see your logo and delivery date instead of the carrier's page.", cta: "Set it up", value: "Shiplet", shiplet: "tracking" },
     ],
     report: {
       numbers: [{ label: "Cost per order", value: "$11.21", change: "−$1.09" }, { label: "Delivered on time", value: "96.4%", change: "+0.8 pts" }, { label: "Customers within 2 days (estimated)", value: "74%", change: "+20 pts" }, { label: "Problems solved by us", value: "311", change: "of 326" }],
-      notes: ["Reno, three months in: West Coast orders arrive in 1.6 days instead of 4.8.", "Midwest orders moved to a regional carrier: same days, 11% cheaper.", "Next: Atlanta goes live Jan 13 for the Southeast, after peak season."],
+      notes: ["Reno, three months in: West Coast orders arrive in 1.6 days instead of 4.8.", "Midwest orders moved to a regional carrier: same days, 11% cheaper.", "Next: Memphis goes live Jan 13 for the Southeast, after peak season."],
     },
     service: {
       joined: "July",
