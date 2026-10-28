@@ -90,7 +90,7 @@ function useTween(target: number, ms = 650) {
   return v;
 }
 
-function NetworkMap() {
+export function NetworkMap() {
   const reduced = useReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>(0.4);
   const [step, setStep] = useState(1);
@@ -269,7 +269,7 @@ function PhotoTile({ area, delay, src, focus, shade, chevrons, credit, className
 }
 
 // Cheapest service that still arrives in time wins; relative cost, no prices.
-function RateCard() {
+export function RateCard() {
   const rows: { name: string; days: string; cost: number; note?: string; picked?: boolean; out?: boolean }[] = [
     { name: "Regional carrier", days: "2 days", cost: 58, note: "Picked", picked: true },
     { name: "National courier", days: "2 days", cost: 74 },
@@ -308,7 +308,7 @@ const SHADE = "linear-gradient(180deg, rgba(23,16,28,0) 0%, rgba(23,16,28,0.1) 2
 // The rates tile as what it is: our rates and your contracts, both on, and
 // the best value wins on every shipment (Michael, Oct 27: say we rate-shop
 // across both). The 2M+ is the buying power behind ours.
-function RateSwitches() {
+export function RateSwitches() {
   const rows: [string, string][] = [
     ["Our rates", "Buying power from 2M+ shipments a year"],
     ["Your contracts", "Bring your own; we use them where they win"],
@@ -339,7 +339,7 @@ function RateSwitches() {
 // The Shiplet Michael named (Oct 27): the "send a job" page built for two
 // national retail chains' store counters (koherent-cases.ts, case 3), as
 // the small screen a counter sees. Details are illustrative and say so.
-function ShipletScreen() {
+export function ShipletScreen() {
   const rows: [string, string][] = [
     ["Job", "2 pieces"],
     ["To", "The workshop"],
@@ -374,6 +374,29 @@ function ShipletScreen() {
 }
 
 const ROLES = ["Account manager", "Operator on the ground", "Support lead"];
+
+// The widgets' own motion (bars, switches, steps), so any page that mounts a
+// widget (the What we bring scroller) can include it. Layout rules stay below.
+export const KB_CSS = `
+  .kb-seg:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes kb-bar-kf { from { width: 0; } }
+    .is-in .kb-bar { animation: kb-bar-kf .8s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d, 0ms) + 300ms + var(--i)); }
+    @keyframes kb-fade-kf { from { opacity: 0; } to { opacity: 1; } }
+    .is-in .kb-pick { animation: kb-fade-kf .4s ease both; animation-delay: calc(var(--d, 0ms) + 950ms); }
+    @keyframes kb-sw-kf { from { background: ${C.line}; } }
+    @keyframes kb-knob-kf { from { transform: translateX(-14px); } }
+    .is-in .kb-sw { animation: kb-sw-kf .3s ease both; animation-delay: calc(var(--d, 0ms) + 500ms + var(--i)); }
+    .is-in .kb-knob { animation: kb-knob-kf .3s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d, 0ms) + 500ms + var(--i)); }
+    @keyframes kb-step-kf { from { opacity: .18; } to { opacity: 1; } }
+    .is-in .kb-step { animation: kb-step-kf .3s ease both; animation-delay: calc(var(--d, 0ms) + 300ms + var(--i)); }
+  }
+  @media (max-width: 760px) {
+    .kb-ohead { flex-direction: column; gap: 2px !important; }
+    .kb-pin { font-size: 10px !important; padding: 1px 5px !important; transform: translate(9px, -50%) !important; }
+    .kb-pin-east { transform: translate(calc(-100% - 9px), -50%) !important; }
+  }
+`;
 
 export function BringBento() {
   return (
@@ -458,8 +481,8 @@ export function BringBento() {
         </Tile>
       </div>
 
+      <style>{KB_CSS}</style>
       <style>{`
-        .kb-seg:focus-visible { outline: 2px solid ${C.violet}; outline-offset: 2px; }
         .kb-link:hover { text-decoration: underline !important; text-underline-offset: 4px; }
         .kb-img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
         .kb-chev { transition: transform .4s cubic-bezier(.22,1,.36,1); }
@@ -473,24 +496,13 @@ export function BringBento() {
           .kb-tile.is-in { animation: kb-in-kf .65s cubic-bezier(.22,1,.36,1) backwards; animation-delay: var(--d); }
           @keyframes kb-chev-kf { from { opacity: 0; translate: -36px 0; } to { opacity: 1; translate: 0 0; } }
           .kb-tile.is-in .kb-chev { animation: kb-chev-kf .6s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d) + 350ms + var(--i)); }
-          @keyframes kb-bar-kf { from { width: 0; } }
-          .kb-tile.is-in .kb-bar { animation: kb-bar-kf .8s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d) + 300ms + var(--i)); }
-          @keyframes kb-fade-kf { from { opacity: 0; } to { opacity: 1; } }
-          .kb-tile.is-in .kb-pick { animation: kb-fade-kf .4s ease both; animation-delay: calc(var(--d) + 950ms); }
           @keyframes kb-pop-kf { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
           .kb-tile.is-in .kb-tick { animation: kb-pop-kf .4s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d) + 350ms + var(--i)); }
-          @keyframes kb-sw-kf { from { background: ${C.line}; } }
-          @keyframes kb-knob-kf { from { transform: translateX(-14px); } }
-          .kb-tile.is-in .kb-sw { animation: kb-sw-kf .3s ease both; animation-delay: calc(var(--d) + 500ms + var(--i)); }
-          .kb-tile.is-in .kb-knob { animation: kb-knob-kf .3s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d) + 500ms + var(--i)); }
-          @keyframes kb-step-kf { from { opacity: .18; } to { opacity: 1; } }
-          .kb-tile.is-in .kb-step { animation: kb-step-kf .3s ease both; animation-delay: calc(var(--d) + 300ms + var(--i)); }
         }
         @media (max-width: 1024px) {
           .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-areas: "map map" "car rat" "int shp" "ppl ppl" !important; }
         }
         @media (max-width: 760px) {
-          .kb-ohead { flex-direction: column; gap: 2px !important; }
           .kb-grid { display: flex !important; flex-direction: column; }
           .kb-people-grid { grid-template-columns: 1fr !important; }
           .kb-people-photo { min-height: 220px !important; }
@@ -499,8 +511,6 @@ export function BringBento() {
           .kb-photo .kb-shade { background: linear-gradient(180deg, rgba(23,16,28,0) 50%, rgba(23,16,28,0.9) 100%) !important; }
           .kb-photo .kb-body { height: auto !important; }
           .kb-chev { width: 30px !important; height: 45px !important; }
-          .kb-pin { font-size: 10px !important; padding: 1px 5px !important; transform: translate(9px, -50%) !important; }
-          .kb-pin-east { transform: translate(calc(-100% - 9px), -50%) !important; }
         }
       `}</style>
     </div>
