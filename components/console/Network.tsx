@@ -173,9 +173,9 @@ export function RuleDetail({ id, statuses, setStatus, back }: { id: string; stat
             </dl>
             <div className="mt-4 space-y-2 border-t border-[color:var(--c-line)] pt-4">
               {status === "Suggested" && <>
-                <div className="grid gap-2"><Button primary onClick={() => change("Live", "Rule turned on. Your next labels follow it.")}><Check className="h-4 w-4" /> Approve and turn on</Button><Button onClick={() => change("Shadow", "Test run started. Priya will review it with you in 14 days.")}>Start a 14-day test run</Button></div>
+                <div className="grid gap-2"><Button primary onClick={() => change("Live", "Rule turned on. Your next labels follow it.")}><Check className="h-4 w-4" /> Approve and turn on</Button><Button onClick={() => change("Shadow", "Test run started. Matteo will review it with you in 14 days.")}>Start a 14-day test run</Button></div>
                 <p className="text-[12px] text-[color:var(--c-muted)]">A test run shows what the rule would do on your live orders and changes nothing.</p>
-                <button type="button" onClick={() => change("Dismissed", "Rule dismissed. Priya will see why in your next check-in.")} className="text-[13px] font-semibold text-[color:var(--c-muted)] hover:text-[color:var(--c-ink)]">Dismiss</button>
+                <button type="button" onClick={() => change("Dismissed", "Rule dismissed. Matteo will see why in your next check-in.")} className="text-[13px] font-semibold text-[color:var(--c-muted)] hover:text-[color:var(--c-ink)]">Dismiss</button>
               </>}
               {status === "Shadow" && <><Button primary onClick={() => change("Live", "Rule turned on. Your next labels follow it.")}>Turn it on now</Button><p className="text-[12px] text-[color:var(--c-muted)]">In a test run the rule shows what it would do and changes nothing.</p></>}
               {status === "Live" && <div className="flex flex-wrap gap-2"><Button small onClick={() => change("Shadow", "Back to a test run. Labels go back to the rule below it.")}>Switch back to a test run</Button><Button small>Edit</Button></div>}
@@ -202,7 +202,7 @@ function projectFor(sc: Scenario) {
   const risk = !!sc.nextSite!.atRisk;
   const skuDue = sc.problems.find((p) => p.title.startsWith("Approve which SKUs"))?.due ?? "Oct 26";
   const tasks: Task[] = [
-    { task: `Sign the ${site} warehouse agreement`, side: "Koherent", owner: "Priya Shah", phase: "Plan", due: "Oct 9", state: "Done" },
+    { task: `Sign the ${site} warehouse agreement`, side: "Koherent", owner: "Matteo Grassi", phase: "Plan", due: "Oct 9", state: "Done" },
     { task: "Send 6 months of order history", side: "You", owner: you, phase: "Assess", due: "Oct 6", state: "Done" },
     { task: `Approve which SKUs go to ${site}`, side: "You", owner: you, phase: "Design", due: skuDue, state: "Open", source: "Oct 21 call ▶ 07:55" },
     { task: `Approve the ${site} delivery zones`, side: "You", owner: you, phase: "Design", due: "Oct 30", state: "Open", source: "Oct 21 call ▶ 04:12" },
@@ -213,15 +213,15 @@ function projectFor(sc: Scenario) {
     { task: "Test labels and first live orders", side: "You", owner: you, phase: "Test", due: "Jan 6", state: "Open" },
   ];
   const meetings = [
-    { date: "Oct 21", title: "Weekly check-in", length: "32 min", people: `${you}, Priya Shah, Marc Leblanc, ${site} warehouse lead`,
+    { date: "Oct 21", title: "Weekly check-in", length: "32 min", people: `${you}, Matteo Grassi, Marc Leblanc, ${site} warehouse lead`,
       recap: `We drafted the ${site} delivery zones and moved the order-system test to Friday. ${risk ? "The pallet label spec from the warehouse is a day late." : "The warehouse sent the pallet label spec on time."}`,
       decided: [[`Go-live moves to ${sc.nextSite!.date}, after peak season`, "11:40"], ["Order-system test moves to Friday", "06:20"]],
       created: tasks.filter((t) => t.source?.startsWith("Oct 21")) },
-    { date: "Oct 14", title: "Design review", length: "45 min", people: `${you}, Priya Shah, Marc Leblanc`,
+    { date: "Oct 14", title: "Design review", length: "45 min", people: `${you}, Matteo Grassi, Marc Leblanc`,
       recap: `We picked the first 40 SKUs for ${site} from last quarter's orders and agreed how labels get printed at the dock.`,
       decided: [["Start with 40 SKUs, 81% of the orders in the zone", "09:30"]],
       created: tasks.filter((t) => t.source?.startsWith("Oct 14")) },
-    { date: "Oct 7", title: "Kickoff", length: "58 min", people: `${you}, Priya Shah, Marc Leblanc`,
+    { date: "Oct 7", title: "Kickoff", length: "58 min", people: `${you}, Matteo Grassi, Marc Leblanc`,
       recap: "We walked through the plan, the owners on each side and the target date.",
       decided: [["Aim to go live before peak season", "22:05"]], created: [] },
   ];
@@ -245,7 +245,7 @@ export function ProjectPage() {
   const mine = tasks.filter((t) => t.side === "You" && t.state !== "Done");
   const holding = (["You", "Koherent", "Warehouse"] as Side[]).map((s) => ({ s, open: tasks.filter((t) => t.side === s && t.state !== "Done").length, late: tasks.filter((t) => t.side === s && t.state === "Late").length }));
   const shown = tasks.filter((t) => side === "All" || t.side === side);
-  const finish = (task: string) => { setTasks(tasks.map((t) => (t.task === task ? { ...t, state: "Done" } : t))); toast({ text: `Done: ${task}. Priya has been told.` }); };
+  const finish = (task: string) => { setTasks(tasks.map((t) => (t.task === task ? { ...t, state: "Done" } : t))); toast({ text: `Done: ${task}. Matteo has been told.` }); };
   return (
     <div className="space-y-6">
       <PageHeader title={`${site} go-live`} status={<Badge tone={late ? "warning" : "positive"}>{late ? "At risk" : "On track"}</Badge>}
@@ -273,7 +273,7 @@ export function ProjectPage() {
         <aside className="space-y-4 lg:order-last">
           <Panel className="p-4">
             <div className="flex items-center justify-between"><span className="text-[13px] font-semibold text-[color:var(--c-ink)]">Latest update</span><Badge tone={late ? "warning" : "positive"}>{late ? "At risk" : "On track"}</Badge></div>
-            <div className="mt-2 flex items-center gap-2 text-[12px] text-[color:var(--c-muted)]"><Actor name="Priya Shah" size={20} /> Priya Shah, today at 9:20 am</div>
+            <div className="mt-2 flex items-center gap-2 text-[12px] text-[color:var(--c-muted)]"><Actor name="Matteo Grassi" size={20} /> Matteo Grassi, today at 9:20 am</div>
             <p className="mt-2 text-[14px] text-[color:var(--c-text)]">{late ? `The pallet label spec is two days late from the ${site} warehouse, which moves the forecast to ${forecast}. I'm on it with them today. Nothing needed from you beyond the SKU approval.` : "Everything is on track for the target date."}</p>
             <p className="mt-2 text-[12px] text-[color:var(--c-muted)]">Since last week: Design went from 40% to 60%, and the Oct 21 call added 3 tasks.</p>
           </Panel>
@@ -307,14 +307,14 @@ export function ProjectPage() {
           </section>
 
           <section>
-            <SectionTitle action={<span className="text-[12px] text-[color:var(--c-muted)]">Recorded with everyone&rsquo;s OK. Checked by Priya.</span>}>Meetings</SectionTitle>
+            <SectionTitle action={<span className="text-[12px] text-[color:var(--c-muted)]">Recorded with everyone&rsquo;s OK. Checked by Matteo.</span>}>Meetings</SectionTitle>
             <div className="mt-3 space-y-3">
               {meetings.map((m, i) => (
                 <Panel key={m.date} className="p-4">
                   <button type="button" onClick={() => setOpenMeeting(openMeeting === i ? -1 : i)} className="flex w-full flex-wrap items-center gap-3 text-left">
                     <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color:var(--c-ink)] text-white"><Play className="h-3.5 w-3.5" /></span>
                     <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold text-[color:var(--c-ink)]">{m.title}, {m.date}</span><span className="block truncate text-[12px] text-[color:var(--c-muted)]">{m.length} with {m.people}</span></span>
-                    <span className="inline-flex items-center gap-1 text-[12px] text-[#217005]"><Check className="h-3.5 w-3.5" /> Reviewed by Priya</span>
+                    <span className="inline-flex items-center gap-1 text-[12px] text-[#217005]"><Check className="h-3.5 w-3.5" /> Reviewed by Matteo</span>
                   </button>
                   {openMeeting === i && (
                     <div className="mt-4 space-y-3 border-t border-[color:var(--c-line)] pt-3 text-[14px]">
@@ -326,7 +326,7 @@ export function ProjectPage() {
                       {m.created.length > 0 && (
                         <div>
                           <div className="text-[12px] font-semibold text-[color:var(--c-muted)]">Tasks it created ({m.created.length})</div>
-                          <ul className="mt-1 space-y-1">{m.created.map((t) => <li key={t.task} className="flex flex-wrap items-center gap-2 text-[color:var(--c-ink)]"><span>{t.task}</span><span className="text-[12px] text-[color:var(--c-muted)]">{t.side === "You" ? "You" : t.owner}, due {t.due}</span><Stamp at={t.source!.split("▶ ")[1]} />{t.proposed && <Badge>Proposed, Priya confirms</Badge>}</li>)}</ul>
+                          <ul className="mt-1 space-y-1">{m.created.map((t) => <li key={t.task} className="flex flex-wrap items-center gap-2 text-[color:var(--c-ink)]"><span>{t.task}</span><span className="text-[12px] text-[color:var(--c-muted)]">{t.side === "You" ? "You" : t.owner}, due {t.due}</span><Stamp at={t.source!.split("▶ ")[1]} />{t.proposed && <Badge>Proposed, Matteo confirms</Badge>}</li>)}</ul>
                         </div>
                       )}
                     </div>
@@ -379,7 +379,7 @@ const DEFINITION: Record<string, string> = {
 // How it's going against what was agreed, and how we work together (Chris's
 // "how we work"). The goals come first and fill as chevrons, the money is set
 // against the fee, the routine is four fixed moments, and the page ends on the
-// month's report signed by Priya. The team card sits beside it.
+// month's report signed by Matteo. The team card sits beside it.
 
 export function Report({ go }: { go: (v: View) => void }) {
   const sc = useScenario();
@@ -388,7 +388,7 @@ export function Report({ go }: { go: (v: View) => void }) {
   const met = sv.goals.filter((g) => g.progress >= 1).length;
   const rhythm = [
     ["Daily note", "Today, 8:05 am", "What we did yesterday, and anything that needs you."],
-    ["Weekly check-in", "Wed, Oct 28, 2:00 pm", "30 minutes with Priya and Marc."],
+    ["Weekly check-in", "Wed, Oct 28, 2:00 pm", "30 minutes with Matteo and Marc."],
     ["Monthly report", "September, sent Oct 2", "At the bottom of this page."],
     ["Quarterly review", sv.review, "Results against these goals, and the next ones."],
   ];
@@ -427,7 +427,7 @@ export function Report({ go }: { go: (v: View) => void }) {
             </div>
           </section>
           <section>
-            <SectionTitle action={<span className="hidden text-[12px] text-[color:var(--c-muted)] sm:inline">Prepared by Priya Shah on Oct 2</span>}>September report</SectionTitle>
+            <SectionTitle action={<span className="hidden text-[12px] text-[color:var(--c-muted)] sm:inline">Prepared by Matteo Grassi on Oct 2</span>}>September report</SectionTitle>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {sc.report!.numbers.map((n) => (
           <Panel key={n.label} className="flex flex-col p-4">
@@ -448,9 +448,9 @@ export function Report({ go }: { go: (v: View) => void }) {
         </div>
       </section>
       <section className="mt-6 max-w-[720px]">
-        <h3 className="text-[14px] font-semibold text-[color:var(--c-ink)]">Notes from Priya</h3>
+        <h3 className="text-[14px] font-semibold text-[color:var(--c-ink)]">Notes from Matteo</h3>
         <ul className="mt-3 space-y-2 text-[14px] text-[color:var(--c-text)]">{sc.report!.notes.map((n) => <li key={n}>{n}</li>)}</ul>
-        <div className="mt-4 flex items-center gap-2 text-[13px] text-[color:var(--c-muted)]"><Actor name="Priya Shah" size={22} /> Priya Shah, account manager</div>
+        <div className="mt-4 flex items-center gap-2 text-[13px] text-[color:var(--c-muted)]"><Actor name="Matteo Grassi" size={22} /> Matteo Grassi, account manager</div>
       </section>
           </section>
         </div>

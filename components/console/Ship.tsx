@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { ArrowUpRight, Check, CircleCheck, Clock, Copy, Download, Ellipsis, Layers, ListChecks, MessageSquare, TriangleAlert, Truck, Undo2 } from "lucide-react";
-import { daily, type ShipletMap, type ShipletStatus } from "./data";
+import { Check, CircleCheck, Clock, Copy, Download, Ellipsis, Layers, ListChecks, MessageSquare, TriangleAlert, Truck, Undo2 } from "lucide-react";
+import { allChecked, openQuestions, type ShipletApp } from "./apps";
+import { daily, type FeatureMap } from "./data";
 import { eventsFor, invoiceFor, money, monthlyOrders, NOW, OLD_RATE, shipmentsFor, TODAY, useScenario } from "./derive";
 import { ScoreMark, useBrand } from "./brand";
 import { useToast } from "./Feedback";
@@ -19,12 +20,21 @@ import { Badge, Button, Chip, PageHeader, Panel, SectionTitle, Stat, StatRow, st
 // you"), checks that couldn't run kept apart from the ones that passed (Drata),
 // and "needs you" items that can't be dismissed (Shopify's order tasks).
 
-function ControlTower({ go }: { go: (v: View) => void }) {
+function ControlTower({ go, app }: { go: (v: View) => void; app: ShipletApp | null }) {
   const sc = useScenario();
   const toast = useToast();
   const t = sc.tower!;
   const [done, setDone] = useState<string[]>([]);
-  const mine = sc.problems.filter((p) => p.who === "you" && !done.includes(p.id));
+  const problems = sc.problems.filter((p) => p.who === "you" && !done.includes(p.id));
+  // The account's app joins "Needs you" whenever it's the client's turn.
+  const asked = app ? openQuestions(app).length : 0;
+  const appTask = !app ? null
+    : app.stage === "check" && asked ? { title: `Answer Matteo's ${asked} questions about the ${app.name}`, detail: "About 5 minutes. Matteo carries on as soon as you do.", cta: "Answer" }
+      : app.stage === "preview" ? { title: `Review the ${app.name} prototype`, detail: `Ready since ${app.since.replace("Today, ", "")}. About 10 minutes.`, cta: "Review" }
+        : app.stage === "test" && allChecked(app) ? { title: `Sign off the ${app.name} to go live`, detail: "Everything you checked in the sandbox works. About 5 minutes.", cta: "Sign off" }
+          : app.stage === "test" ? { title: `Try the ${app.name} sandbox and check each thing`, detail: `Ready since ${app.since}. About 15 minutes.`, cta: "Try it" }
+            : null;
+  const mine = [...(appTask ? [null] : []), ...problems];
   const goLiveCity = sc.nextSite?.name.split(",")[0];
   return (
     <section className="overflow-hidden rounded-lg border border-[color:var(--c-line)]">
@@ -40,7 +50,13 @@ function ControlTower({ go }: { go: (v: View) => void }) {
         <div className="bg-white p-4">
           <div className="text-[13px] font-semibold text-[color:var(--c-ink)]">Needs you</div>
           <ul className="mt-2 space-y-3">
-            {mine.map((p) => (
+            {appTask && (
+              <li className="flex items-start gap-3">
+                <div className="min-w-0 flex-1"><div className="text-[14px] text-[color:var(--c-ink)]">{appTask.title}</div><div className="text-[12px] text-[color:var(--c-muted)]">{appTask.detail}</div></div>
+                <Button small onClick={() => go("app")}>{appTask.cta}</Button>
+              </li>
+            )}
+            {problems.map((p) => (
               <li key={p.id} className="flex items-start gap-3">
                 <div className="min-w-0 flex-1"><div className="text-[14px] text-[color:var(--c-ink)]">{p.title}</div><div className="text-[12px] text-[color:var(--c-muted)]">{p.detail} Due {p.due === "Today" ? "today" : p.due}.</div></div>
                 {p.site === goLiveCity
@@ -69,7 +85,7 @@ function ControlTower({ go }: { go: (v: View) => void }) {
   );
 }
 
-export function Home({ go, shiplets, setShiplet }: { go: (v: View) => void; shiplets: ShipletMap; setShiplet: (id: string, s: ShipletStatus) => void }) {
+export function Home({ go, features, setFeature, app }: { go: (v: View) => void; features: FeatureMap; setFeature: (id: string) => void; app: ShipletApp | null }) {
   const sc = useScenario();
   const { c: pal } = useBrand();
   const toast = useToast();
@@ -89,7 +105,7 @@ export function Home({ go, shiplets, setShiplet }: { go: (v: View) => void; ship
   const site = sc.nextSite?.name.split(",")[0];
   return (
     <div className="space-y-8">
-      {sc.tower && <ControlTower go={go} />}
+      {sc.tower && <ControlTower go={go} app={app} />}
 
       {sc.nextSite && (
         <Panel className="flex flex-wrap items-center gap-4 p-4">
@@ -161,17 +177,17 @@ export function Home({ go, shiplets, setShiplet }: { go: (v: View) => void; ship
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {sc.recs.map((r) => (
             <Panel key={r.id} className="flex flex-col p-4">
-              <span className="self-start">{r.shiplet ? <Badge tone="info" icon={<Layers className="h-3 w-3" />}>Shiplet</Badge> : <Badge>{r.value}</Badge>}</span>
+              <span className="self-start">{r.feature ? <Badge tone="info">Included</Badge> : <Badge>{r.value}</Badge>}</span>
               <div className="mt-2 text-[14px] font-semibold text-[color:var(--c-ink)]">{r.title}</div>
               <p className="mt-1 flex-1 text-[13px] leading-5 text-[color:var(--c-muted)]">{r.body}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {r.goLive ? <Button small onClick={() => go("golive")}>{r.cta}</Button>
-                  : r.shiplet ? (
-                    shiplets[r.shiplet] === "Live"
-                      ? <><Badge tone="positive" icon={<Check className="h-3 w-3" />}>Live</Badge><Button small onClick={() => go("shiplets")}>Manage</Button></>
-                      : <><Button small onClick={() => { setShiplet(r.shiplet!, "Live"); toast({ text: `${r.title.replace("Turn on your", "Your").replace("Show delivery dates at checkout", "Delivery dates at checkout")} is on.`, action: { label: "View", onClick: () => go("shiplets") } }); }}>Switch on</Button><Button small onClick={() => go("shiplets")}>See all Shiplets</Button></>
+                  : r.feature ? (
+                    features[r.feature]
+                      ? <Badge tone="positive" icon={<Check className="h-3 w-3" />}>On</Badge>
+                      : <Button small onClick={() => { setFeature(r.feature!); toast({ text: `${r.title.replace("Turn on your", "Your").replace("Show delivery dates at checkout", "Delivery dates at checkout")} is on.` }); }}>Switch on</Button>
                   ) : approved.includes(r.id) ? <Badge tone="positive" icon={<Check className="h-3 w-3" />}>Approved</Badge>
-                  : <><Button small onClick={() => { setApproved([...approved, r.id]); toast({ text: one ? "Approved. Priya will set it up and confirm today." : "Approved. It applies to your next labels." }); }}>Approve</Button><Button small>{r.cta}</Button></>}
+                  : <><Button small onClick={() => { setApproved([...approved, r.id]); toast({ text: one ? "Approved. Matteo will set it up and confirm today." : "Approved. It applies to your next labels." }); }}>Approve</Button><Button small>{r.cta}</Button></>}
               </div>
             </Panel>
           ))}
@@ -227,7 +243,7 @@ export function Shipments({ open, returnsLive }: { open: (id: string) => void; r
           <tbody>
             {rows.map((s) => (
               <tr key={s.id} onClick={() => open(s.id)} className="cursor-pointer hover:bg-[color:var(--c-hover)]">
-                <Td><span className="inline-flex items-center gap-2"><span style={{ fontFamily: T.mono, fontSize: 13 }}>{s.id}</span><Badge tone={statusTone(s.status)}>{s.status === "Exception" ? "Problem" : s.status}</Badge>{s.status === "Returned" && returnsLive && <span className="inline-flex items-center gap-1 text-[12px] text-[#045AD0]"><Layers className="h-3 w-3" /> via your returns page</span>}</span></Td>
+                <Td><span className="inline-flex items-center gap-2"><span style={{ fontFamily: T.mono, fontSize: 13 }}>{s.id}</span><Badge tone={statusTone(s.status)}>{s.status === "Exception" ? "Problem" : s.status}</Badge>{s.status === "Returned" && returnsLive && <span className="inline-flex items-center gap-1 text-[12px] text-[#045AD0]">via your returns page</span>}</span></Td>
                 <Td muted>{s.order}</Td>
                 <Td>{s.to}</Td>
                 <Td muted>{s.carrier} {s.service}</Td>
@@ -251,7 +267,7 @@ export function Shipments({ open, returnsLive }: { open: (id: string) => void; r
 const eventIcon = (tone: string) =>
   tone === "green" ? <CircleCheck className="h-4 w-4 text-[#217005]" /> : tone === "amber" ? <TriangleAlert className="h-4 w-4 text-[#B13600]" /> : <Clock className="h-4 w-4 text-[color:var(--c-muted)]" />;
 
-export function ShipmentDetail({ id, back, go, trackingLive, onTrackingOn }: { id: string; back: () => void; go: (v: View) => void; trackingLive: boolean; onTrackingOn: () => void }) {
+export function ShipmentDetail({ id, back, trackingLive, onTrackingOn }: { id: string; back: () => void; trackingLive: boolean; onTrackingOn: () => void }) {
   const sc = useScenario();
   const ask = useAsk();
   const all = useMemo(() => shipmentsFor(sc), [sc]);
@@ -302,12 +318,12 @@ export function ShipmentDetail({ id, back, go, trackingLive, onTrackingOn }: { i
           {s.status !== "Label created" && <div>
             <SectionTitle>Your customer saw</SectionTitle>
             {trackingLive ? (
-              <p className="mt-3 text-[14px] text-[color:var(--c-text)]">Your branded tracking page, 3 visits. <button type="button" onClick={() => go("shiplets")} className="inline-flex items-center gap-0.5 font-semibold text-[color:var(--c-link)]">Open <ArrowUpRight className="h-3.5 w-3.5" /></button></p>
+              <p className="mt-3 text-[14px] text-[color:var(--c-text)]">Your branded tracking page, 3 visits.</p>
             ) : (
               <div className="mt-3 rounded-lg bg-[color:var(--c-subtle)] p-3 text-[13px] text-[color:var(--c-text)]">
                 <div>The carrier&rsquo;s tracking page, 3 visits.</div>
                 <div className="mt-2 flex items-center gap-1.5 font-semibold text-[color:var(--c-ink)]"><Layers className="h-3.5 w-3.5 text-[#045AD0]" /> Show your own page instead</div>
-                <div className="text-[color:var(--c-muted)]">Your logo and the delivery date. A Shiplet, ready in a minute.</div>
+                <div className="text-[color:var(--c-muted)]">Your logo and the delivery date. Included with your account.</div>
                 <div className="mt-2"><Button small onClick={onTrackingOn}>Switch on</Button></div>
               </div>
             )}
@@ -395,7 +411,7 @@ export function InvoiceDetail({ back }: { back: () => void }) {
               <div className="flex justify-between border-t border-[color:var(--c-line)] pt-2 font-semibold text-[color:var(--c-ink)]"><dt>Amount due</dt><dd>{money(total)}</dd></div>
             </dl>
           </Panel>
-          <p className="text-[13px] text-[color:var(--c-muted)]">Choose <b>Ask</b> on any line to question it. It goes to {sc.warehouse ? "Priya, your account manager," : "our support team"} and shows in Requests. Any credit lands on your next invoice.</p>
+          <p className="text-[13px] text-[color:var(--c-muted)]">Choose <b>Ask</b> on any line to question it. It goes to {sc.warehouse ? "Matteo, your account manager," : "our support team"} and shows in Requests. Any credit lands on your next invoice.</p>
         </aside>
       </div>
     </div>

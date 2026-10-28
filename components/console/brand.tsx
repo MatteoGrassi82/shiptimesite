@@ -62,15 +62,20 @@ const varName = (k: string) => `--c-${k.replace(/[A-Z]/g, (m) => `-${m.toLowerCa
 // Koherent's headline numbers (the .k-num ones) are set in JetBrains Mono, as
 // on the Koherent site. Everywhere else Schibsted keeps its normal figures,
 // because its tabular ones widen the commas ("18 , 240").
+// Koherent pages sit on the brand's warm white (the site's #F6F3EE, a shade
+// lighter so white panels still read as panels), and headings take the site's
+// display weight: 800 with tight tracking.
 export const BRAND_CSS = `
 [data-brand="koherent"] .tabular-nums { font-variant-numeric: normal; }
 [data-brand="koherent"] .k-num { font-family: var(--c-mono); font-weight: 500; letter-spacing: -0.02em; }
+[data-brand="koherent"] h1 { font-weight: 800; letter-spacing: -0.02em; }
+[data-brand="koherent"] h2 { font-weight: 700; letter-spacing: -0.01em; }
 `;
 
 // The variables for a whole page. `surface` is what avatars and pins sit on.
 export function themeVars(b: Brand): CSSProperties {
   const p = PALETTE[b];
-  const v: Record<string, string> = { "--c-font": p.font, "--c-mono": p.mono, "--c-surface": "#FFFFFF", "--c-side": "#FFFFFF" };
+  const v: Record<string, string> = { "--c-font": p.font, "--c-mono": p.mono, "--c-surface": "#FFFFFF", "--c-side": "#FFFFFF", "--c-page": b === "koherent" ? "#F9F7F4" : "#FFFFFF" };
   for (const k of KEYS) v[varName(k)] = p[k];
   return v as CSSProperties;
 }

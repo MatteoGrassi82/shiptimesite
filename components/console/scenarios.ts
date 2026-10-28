@@ -25,7 +25,7 @@ export type MapStory = { days: 1 | 2; before: string[]; now: string[]; planned?:
 export type Tower = { watched: number; caught: number; fixed: number; saved: string; asOf: string; events: { time: string; who: string; text: string; impact: string }[]; warning?: string };
 export type Site = { name: string; kind: string; status: string; orders: number; costPerOrder: string; onTime: string; days: string; problems: number };
 export type Problem = { id: string; who: "you" | "us"; title: string; detail: string; site: string; due: string; cta?: string };
-export type Rec = { id: string; title: string; body: string; cta: string; value: string; shiplet?: string; goLive?: boolean };
+export type Rec = { id: string; title: string; body: string; cta: string; value: string; feature?: string; goLive?: boolean };
 export type Line = { item: string; qty: string; unit: string; amount: number };
 // How the account team works with a Koherent customer, and how it's going
 // against what was agreed when they joined (Chris, Oct 22: the product is what
@@ -106,7 +106,7 @@ export const scenarios: Record<BrandId, Scenario> = {
     recs: [
       { id: "r1", title: "Ship parcels under 1 lb with USPS Ground Advantage", body: "68% of your orders weigh under a pound. Same delivery days, about $1.10 less each.", cta: "See the numbers", value: "−$450/mo" },
       { id: "r2", title: "Print labels in one batch", body: "Pick today's orders, print once. Most days that's 20 labels in one go.", cta: "Try it", value: "Saves time" },
-      { id: "r3", title: "Turn on your returns page", body: "Customers start a return themselves instead of emailing you.", cta: "Set it up", value: "Shiplet", shiplet: "returns" },
+      { id: "r3", title: "Turn on your returns page", body: "Customers start a return themselves instead of emailing you.", cta: "Set it up", value: "Included", feature: "returns" },
     ],
     cities: [{ city: "Seattle, WA", site: "Portland" }, { city: "Austin, TX", site: "Portland" }, { city: "Brooklyn, NY", site: "Portland" }, { city: "Denver, CO", site: "Portland" }, { city: "Chicago, IL", site: "Portland" }, { city: "Los Angeles, CA", site: "Portland" }, { city: "Boston, MA", site: "Portland" }, { city: "Atlanta, GA", site: "Portland" }],
   },
@@ -116,10 +116,10 @@ export const scenarios: Record<BrandId, Scenario> = {
     line: "Ships from Texas. Canadian orders cost $30+ each and take a week.",
     account: { name: "Northpeak Outdoor", initials: "NO", user: { name: "Sam Ortiz", role: "VP Operations", initials: "SO" } },
     rules: [
-      { id: "c1", name: "Texas and the South on a regional carrier", if: ["Ship-to state is TX, OK, LA, AR or NM"], site: "Austin", carrier: "Regional carrier, ground", status: "Live", monthly: 3100, matched: 2600, share: 38, faster: "Same days", why: "38% of your orders stay in Texas and the South. A regional carrier is cheaper for the same days.", by: "Priya Shah", since: "Jun 9" },
+      { id: "c1", name: "Texas and the South on a regional carrier", if: ["Ship-to state is TX, OK, LA, AR or NM"], site: "Austin", carrier: "Regional carrier, ground", status: "Live", monthly: 3100, matched: 2600, share: 38, faster: "Same days", why: "38% of your orders stay in Texas and the South. A regional carrier is cheaper for the same days.", by: "Matteo Grassi", since: "Jun 9" },
       { id: "c2", name: "Eastern Canada through Toronto", if: ["Ship-to country is Canada", "Province is ON, QC or Atlantic Canada"], site: "Toronto", carrier: "Canada Post or Purolator", status: "Live", monthly: 4900, matched: 640, share: 9, faster: "5 days faster", why: "Canada was 29% of your shipping spend, at $31.20 an order and 6–8 days.", by: "Marc Leblanc", since: "Jul 7" },
       { id: "c3", name: "Western Canada through Vancouver", if: ["Ship-to country is Canada", "Province is BC, AB, SK or MB"], site: "Vancouver", carrier: "Canada Post, expedited", status: "Shadow", monthly: 2200, matched: 410, share: 5, faster: "2 days faster", why: "Runs as a test until Vancouver goes live on Jan 20. It shows what it would do and changes nothing.", by: "Marc Leblanc", since: "Oct 19" },
-      { id: "c4", name: "Heavy Canadian orders on the weekly truck", if: ["Ship-to country is Canada", "Weight over 15 lb"], site: "Austin", carrier: "Consolidated truck to Toronto", status: "Suggested", monthly: 900, matched: 120, share: 2, faster: "Same days", why: "Heavy Canadian parcels cost $58 each by courier. They fit on the truck that already goes to Toronto twice a week.", by: "Priya Shah", since: "Oct 16" },
+      { id: "c4", name: "Heavy Canadian orders on the weekly truck", if: ["Ship-to country is Canada", "Weight over 15 lb"], site: "Austin", carrier: "Consolidated truck to Toronto", status: "Suggested", monthly: 900, matched: 120, share: 2, faster: "Same days", why: "Heavy Canadian parcels cost $58 each by courier. They fit on the truck that already goes to Toronto twice a week.", by: "Matteo Grassi", since: "Oct 16" },
     ],
     defaultRule: { text: "Cheapest rate from Austin, comparing your UPS account and ours on every label", monthly: 2400 },
     nextSite: { name: "Vancouver, BC", date: "Jan 20", daysLeft: 90 },
@@ -127,7 +127,7 @@ export const scenarios: Record<BrandId, Scenario> = {
     tower: { watched: 1380, caught: 9, fixed: 7, saved: "$610", asOf: "10:40 am", warning: "1 check couldn't run: the Purolator feed is late this morning.", events: [
       { time: "10:21 am", who: "Marc Leblanc", text: "Switched 4 Toronto labels to Canada Post after Purolator missed the pickup", impact: "$0 extra" },
       { time: "9:52 am", who: "ShipTime", text: "Got 3 labels repriced after weight overcharges", impact: "−$24" },
-      { time: "9:10 am", who: "Priya Shah", text: "Filed a claim for a damaged parcel to Ottawa", impact: "Credit due Nov 5" },
+      { time: "9:10 am", who: "Matteo Grassi", text: "Filed a claim for a damaged parcel to Ottawa", impact: "Credit due Nov 5" },
     ] },
     metrics: [
       { label: "Shipping spend", value: "$94,200", delta: "−10.4%" },
@@ -150,7 +150,7 @@ export const scenarios: Record<BrandId, Scenario> = {
     recs: [
       { id: "r1", title: "Ship Western Canada from Vancouver", body: "1,100 Canadian orders a month go west of Winnipeg. They'd arrive 2 days sooner.", cta: "See the numbers", value: "−2 days" },
       { id: "r2", title: "Add duties to your checkout", body: "Canadian customers see the full price before they pay. Fewer refused parcels.", cta: "Review the change", value: "Fewer refusals" },
-      { id: "r3", title: "Turn on your branded tracking page", body: "Your logo and delivery date instead of the carrier's page.", cta: "Set it up", value: "Shiplet", shiplet: "tracking" },
+      { id: "r3", title: "Turn on your branded tracking page", body: "Your logo and delivery date instead of the carrier's page.", cta: "Set it up", value: "Included", feature: "tracking" },
     ],
     report: {
       numbers: [{ label: "Cost per order", value: "$13.27", change: "−$1.53" }, { label: "Delivered on time", value: "96.1%", change: "+1.2 pts" }, { label: "Canada, days to deliver", value: "1.7", change: "was 6.8" }, { label: "Problems solved by us", value: "96", change: "of 101" }],
@@ -184,11 +184,11 @@ export const scenarios: Record<BrandId, Scenario> = {
     line: "24 stores and a busy online shop. Heavy items, and no room left in the back.",
     account: { name: "Sunbelt Home & Garden", initials: "SH", user: { name: "Dana Kim", role: "Director of Supply Chain", initials: "DK" } },
     rules: [
-      { id: "s1", name: "Heavy parcels on a regional carrier", if: ["Ship-to state is AZ, CA or NV", "Weight 20 to 70 lb"], site: "Phoenix", carrier: "Regional carrier, heavy ground", status: "Live", monthly: 4300, matched: 2500, share: 81, faster: "Same days", why: "81% of your online orders go to AZ, CA and NV, and most pay heavy-package fees with the national carriers.", by: "Priya Shah", since: "Jun 2" },
-      { id: "s2", name: "Orders over 70 lb as freight", if: ["Weight over 70 lb"], site: "Phoenix", carrier: "LTL freight", status: "Live", monthly: 2800, matched: 190, share: 6, faster: "Same days", why: "Parcels over 70 lb paid $35 or more in fees each.", by: "Priya Shah", since: "Jun 2" },
+      { id: "s1", name: "Heavy parcels on a regional carrier", if: ["Ship-to state is AZ, CA or NV", "Weight 20 to 70 lb"], site: "Phoenix", carrier: "Regional carrier, heavy ground", status: "Live", monthly: 4300, matched: 2500, share: 81, faster: "Same days", why: "81% of your online orders go to AZ, CA and NV, and most pay heavy-package fees with the national carriers.", by: "Matteo Grassi", since: "Jun 2" },
+      { id: "s2", name: "Orders over 70 lb as freight", if: ["Weight over 70 lb"], site: "Phoenix", carrier: "LTL freight", status: "Live", monthly: 2800, matched: 190, share: 6, faster: "Same days", why: "Parcels over 70 lb paid $35 or more in fees each.", by: "Matteo Grassi", since: "Jun 2" },
       { id: "s3", name: "California stores from Riverside", if: ["Destination is one of your California stores"], site: "Riverside", carrier: "Weekly store route", status: "Live", monthly: 3600, matched: 96, share: 3, faster: "1 day faster", why: "California stores were supplied from Phoenix, two days away, with no frozen space on the way.", by: "Marc Leblanc", since: "Jul 14" },
       { id: "s4", name: "Nevada stores from Las Vegas", if: ["Destination is one of your Nevada stores"], site: "Las Vegas", carrier: "Same-day store route", status: "Shadow", monthly: 900, matched: 22, share: 1, faster: "1 day faster", why: "Runs as a test until Las Vegas goes live on Jan 27. It shows what it would do and changes nothing.", by: "Marc Leblanc", since: "Oct 19" },
-      { id: "s5", name: "Store deliveries planned by route and day", if: ["Destination is any store", "Order placed before Tuesday noon"], site: "Riverside", carrier: "Wednesday to Friday routes", status: "Suggested", monthly: 1500, matched: 52, share: 2, faster: "Same days", why: "Today a truck goes out whenever a store orders. Grouping stores by route fills each truck.", by: "Priya Shah", since: "Oct 16" },
+      { id: "s5", name: "Store deliveries planned by route and day", if: ["Destination is any store", "Order placed before Tuesday noon"], site: "Riverside", carrier: "Wednesday to Friday routes", status: "Suggested", monthly: 1500, matched: 52, share: 2, faster: "Same days", why: "Today a truck goes out whenever a store orders. Grouping stores by route fills each truck.", by: "Matteo Grassi", since: "Oct 16" },
     ],
     defaultRule: { text: "Cheapest rate from Phoenix, comparing every carrier on every label", monthly: 0 },
     nextSite: { name: "Las Vegas, NV", date: "Jan 27", daysLeft: 97 },
@@ -196,7 +196,7 @@ export const scenarios: Record<BrandId, Scenario> = {
     tower: { watched: 640, caught: 6, fixed: 5, saved: "$420", asOf: "10:40 am", events: [
       { time: "10:25 am", who: "Marc Leblanc", text: "Rebooked a refused 84 lb delivery with the final-mile team for tomorrow", impact: "$0 extra" },
       { time: "9:50 am", who: "ShipTime", text: "Caught 2 orders over 70 lb booked as parcels and moved them to freight before pickup", impact: "−$71" },
-      { time: "9:12 am", who: "Priya Shah", text: "Confirmed Tuesday's Riverside freezer service with the warehouse", impact: "No orders affected" },
+      { time: "9:12 am", who: "Matteo Grassi", text: "Confirmed Tuesday's Riverside freezer service with the warehouse", impact: "No orders affected" },
     ] },
     metrics: [
       { label: "Shipping & delivery spend", value: "$54,800", delta: "−16.3%" },
@@ -219,7 +219,7 @@ export const scenarios: Record<BrandId, Scenario> = {
     recs: [
       { id: "r1", title: "Offer room-of-choice delivery on items over 70 lb", body: "Customers asked for it 31 times last month. Our final-mile partners cover Phoenix and LA.", cta: "See the numbers", value: "New" },
       { id: "r2", title: "Serve your Nevada stores from Las Vegas", body: "Store deliveries in Nevada would drop from 2 days to same day.", cta: "Review the change", value: "−1 day" },
-      { id: "r3", title: "Turn on your returns page", body: "Customers start a return and drop it at their nearest store.", cta: "Set it up", value: "Shiplet", shiplet: "returns" },
+      { id: "r3", title: "Turn on your returns page", body: "Customers start a return and drop it at their nearest store.", cta: "Set it up", value: "Included", feature: "returns" },
     ],
     report: {
       numbers: [{ label: "Cost per online order", value: "$12.95", change: "−$3.45" }, { label: "Store deliveries on time", value: "98.2%", change: "+2.1 pts" }, { label: "Heavy-package fees", value: "$1,240", change: "was $9,870" }, { label: "Problems solved by us", value: "47", change: "of 49" }],
@@ -254,10 +254,10 @@ export const scenarios: Record<BrandId, Scenario> = {
     line: "One warehouse in Ohio. West Coast customers wait 5 days.",
     account: { name: "Alder & Stone", initials: "AS", user: { name: "Jordan Reyes", role: "Director of Operations", initials: "JR" } },
     rules: [
-      { id: "a1", name: "Midwest orders on a regional carrier", if: ["Ship-to state is OH, IN, MI, IL, KY, PA or WV", "Weight under 20 lb"], site: "Columbus", carrier: "Regional carrier, ground", status: "Live", monthly: 6700, matched: 5600, share: 31, faster: "Same days", why: "31% of your orders go to seven states next door. A regional carrier gets them there in the same days for less.", by: "Priya Shah", since: "Jul 14" },
+      { id: "a1", name: "Midwest orders on a regional carrier", if: ["Ship-to state is OH, IN, MI, IL, KY, PA or WV", "Weight under 20 lb"], site: "Columbus", carrier: "Regional carrier, ground", status: "Live", monthly: 6700, matched: 5600, share: 31, faster: "Same days", why: "31% of your orders go to seven states next door. A regional carrier gets them there in the same days for less.", by: "Matteo Grassi", since: "Jul 14" },
       { id: "a2", name: "West orders from Reno", if: ["Ship-to state is WA, OR, CA, NV, ID, UT or AZ", "Weight under 5 lb"], site: "Reno", carrier: "Cheapest 2-day", status: "Live", monthly: 6400, matched: 4312, share: 24, faster: "3.2 days faster", why: "24% of your orders go west, and from Columbus they took 4.8 days.", by: "Marc Leblanc", since: "Jul 21" },
       { id: "a3", name: "Southeast orders from Memphis", if: ["Ship-to state is TN, AR, MS, AL, GA, LA or KY"], site: "Memphis", carrier: "Local carrier, next day", status: "Shadow", monthly: 2700, matched: 2100, share: 12, faster: "1 day faster", why: "Runs as a test until Memphis goes live on Jan 13. It shows what it would do and changes nothing.", by: "Marc Leblanc", since: "Oct 19" },
-      { id: "a4", name: "Light parcels to the Northeast and South by USPS", if: ["Weight under 1 lb", "Ship-to state is NY, NJ, MA, TX or FL", "Not an express order"], site: "Columbus", carrier: "USPS Ground Advantage", status: "Suggested", monthly: 1900, matched: 620, share: 3, faster: "Same days", why: "620 parcels a month under a pound go to the Northeast and South by UPS. USPS is about $3 cheaper each, for the same days.", by: "Priya Shah", since: "Oct 16" },
+      { id: "a4", name: "Light parcels to the Northeast and South by USPS", if: ["Weight under 1 lb", "Ship-to state is NY, NJ, MA, TX or FL", "Not an express order"], site: "Columbus", carrier: "USPS Ground Advantage", status: "Suggested", monthly: 1900, matched: 620, share: 3, faster: "Same days", why: "620 parcels a month under a pound go to the Northeast and South by UPS. USPS is about $3 cheaper each, for the same days.", by: "Matteo Grassi", since: "Oct 16" },
     ],
     defaultRule: { text: "Cheapest rate from the nearest site, comparing your UPS account and ours on every label", monthly: 6500 },
     nextSite: { name: "Memphis, TN", date: "Jan 13", daysLeft: 83, atRisk: true },
@@ -265,7 +265,7 @@ export const scenarios: Record<BrandId, Scenario> = {
     tower: { watched: 3412, caught: 14, fixed: 12, saved: "$1,840", asOf: "10:40 am", warning: "1 check couldn't run: the FedEx feed is late this morning.", events: [
       { time: "10:18 am", who: "Marc Leblanc", text: "Switched 6 labels from FedEx to UPS before pickup, after a hub delay in Memphis", impact: "$0 extra" },
       { time: "9:47 am", who: "ShipTime", text: "Got 3 labels repriced after weight overcharges", impact: "−$21" },
-      { time: "9:05 am", who: "Priya Shah", text: "Filed a claim for 2 damaged parcels to Denver", impact: "Credit due Nov 5" },
+      { time: "9:05 am", who: "Matteo Grassi", text: "Filed a claim for 2 damaged parcels to Denver", impact: "Credit due Nov 5" },
       { time: "8:30 am", who: "ShipTime", text: "Caught 4 addresses with no unit number and asked the customers before pickup", impact: "4 failed deliveries avoided" },
     ] },
     metrics: [
@@ -289,8 +289,8 @@ export const scenarios: Record<BrandId, Scenario> = {
     ],
     recs: [
       { id: "r1", title: "Memphis opens Jan 13", body: "Southeast orders a day sooner and about $2,700 a month less. Two things need you first.", cta: "Open the go-live", value: "Go-live", goLive: true },
-      { id: "r2", title: "Show delivery dates at checkout", body: "With Reno live, 74% of your customers can be promised 2 days.", cta: "See the numbers", value: "Shiplet", shiplet: "checkout" },
-      { id: "r3", title: "Turn on your branded tracking page", body: "Customers see your logo and delivery date instead of the carrier's page.", cta: "Set it up", value: "Shiplet", shiplet: "tracking" },
+      { id: "r2", title: "Show delivery dates at checkout", body: "With Reno live, 74% of your customers can be promised 2 days.", cta: "See the numbers", value: "Included", feature: "checkout" },
+      { id: "r3", title: "Turn on your branded tracking page", body: "Customers see your logo and delivery date instead of the carrier's page.", cta: "Set it up", value: "Included", feature: "tracking" },
     ],
     report: {
       numbers: [{ label: "Cost per order", value: "$11.21", change: "−$1.09" }, { label: "Delivered on time", value: "96.4%", change: "+0.8 pts" }, { label: "Customers within 2 days (estimated)", value: "74%", change: "+20 pts" }, { label: "Problems solved by us", value: "311", change: "of 326" }],

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, KeyRound } from "lucide-react";
 import { BRAND_CSS, KMark, KoherentLogo, themeVars } from "./brand";
+import { Avatar, TEAM } from "./People";
 import { scenarios, type BrandId, type Scenario } from "./scenarios";
 import { FOCUS, T } from "./ui";
 
@@ -80,10 +81,10 @@ function Choose({ email, onBack, onPick, onTeam }: { email: string; onBack: () =
       </ul>
       <p className="mt-6 text-[12px] font-medium text-[color:var(--c-muted)]">ShipTime staff</p>
       <button type="button" onClick={onTeam} className="group mt-2 flex w-full items-center gap-3 rounded-lg border border-[color:var(--c-line)] px-3.5 py-3 text-left transition-colors hover:bg-[color:var(--c-hover)] focus-visible:bg-[color:var(--c-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--c-accent)]/40">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2E4C8F] text-[11px] font-semibold text-white">PS</span>
+        <Avatar p={TEAM[0]} size={32} />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[14px] font-medium text-[color:var(--c-ink)]">Priya Shah, account team</span>
-          <span className="block truncate text-[12px] text-[color:var(--c-muted)]">Her day and her 3 Koherent accounts</span>
+          <span className="block truncate text-[14px] font-medium text-[color:var(--c-ink)]">Matteo Grassi, account team</span>
+          <span className="block truncate text-[12px] text-[color:var(--c-muted)]">The day across 3 Koherent accounts</span>
         </span>
         <span className="shrink-0 rounded bg-[color:var(--c-subtle)] px-1.5 py-0.5 text-[11px] font-medium text-[color:var(--c-muted)]">Internal</span>
         <ChevronRight className="h-4 w-4 shrink-0 text-[color:var(--c-border2)] transition-colors group-hover:text-[color:var(--c-muted)]" />

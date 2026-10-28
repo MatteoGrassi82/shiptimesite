@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Eye, LogOut, X } from "lucide-react";
+import { openQuestions, templateOf, type ShipletApp } from "./apps";
 import { ScoreMark } from "./brand";
 import { invoiceFor, TODAY } from "./derive";
 import { useToast } from "./Feedback";
@@ -10,17 +11,17 @@ import { scenarios, type BrandId } from "./scenarios";
 import { Badge, Button, FOCUS, SectionTitle, T, Td, Th, type View } from "./ui";
 
 // ── The account team's side (internal) ──────────────────────────────────────
-// What Priya sees when she signs in: one queue across her accounts, most
-// urgent first, each line with one action; then her accounts, with the
+// What the account manager sees on signing in: one queue across the accounts,
+// most urgent first, each line with one action; then the accounts, with the
 // numbers the customer sees plus the one they never do (our margin), and
 // "View as customer" to open exactly what they see. The way merchant success
 // managers worked at Shopify Plus: the work comes to you in one list. Anything
-// drafted for her (call tasks, the monthly note) waits for her to confirm or
-// sign. It's ShipTime's own tool, so it carries the internal name.
+// drafted for them (call tasks, the monthly note) waits until it's confirmed or
+// signed. It's ShipTime's own tool, so it carries the internal name.
 
 export type ViewAs = (b: BrandId, v?: View, ids?: { request?: string }) => void;
 
-type Item = { id: string; when: string; urgent?: boolean; account: BrandId; what: string; why: string; action: string; run: "open" | "note" | string };
+type Item = { id: string; when: string; urgent?: boolean; account: BrandId; what: string; why: string; action: string; run: "open" | "note" | "approve" | string; alt?: { label: string; run: "ask" } };
 
 const BOOK: BrandId[] = ["reach", "canada", "stores"];
 
@@ -28,7 +29,7 @@ const ITEMS: Item[] = [
   { id: "i1", when: "12:05 pm", urgent: true, account: "reach", what: "Reply: damaged parcel, refund or reship?", why: "Jordan asked at 10:05 am. The promised reply time is 12:05 pm.", action: "Open", run: "open" },
   { id: "i2", when: "Today", account: "canada", what: "3 parcels with no scan for 2 days", why: "Sam lets us reship anything under $100 and tell him after.", action: "Reship", run: "Reshipped 3 parcels. Sam sees it in tomorrow's daily note." },
   { id: "i3", when: "Today", account: "reach", what: "Confirm a task from the Oct 21 call: send a label printer to the dock", why: "Proposed from the recording, for Marc, due Nov 10. Jordan sees it once you confirm.", action: "Confirm", run: "Confirmed. It's on the Atlanta go-live for Marc." },
-  { id: "i4", when: "Tomorrow", account: "stores", what: "Dana hasn't confirmed next week's Riverside store order", why: "14 pallets, pre-filled from last year. Riverside needs it by tomorrow noon.", action: "Nudge", run: "Reminder sent to Dana Kim, with the order attached." },
+  { id: "i4", when: "Tomorrow", account: "stores", what: "Dana hasn't tried the Store counter sandbox", why: "Ready since Tue. Going live waits on Dana's checks and sign-off.", action: "Nudge", run: "Reminder sent to Dana Kim, with the test logins." },
   { id: "i5", when: "Nov 5", account: "reach", what: "October note, drafted from the work log", why: "64 entries this month. Check the numbers, then sign.", action: "Edit and sign", run: "note" },
 ];
 
@@ -40,12 +41,42 @@ Cost per order is $11.21, down from $12.30 in July. Memphis should take it under
 
 Next: approve the Memphis SKUs by Oct 26 so the Jan 13 go-live holds.`;
 
-export function TeamConsole({ onViewAs, onSignOut }: { onViewAs: ViewAs; onSignOut: () => void }) {
+type Apps = Record<BrandId, ShipletApp | null>;
+
+export function TeamConsole({ apps, setApps, onViewAs, onSignOut }: { apps: Apps; setApps: (f: (m: Apps) => Apps) => void; onViewAs: ViewAs; onSignOut: () => void }) {
   const toast = useToast();
   const [done, setDone] = useState<string[]>([]);
   const [note, setNote] = useState(false);
-  const priya = TEAM[0];
-  const open = ITEMS.filter((i) => !done.includes(i.id));
+  const am = TEAM[0];
+  // A Shiplet a customer just asked for comes first (Shiplet.ai's gate one):
+  // approve it, or ask what isn't clear and wait for the answers.
+  const revisions: Item[] = BOOK.filter((b) => apps[b]?.stage === "prepare" && apps[b]!.revision).map((b) => {
+    const a = apps[b]!;
+    return { id: `app-${b}-v2`, when: "Today", account: b, what: `${scenarios[b].account.user.name.split(" ")[0]} asked for prototype changes`, why: `${a.name}: "${a.revision!.text}"`, action: "Send version 2", run: "v2" };
+  });
+  const requested: Item[] = [...revisions, ...BOOK.filter((b) => apps[b]?.stage === "check" && !openQuestions(apps[b]!).length).map((b): Item => {
+    const a = apps[b]!;
+    const t = templateOf(a.template);
+    const first = scenarios[b].account.user.name.split(" ")[0];
+    const n = Object.keys(a.settings).length;
+    return a.questions
+      ? { id: `app-${b}-answered`, when: "Today", account: b, what: `${first} answered your ${a.questions.length} questions`, why: `${a.name}: "${a.questions[0].a}"`, action: "Approve", run: "approve" }
+      : { id: `app-${b}-new`, when: "Today", account: b, what: `${first} asked for a ${a.name}`, why: `From the ${t.name} template${n ? `, ${n} setting${n > 1 ? "s" : ""} changed` : ""}. Approve it, or ask what isn't clear.`, action: "Approve", run: "approve", alt: { label: `Ask ${t.questions.length} questions`, run: "ask" } };
+  })];
+  const approve = (b: BrandId) => setApps((m) => {
+    const a = m[b]!;
+    return { ...m, [b]: { ...a, stage: "preview", since: "Today, 11:20 am", dates: { ...a.dates, check: "Today", prepare: "Today", preview: "Today" }, events: [{ when: "Today, 11:20 am", who: "ShipTime", text: "Made the prototype." }, { when: "Today, 11:12 am", who: am.name, text: "Approved it; the prototype is next." }, ...a.events] } };
+  });
+  const sendV2 = (b: BrandId) => setApps((m) => {
+    const a = m[b]!;
+    return { ...m, [b]: { ...a, stage: "preview", revision: undefined, since: "Today, 11:20 am", events: [{ when: "Today, 11:20 am", who: "ShipTime", text: "Made version 2 of the prototype." }, ...a.events] } };
+  });
+  const askQuestions = (b: BrandId) => setApps((m) => {
+    const a = m[b]!;
+    const qs = templateOf(a.template).questions;
+    return { ...m, [b]: { ...a, questions: qs.map((q) => ({ q })), events: [{ when: "Today, 10:55 am", who: am.name, text: `Asked ${qs.length} questions.` }, ...a.events] } };
+  });
+  const open = [...requested, ...ITEMS.filter((i) => i.id !== "i4" || apps.stores?.stage === "test")].filter((i) => !done.includes(i.id));
   const finish = (i: Item, text: string) => { setDone([...done, i.id]); toast({ text }); };
   const book = BOOK.map((id) => {
     const sc = scenarios[id];
@@ -63,7 +94,7 @@ export function TeamConsole({ onViewAs, onSignOut }: { onViewAs: ViewAs; onSignO
         <img src="/shiptime-logo.svg" alt="ShipTime" width={110} height={34} className="h-6 w-auto" />
         <span className="whitespace-nowrap rounded border border-[color:var(--c-line)] px-1.5 py-0.5 text-[12px] font-semibold text-[color:var(--c-text)]">ShipTime One<span className="hidden sm:inline"> · Account team</span></span>
         <span className="ml-auto hidden text-[13px] text-[color:var(--c-muted)] sm:inline">Internal. Customers never see this.</span>
-        <Avatar p={priya} size={30} dot />
+        <Avatar p={am} size={30} dot />
         <button type="button" onClick={onSignOut} aria-label="Sign out" className={`rounded-md p-1.5 text-[color:var(--c-muted)] hover:bg-[color:var(--c-hover)] ${FOCUS}`}><LogOut className="h-4 w-4" /></button>
       </header>
 
@@ -83,7 +114,10 @@ export function TeamConsole({ onViewAs, onSignOut }: { onViewAs: ViewAs; onSignO
                     <div className="text-[12px] text-[color:var(--c-muted)]">{i.why}</div>
                   </div>
                   <div className="col-span-2 sm:col-span-1">
-                    <Button small primary={i.urgent} onClick={() => i.run === "open" ? onViewAs(i.account, "request", { request: "R-1048" }) : i.run === "note" ? setNote(true) : finish(i, i.run)}>{i.action}</Button>
+                    <div className="flex flex-wrap gap-2">
+                      {i.alt && <Button small onClick={() => { askQuestions(i.account); finish(i, `Questions sent to ${scenarios[i.account].account.user.name.split(" ")[0]}. The app waits for the answers.`); }}>{i.alt.label}</Button>}
+                      <Button small primary={i.urgent || i.run === "approve" || i.run === "v2"} onClick={() => { if (i.run === "open") onViewAs(i.account, "request", { request: "R-1048" }); else if (i.run === "note") setNote(true); else if (i.run === "approve") { approve(i.account); finish(i, `Approved. ${scenarios[i.account].account.user.name.split(" ")[0]} sees the prototype on Home and in Shiplets.`); } else if (i.run === "v2") { sendV2(i.account); finish(i, `Version 2 sent to ${scenarios[i.account].account.user.name.split(" ")[0]}.`); } else finish(i, i.run); }}>{i.action}</Button>
+                    </div>
                   </div>
                 </li>
               );

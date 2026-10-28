@@ -13,7 +13,7 @@ import { Badge, Button, FOCUS, PageHeader, Panel, T, Tabs, Td, Th, type View } f
 // of saying when you'll hear back, paused while we wait on you (Plain). Every
 // request keeps a link to what it's about, and opens to its thread.
 
-export type About = { kind: "Shipment" | "Invoice" | "Warehouse" | "Rule" | "Go-live" | "General"; label: string; view?: View };
+export type About = { kind: "Shipment" | "Invoice" | "Warehouse" | "Rule" | "Go-live" | "App" | "General"; label: string; view?: View };
 export type RequestState = "Submitted" | "In progress" | "Waiting on you" | "Resolved";
 export type Message = { who: string; at: string; text: string };
 export type Req = { id: string; title: string; about: About; state: RequestState; owner?: string; promise: string; created: string; thread: Message[] };
@@ -26,10 +26,10 @@ export function requestsFor(one: boolean, partner: string, you: string): Req[] {
       thread: [{ who: you, at: "Oct 9, 9:12 am", text: "UPS charged us for 3 lb on a 1.2 lb parcel. Can you check?" }, { who: SUPPORT.name, at: "Oct 9, 3:20 pm", text: "You're right: the carrier measured the wrong box. We disputed it and the $6.40 credit is on your next invoice." }] },
   ];
   return [
-    { id: "R-1048", title: "Damaged parcel: refund or reship?", about: { kind: "Shipment", label: "SHP-48196", view: "shipments" }, state: "In progress", owner: "Priya Shah", promise: "Reply by 12:05 pm", created: "Today, 10:05 am",
-      thread: [{ who: you, at: "Today, 10:05 am", text: "The customer sent a photo of a crushed box. Can we reship today and claim from the carrier?" }, { who: "Priya Shah", at: "Today, 10:30 am", text: "Yes. I've booked the reship for this afternoon and opened the claim. I'll confirm the credit date by noon." }] },
-    { id: "R-1046", title: "Why a residential surcharge on this line?", about: { kind: "Invoice", label: "Oct 1–15 · carrier adjustments", view: "billing" }, state: "Waiting on you", owner: "Priya Shah", promise: "Paused until you reply", created: "Yesterday, 2:10 pm",
-      thread: [{ who: you, at: "Yesterday, 2:10 pm", text: "We're seeing residential surcharges on what should be business addresses." }, { who: "Priya Shah", at: "Yesterday, 3:45 pm", text: "Can you send me two or three order numbers? I'll check them against the carrier's address list." }] },
+    { id: "R-1048", title: "Damaged parcel: refund or reship?", about: { kind: "Shipment", label: "SHP-48196", view: "shipments" }, state: "In progress", owner: "Matteo Grassi", promise: "Reply by 12:05 pm", created: "Today, 10:05 am",
+      thread: [{ who: you, at: "Today, 10:05 am", text: "The customer sent a photo of a crushed box. Can we reship today and claim from the carrier?" }, { who: "Matteo Grassi", at: "Today, 10:30 am", text: "Yes. I've booked the reship for this afternoon and opened the claim. I'll confirm the credit date by noon." }] },
+    { id: "R-1046", title: "Why a residential surcharge on this line?", about: { kind: "Invoice", label: "Oct 1–15 · carrier adjustments", view: "billing" }, state: "Waiting on you", owner: "Matteo Grassi", promise: "Paused until you reply", created: "Yesterday, 2:10 pm",
+      thread: [{ who: you, at: "Yesterday, 2:10 pm", text: "We're seeing residential surcharges on what should be business addresses." }, { who: "Matteo Grassi", at: "Yesterday, 3:45 pm", text: "Can you send me two or three order numbers? I'll check them against the carrier's address list." }] },
     { id: "R-1044", title: `Add a second dock door at ${partner}`, about: { kind: "Warehouse", label: partner, view: "network" }, state: "Submitted", promise: "First reply by 11:05 am", created: "Today, 9:05 am",
       thread: [{ who: you, at: "Today, 9:05 am", text: `Holiday volume is up. Can ${partner} give us a second dock door from November?` }] },
     { id: "R-1031", title: "Hold orders over $2,000 for review", about: { kind: "Rule", label: "New rule", view: "rules" }, state: "Resolved", owner: "Marc Leblanc", promise: "Answered in 38 minutes", created: "Oct 14",
@@ -125,7 +125,7 @@ export function AskDrawer({ about, onClose, onSend }: { about: About; onClose: (
             <label htmlFor="ask" className="text-[12px] font-medium text-[color:var(--c-muted)]">Your question</label>
             <textarea id="ask" autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="What would you like us to look at?" className="mt-1 h-32 w-full rounded-md border border-[color:var(--c-border)] p-3 text-[14px] outline-none focus:border-[color:var(--c-accent)] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--c-accent)_18%,transparent)]" />
           </div>
-          <div className="rounded-md bg-[color:var(--c-subtle)] p-3 text-[13px] text-[color:var(--c-text)]">{one ? "Goes to Priya Shah, your account manager. First reply within 2 business hours, here and by email." : "Goes to our support team. Reply within 1 business day, here and by email."}</div>
+          <div className="rounded-md bg-[color:var(--c-subtle)] p-3 text-[13px] text-[color:var(--c-text)]">{one ? "Goes to Matteo Grassi, your account manager. First reply within 2 business hours, here and by email." : "Goes to our support team. Reply within 1 business day, here and by email."}</div>
         </div>
         <div className="flex justify-end gap-2 border-t border-[color:var(--c-line)] px-5 py-3">
           <Button small onClick={onClose}>Cancel</Button>

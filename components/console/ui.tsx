@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
-  Bell, ChevronsUpDown, CircleHelp, Code, House, Inbox, Layers, ListChecks, LogOut, Package, Plus, Receipt, Route, Search, Settings, Target, Warehouse,
+  Bell, ChevronsUpDown, CircleHelp, Code, House, Inbox, Layers, ListChecks, LogOut, Package, PanelLeftClose, PanelLeftOpen, Plus, Receipt, Route, Search, Settings, Target, Warehouse,
 } from "lucide-react";
 import { BrandLogo, brandOf, koherentSideVars } from "./brand";
 import { useScenario } from "./derive";
 
 // Shared frame for the /dashboard mockup. One app for every account, the way
 // Shopify Plus sits on top of Shopify: the same pages for everyone (Home,
-// Shipments, Billing, Shiplets), and ShipTime One (internally; customers see
+// Shipments, Billing; Shiplets for invited accounts), and ShipTime One (internally; customers see
 // Koherent) switches more on: a block for warehouses, rules, go-lives and
 // reports, an account team, and extras inside the shared pages. Look from
 // Stripe's dashboard (neutral surfaces, thin keylines, 36px table rows, small
 // bordered badges, one accent colour for actions). Colours and fonts are theme
 // variables (brand.tsx): ShipTime orange, or Koherent plum.
 
-export type View = "home" | "shipments" | "shipment" | "billing" | "invoice" | "shiplets" | "shiplet" | "requests" | "request" | "network" | "rules" | "rule" | "golive" | "report" | "developers";
+export type View = "home" | "shipments" | "shipment" | "billing" | "invoice" | "shiplets" | "template" | "app" | "shiplet" | "signoff" | "requests" | "request" | "network" | "rules" | "rule" | "golive" | "report" | "developers";
 
 // Colours: the accent marks things (charts, the map, selection borders).
 // Buttons and accent text use darker shades that pass WCAG AA with white or on
@@ -51,12 +51,14 @@ export function Badge({ tone = "neutral", children, icon }: { tone?: BadgeTone; 
 export const statusTone = (s: string): BadgeTone =>
   ({ Delivered: "positive", Paid: "positive", Live: "positive", "In transit": "info", Open: "info", "Label created": "neutral", Draft: "neutral", Returned: "neutral", "Call booked": "info", Exception: "warning", "Past due": "warning", Failed: "negative" } as Record<string, BadgeTone>)[s] ?? "neutral";
 
-export function Button({ children, onClick, primary, small }: { children: ReactNode; onClick?: () => void; primary?: boolean; small?: boolean }) {
+export function Button({ children, onClick, primary, small, disabled, title }: { children: ReactNode; onClick?: () => void; primary?: boolean; small?: boolean; disabled?: boolean; title?: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-semibold transition-colors ${FOCUS} ${small ? "h-7 px-2.5 text-[13px]" : "h-8 px-3 text-[14px]"} ${
+      disabled={disabled}
+      title={title}
+      className={`inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-semibold transition-colors disabled:cursor-not-allowed disabled:border-transparent disabled:bg-[color:var(--c-track)] disabled:text-[color:var(--c-faint)] disabled:shadow-none ${FOCUS} ${small ? "h-7 px-2.5 text-[13px]" : "h-8 px-3 text-[14px]"} ${
         primary
           ? "bg-[color:var(--c-action)] text-white shadow-[0_1px_1px_rgba(0,0,0,.12),0_2px_5px_rgba(48,49,61,.08)] hover:bg-[color:var(--c-action-hover)]"
           : "border border-[color:var(--c-border)] bg-white text-[color:var(--c-text)] shadow-[0_1px_1px_rgba(0,0,0,.06)] hover:bg-[color:var(--c-hover)]"
@@ -180,7 +182,7 @@ const NAV: NavGroup[] = [
 ];
 
 const isActive = (view: View, target?: View) =>
-  !!target && (view === target || (view === "shipment" && target === "shipments") || (view === "invoice" && target === "billing") || (view === "rule" && target === "rules") || (view === "shiplet" && target === "shiplets") || (view === "request" && target === "requests"));
+  !!target && (view === target || (view === "shipment" && target === "shipments") || (view === "invoice" && target === "billing") || (view === "rule" && target === "rules") || (["template", "app", "shiplet", "signoff"].includes(view) && target === "shiplets") || (view === "request" && target === "requests"));
 
 export function Shell({ view, go, sandbox, setSandbox, onSignOut, extra, banner, children }: {
   view: View; go: (v: View) => void; sandbox: boolean; setSandbox: (b: boolean) => void; onSignOut: () => void; extra?: ReactNode; banner?: ReactNode; children: ReactNode;
@@ -189,13 +191,26 @@ export function Shell({ view, go, sandbox, setSandbox, onSignOut, extra, banner,
   const one = tier === "Koherent";
   const brand = brandOf(tier);
   const [menu, setMenu] = useState(false);
-  const groups = NAV.filter((g) => one || !g.one);
+  // The sidebar can be put away for a full-width page (the button top left, or
+  // "[" as in Linear), and comes back the same way.
+  const [side, setSide] = useState(true);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (e.key !== "[" || e.metaKey || e.ctrlKey || e.altKey || t.closest("input, textarea, select, [contenteditable]")) return;
+      setSide((v) => !v);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  // Shiplets is invite-only (vetted accounts), so ShipTime accounts don't see it.
+  const groups = NAV.filter((g) => one || !g.one).map((g) => ({ ...g, items: g.items.filter((it) => one || it.view !== "shiplets") }));
   // On phones the menu is one scrolling row: Home first, then the network
   // pages, so they're on screen instead of off to the right.
   const core = groups[0].items;
   const mobileNav: NavItem[] = [core[0], ...groups.slice(1).flatMap((g) => g.items), ...core.slice(1), { label: "Developers", icon: Code, view: "developers" }];
   return (
-    <div className="min-h-screen bg-white text-[color:var(--c-text)]" style={{ fontFamily: T.font }}>
+    <div className="min-h-screen bg-[color:var(--c-page)] text-[color:var(--c-text)]" style={{ fontFamily: T.font }}>
       {banner}
       {sandbox && (
         <div className="flex h-9 items-center justify-between bg-[color:var(--c-link)] px-4 text-[13px] font-semibold text-white">
@@ -205,7 +220,7 @@ export function Shell({ view, go, sandbox, setSandbox, onSignOut, extra, banner,
         </div>
       )}
       <div className="flex">
-        <aside className="sticky top-0 hidden h-screen w-[250px] shrink-0 flex-col border-r border-[color:var(--c-line)] bg-[color:var(--c-side)] md:flex" style={brand === "koherent" ? koherentSideVars : undefined}>
+        <aside className={`sticky top-0 hidden h-screen w-[250px] shrink-0 flex-col border-r border-[color:var(--c-line)] bg-[color:var(--c-side)] ${side ? "md:flex" : ""}`} style={brand === "koherent" ? koherentSideVars : undefined}>
           <div className="flex h-[60px] items-center gap-2 px-4">
             <BrandLogo brand={brand} />
           </div>
@@ -244,9 +259,12 @@ export function Shell({ view, go, sandbox, setSandbox, onSignOut, extra, banner,
         </aside>
 
         <div className="min-w-0 flex-1">
-          <header className="sticky top-0 z-30 flex h-[60px] items-center gap-3 bg-white/95 px-4 backdrop-blur md:px-10">
-            <span className="shrink-0 md:hidden"><BrandLogo brand={brand} small /></span>
-            <div className="flex h-8 min-w-0 w-full max-w-[320px] items-center gap-2 rounded-md bg-[color:var(--c-subtle)] px-2.5 text-[14px] text-[color:var(--c-muted)]">
+          <header className="sticky top-0 z-30 flex h-[60px] items-center gap-3 bg-[color:var(--c-page)]/95 px-4 backdrop-blur md:px-10">
+            <button type="button" onClick={() => setSide(!side)} aria-label={side ? "Hide sidebar" : "Show sidebar"} title={`${side ? "Hide" : "Show"} sidebar  [`} className={`-ml-1.5 hidden rounded-md p-1.5 text-[color:var(--c-muted)] hover:bg-[color:var(--c-hover)] hover:text-[color:var(--c-ink)] md:inline-flex ${FOCUS}`}>
+              {side ? <PanelLeftClose className="h-[18px] w-[18px]" strokeWidth={1.8} /> : <PanelLeftOpen className="h-[18px] w-[18px]" strokeWidth={1.8} />}
+            </button>
+            <span className={`shrink-0 ${side ? "md:hidden" : "mr-2"}`}><BrandLogo brand={brand} small /></span>
+            <div className="flex h-8 min-w-0 w-full max-w-[320px] items-center gap-2 rounded-md border border-[color:var(--c-line)] bg-white px-2.5 text-[14px] text-[color:var(--c-muted)]">
               <Search className="h-4 w-4 shrink-0" /> <span className="flex-1 truncate">Search shipments, orders, invoices</span>
               <kbd className="hidden rounded border border-[color:var(--c-border)] bg-white px-1 text-[11px] sm:inline" style={{ fontFamily: T.mono }}>⌘K</kbd>
             </div>
@@ -282,7 +300,7 @@ export function Shell({ view, go, sandbox, setSandbox, onSignOut, extra, banner,
               </button>
             ))}
           </div>
-          <main className="mx-auto max-w-[1280px] px-4 pb-16 pt-6 md:px-10">{children}</main>
+          <main className={`mx-auto px-4 pb-16 pt-6 md:px-10 ${side ? "max-w-[1280px]" : "max-w-[1520px]"}`}>{children}</main>
         </div>
       </div>
     </div>

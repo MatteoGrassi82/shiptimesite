@@ -6,7 +6,7 @@ import { T } from "./ui";
 
 // ── Confirmations ────────────────────────────────────────────────────────────
 // Every action says what happened and, where there's somewhere to go next,
-// offers it ("Sent to Priya · first reply by 12:42 pm · View").
+// offers it ("Sent to Matteo · first reply by 12:42 pm · View").
 
 export type Toast = { text: string; action?: { label: string; onClick: () => void } };
 export const ToastContext = createContext<(t: Toast) => void>(() => {});

@@ -1,7 +1,8 @@
 import type { BrandId } from "./scenarios";
 
 // Sample data shared by every brand in the /dashboard mockup: the daily
-// shipments curve (scaled per brand), Shiplets, and the Developers page.
+// shipments curve (scaled per brand), the standard features, and the
+// Developers page.
 // Brand-specific data (sites, plan, bill, problems) lives in scenarios.ts.
 
 // The last 30 days, Sep 23 to today (Thursday, Oct 22), with quieter weekends.
@@ -33,28 +34,14 @@ export const requestLog = [
   { time: "10:38:05", method: "GET", path: "/v1/tracking/1Z84…", status: 200, ms: 91, source: "Branded tracking" },
 ];
 
-// Shiplets: one screen of ShipTime, filled in, for someone who doesn't ship.
-// Every account can switch on the simple ones. Bigger ones are built with
-// ShipTime One accounts on a setup call, then become templates for everyone
-// (the way Shopify Flow started on Plus and moved to every plan). Store
-// Shiplets only show for accounts that have stores.
-export type ShipletStatus = "Live" | "Draft" | "Call booked";
-export type ShipletMap = Record<string, ShipletStatus>;
+// Standard features any account can switch on: a branded tracking page, a
+// returns page, delivery dates at checkout. They're not Shiplets: a Shiplet is
+// the one custom app an account builds with us (apps.ts).
+export type FeatureMap = Record<string, boolean>;
 
-export const shipletCatalog = [
-  { id: "tracking", group: "For your customers", name: "Branded tracking page", who: "Your customers", what: "Your logo and delivery date instead of the carrier's page.", setup: "now", color: "#0EA5E9", use: "9,840 visits" },
-  { id: "returns", group: "For your customers", name: "Returns page", who: "Your customers", what: "Customers start a return and print their own label.", setup: "now", color: "#0EA5E9", use: "212 returns" },
-  { id: "checkout", group: "For your customers", name: "Delivery dates at checkout", who: "Your shoppers", what: "An estimated delivery date, before they pay.", setup: "now", color: "#0EA5E9", use: "3,120 orders" },
-  { id: "case", group: "For people who don't ship", name: "Send a case", who: "Dental offices, for their lab", what: "Book a pickup, track the case, bill the lab.", setup: "call", color: "#F59E0B", use: "" },
-  { id: "repair", group: "For people who don't ship", name: "Mail-in repair kit", who: "Repair shops' customers", what: "A box and a prepaid label, out and back, tracked.", setup: "call", color: "#F59E0B", use: "" },
-  { id: "retrieval", group: "For people who don't ship", name: "Equipment return kit", who: "HR, IT and rental businesses", what: "Send a kit out, get the equipment back.", setup: "call", color: "#F59E0B", use: "" },
-  { id: "counter", group: "For your stores and team", name: "Counter app", who: "Store staff", what: "Ship a customer's order from the store counter, one screen.", setup: "call", needs: "stores", color: "#10B981", use: "" },
-  { id: "storeorder", group: "For your stores and team", name: "Store order form", who: "Store managers", what: "Stores order stock from your warehouse; we route the delivery.", setup: "call", needs: "stores", color: "#10B981", use: "" },
-] as const;
-
-export const shipletsAtStart: Record<BrandId, ShipletMap> = {
+export const featuresAtStart: Record<BrandId, FeatureMap> = {
   small: {},
-  canada: { returns: "Live" },
-  stores: { tracking: "Live", counter: "Draft" },
-  reach: { returns: "Live" },
+  canada: { returns: true },
+  stores: { tracking: true },
+  reach: {},
 };

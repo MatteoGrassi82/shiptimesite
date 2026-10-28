@@ -12,24 +12,27 @@ import { Button, FOCUS, Segmented, T } from "./ui";
 // Koherent accounts get named people (Shopify Plus's merchant success
 // model). Only people actually on the account are shown, with real presence:
 // online or away, local time, a measured reply time, and who covers when
-// they're out (Intercom's and Pylon's rule). Initials stand in for photos until
-// the team's own headshots are in.
+// they're out (Intercom's and Pylon's rule). A photo where we have one,
+// initials until the rest of the team's headshots are in.
 
-export type Person = { name: string; role: string; initials: string; color: string; city: string; online: boolean; detail: string };
+export type Person = { name: string; role: string; initials: string; color: string; city: string; online: boolean; detail: string; photo?: string };
 
 export const TEAM: Person[] = [
-  { name: "Priya Shah", role: "Account manager", initials: "PS", color: "#2E4C8F", city: "Toronto", online: true, detail: "Online. 10:42 am in Toronto. Usually replies in about 40 minutes." },
-  { name: "Marc Leblanc", role: "Network engineer", initials: "ML", color: "#0F766E", city: "Montréal", online: false, detail: "Away until 1:00 pm your time. Priya covers." },
+  { name: "Matteo Grassi", role: "Account manager", initials: "MG", color: "#2E4C8F", city: "Toronto", online: true, detail: "Online now · usually replies within the hour.", photo: "/team/matteo-grassi.jpg" },
+  { name: "Marc Leblanc", role: "Network engineer", initials: "ML", color: "#0F766E", city: "Montréal", online: false, detail: "Away until 1:00 pm your time. Matteo covers." },
 ];
 
 export const SUPPORT: Person = { name: "ShipTime support", role: "Support team", initials: "ST", color: "#6A7383", city: "", online: true, detail: "Replies within 1 business day" };
 
 export const personByName = (name: string) => TEAM.find((p) => p.name === name);
 
-export function Avatar({ p, size = 32, dot = false }: { p: Pick<Person, "initials" | "color" | "online">; size?: number; dot?: boolean }) {
+export function Avatar({ p, size = 32, dot = false }: { p: Pick<Person, "initials" | "color" | "online"> & { photo?: string }; size?: number; dot?: boolean }) {
   return (
     <span className="relative inline-flex shrink-0" style={{ width: size, height: size }}>
-      <span className="inline-flex h-full w-full items-center justify-center rounded-full font-semibold text-white" style={{ background: p.color, fontSize: Math.round(size * 0.36) }}>{p.initials}</span>
+      {p.photo
+        // eslint-disable-next-line @next/next/no-img-element
+        ? <img src={p.photo} alt="" width={size} height={size} className="h-full w-full rounded-full object-cover" />
+        : <span className="inline-flex h-full w-full items-center justify-center rounded-full font-semibold text-white" style={{ background: p.color, fontSize: Math.round(size * 0.36) }}>{p.initials}</span>}
       {dot && <span className={`absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full border-2 border-[color:var(--c-surface)] ${p.online ? "bg-[#16A34A]" : "bg-[color:var(--c-border2)]"}`} />}
     </span>
   );
@@ -73,7 +76,7 @@ export function TeamCard({ onMessage }: { onMessage: () => void }) {
       </ul>
       <div className="mt-3 space-y-2.5 border-t border-[color:var(--c-line)] pt-3">
         <div className={row}><CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--c-muted)]" /> Next weekly check-in: Wed, Oct 28 at 2:00 pm</div>
-        <div className={row}><Phone className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--c-muted)]" /><span>Urgent: call Priya, (416) 555-0142. Out of hours: the on-call team, (833) 555-0199.</span></div>
+        <div className={row}><Phone className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--c-muted)]" /><span>Urgent: call Matteo, (416) 555-0142. Out of hours: the on-call team, (833) 555-0199.</span></div>
         <div className={row}><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--c-muted)]" /><span>We act without asking on {free} things and ask you first on {jobs.length - free}. <button type="button" onClick={() => setEditing(true)} className={`font-semibold text-[color:var(--c-link)] hover:underline ${FOCUS}`}>Change</button></span></div>
       </div>
       <div className="mt-3 flex gap-2"><Button small onClick={onMessage}><MessageSquare className="h-3.5 w-3.5" /> Ask</Button><Button small>Book a call</Button></div>
