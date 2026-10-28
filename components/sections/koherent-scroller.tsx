@@ -31,19 +31,14 @@ export function BlockScroller({ blocks }: { blocks: Block[] }) {
     let frame = 0;
     const update = () => {
       frame = 0;
-      const mid = window.innerHeight * 0.5;
-      let best = 0;
-      let dist = Infinity;
+      // The block being read is the last one whose top has passed 55% of the
+      // screen, so the widget changes as soon as the next block comes up.
+      const line = window.innerHeight * 0.55;
+      let n = 0;
       refs.current.forEach((el, i) => {
-        if (!el) return;
-        const r = el.getBoundingClientRect();
-        const d = Math.abs(r.top + r.height / 2 - mid);
-        if (d < dist) {
-          dist = d;
-          best = i;
-        }
+        if (el && el.getBoundingClientRect().top <= line) n = i;
       });
-      setActive(best);
+      setActive(n);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -106,23 +101,43 @@ export function BlockScroller({ blocks }: { blocks: Block[] }) {
         ))}
       </div>
 
-      {/* the pinned widget: every block's widget is mounted, one is shown */}
+      {/* the pinned panel: a header that names the block in view, with the
+          steps filling as you go, then that block's widget sliding in */}
       <div className="ks-pin" style={{ position: "sticky", top: 84, height: "calc(100vh - 84px)", display: "flex", alignItems: "center" }}>
-        <div style={{ position: "relative", width: "100%" }}>
-          {blocks.map((b, i) => (
-            <div
-              key={b.id}
-              aria-hidden={i !== active}
-              className={i === active ? "ks-w is-in is-on" : "ks-w"}
-              style={{ gridArea: "1 / 1", position: i === active ? "relative" : "absolute", inset: 0, opacity: i === active ? 1 : 0, transform: i === active ? "none" : "translateY(12px)", pointerEvents: i === active ? "auto" : "none", transition: "opacity .45s ease, transform .45s cubic-bezier(.22,1,.36,1)" }}
-            >
-              {b.widget}
-            </div>
-          ))}
+        <div style={{ width: "100%" }}>
+          <div aria-live="polite" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, marginBottom: 14 }}>
+            <span key={active} className="ks-name" style={{ ...title, fontSize: "1.25rem", color: K.plum }}>
+              <span style={{ ...mono, fontSize: 12, letterSpacing: "0.1em", color: K.violet, marginRight: 10 }}>{blocks[active].n}</span>
+              {blocks[active].name}
+            </span>
+            <span aria-hidden style={{ display: "inline-flex", gap: 5 }}>
+              {blocks.map((_, k) => (
+                <svg key={k} viewBox="0 0 8 12" style={{ width: 9, height: 14 }}>
+                  <path d={CHEV} fill={k <= active ? K.plum : K.line} style={{ transition: "fill .3s ease" }} />
+                </svg>
+              ))}
+            </span>
+          </div>
+          <div style={{ position: "relative" }}>
+            {blocks.map((b, i) => (
+              <div
+                key={b.id}
+                aria-hidden={i !== active}
+                className={i === active ? "ks-w is-in is-on" : "ks-w"}
+                style={{ position: i === active ? "relative" : "absolute", inset: 0, opacity: i === active ? 1 : 0, transform: i === active ? "none" : i < active ? "translateY(-28px) scale(.98)" : "translateY(28px) scale(.98)", pointerEvents: i === active ? "auto" : "none", transition: "opacity .5s ease, transform .55s cubic-bezier(.22,1,.36,1)" }}
+              >
+                {b.widget}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <style>{`
+        @media (prefers-reduced-motion: no-preference) {
+          @keyframes ks-name-kf { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+          .ks-name { animation: ks-name-kf .4s cubic-bezier(.22,1,.36,1) both; }
+        }
         @media (max-width: 960px) {
           .ks { grid-template-columns: 1fr !important; }
           .ks-pin { display: none !important; }

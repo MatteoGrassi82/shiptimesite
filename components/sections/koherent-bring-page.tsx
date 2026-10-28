@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { INTEGRATIONS, LogoChip } from "./koherent-logos";
 import { KB_CSS, NetworkMap, RateCard, RateSwitches, ShipletScreen } from "./koherent-bring";
 import { BlockScroller, type Block } from "./koherent-scroller";
-import { CHEV, K, K_ARROW, K_BAR, mono, sans, title } from "./koherent-brand";
+import { K, K_ARROW, K_BAR, mono, sans, title } from "./koherent-brand";
 
 // ── The What we bring page's scroller: six blocks, a widget each ─────────────
 // Matteo (Oct 28): the page read like a blog; make it text one side, a widget
@@ -211,25 +211,5 @@ export function BringScroller() {
       <BlockScroller blocks={BLOCKS} />
       <style>{KB_CSS}</style>
     </>
-  );
-}
-
-// The hero's object: the six blocks as a stack of chevron rows, each one a
-// link to its block below. The lattice is its own band under the hero.
-export function BringHeroStack() {
-  return (
-    <div data-k-dark="" style={{ background: K.ink, borderRadius: 8, padding: "18px 20px", boxShadow: "0 30px 60px -36px rgba(23,16,28,0.6)" }}>
-      <p style={{ ...mono, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: K.lilac, margin: "0 0 6px" }}>The six blocks</p>
-      {BLOCKS.map((b, i) => (
-        <a key={b.id} href={`#${b.id}`} className="k-row" style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", alignItems: "center", gap: 12, padding: "13px 0", borderTop: i ? `1px solid ${K.darkLine}` : "none", textDecoration: "none" }}>
-          <span style={{ ...mono, fontSize: 12, color: K.lilac }}>{b.n}</span>
-          <span style={{ ...title, fontSize: "1.15rem", color: K.onDark }}>{b.name}</span>
-          <svg viewBox="0 0 8 12" aria-hidden style={{ width: 8, height: 12 }}>
-            <path d={CHEV} fill={K.lilac} />
-          </svg>
-        </a>
-      ))}
-      <style>{`.k-row:hover span:nth-child(2) { color: ${K.lilac}; } .k-row:focus-visible { outline: 2px solid ${K.lilac}; outline-offset: 2px; }`}</style>
-    </div>
   );
 }
