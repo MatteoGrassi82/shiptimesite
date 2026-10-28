@@ -11,3 +11,9 @@ work.sqlite
 # public/generated/*.png rule — alt-hero, core-include-*, grommet-*, plus-iso-*
 # and others are referenced as .png and must ship.
 public/generated/pf-*.png
+
+# Local env (Next would read it at build time) and the two unused Koherent
+# source PNGs; the pages reference the .webp versions.
+.env.local
+public/generated/koherent-bring-carriers-b.png
+public/generated/koherent-bring-people-a.png
