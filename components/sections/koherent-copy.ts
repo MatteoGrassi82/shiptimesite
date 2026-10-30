@@ -69,7 +69,6 @@ export const HOME = {
   headline: "Your managed logistics network.",
   lead: "We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to individuals.",
   sub: "Not another 3PL, not another shipping platform. One team designs your network from your own order data and runs it with you: no rebuild, and you stay in control.",
-  ticks: ["Your carrier contracts or ours", "One team responsible for the result", "No sales deck until you ask for one"],
   facts: [
     ["2M+", "shipments a year"],
     ["1,000+", "businesses on the platform"],
@@ -369,7 +368,7 @@ export const FROM_JENNY: { kept: string[]; later: string[] } = {
     "“Shipping software sells you a label. A 3PL sells you a building. We sell you the outcome.” on the home page.",
     "The 15-minute rate comparison, the 90-day audit and pilot, and the partner onboarding steps.",
     "A way to ShipTime for smaller shippers: the door finder and Pricing.",
-    "Pure white with boxes, and no generated hero picture.",
+    "Pure white with boxes instead of the tan.",
     "“Custom shipping applet” instead of “Shiplet”.",
   ],
   later: [

@@ -2,12 +2,11 @@ import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Marquee } from "@/components/ui/marquee";
-import { ConsoleView } from "./koherent-motion";
+import { KoherentHeroArt } from "./koherent-hero-art";
 import { BringBento } from "./koherent-bring";
 import { FitSlider } from "./koherent-fit";
 import { CountUp } from "./koherent-fx";
 import { LogoRow } from "./koherent-logos";
-import { CHEV } from "./koherent-brand";
 import { HOME } from "./koherent-copy";
 import { CardGrid, CasesRow, R2Styles, wrap } from "./koherent-page";
 import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, Secondary, Sect, display, mono, sans, title } from "./koherent-ui";
@@ -19,8 +18,8 @@ import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, 
 // the score. From Jenny's draft (Oct 29): her best line ("a label / a
 // building / the outcome") as the problem's heading, her three doors with
 // the door finder sending smaller shippers to ShipTime, white with boxes.
-// One idea and one visual per section. The hero shows the product, the
-// example account, instead of the generated picture (less AI-looking).
+// One idea and one visual per section. The hero stays Hero C, Matteo's Oct 28
+// pick: Jenny's "looks AI" (Oct 29 L10) was about the tan, not the picture.
 
 const para = { ...sans, fontSize: "clamp(1.02rem, 1.25vw, 1.12rem)", lineHeight: 1.7, color: K.stone, margin: "18px auto 0", maxWidth: "60ch" };
 const h2 = { ...title, fontSize: "clamp(1.9rem, 3.2vw, 2.8rem)", color: K.ink, margin: "14px auto 0", maxWidth: "26ch" };
@@ -36,64 +35,51 @@ function SectionHead({ label, heading, lead }: { label?: string; heading: ReactN
 }
 
 // ── hero ─────────────────────────────────────────────────────────────────────
-function LeadCard() {
-  return (
-    <div className="k-lead" style={{ ...box, position: "absolute", left: "-7%", bottom: 0, width: "min(330px, 72%)", display: "flex", gap: 12, alignItems: "center", padding: "14px 16px", boxShadow: "0 26px 50px -24px rgba(23,16,28,0.5)" }}>
-      <span aria-hidden style={{ width: 44, height: 44, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-        <KMark style={{ width: 18, height: 18 }} />
-      </span>
-      <span>
-        <span style={{ ...mono, display: "block", fontSize: 10.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet }}>Your account manager</span>
-        <span style={{ ...sans, display: "block", fontSize: 14, lineHeight: 1.4, fontWeight: 600, color: K.ink, marginTop: 3 }}>Owns the relationship, knows your plans. One call for anything.</span>
-      </span>
-    </div>
-  );
-}
-
+// Hero C from the Oct 28 lab (Matteo's pick), as on the first revision: words
+// left, the picture right, tall and off the page edge, with the pieces, the
+// K, the sweep and the cost card (koherent-hero-art.tsx). The words are
+// Michael's headline and 15-second sentence, then Chris's category.
 function Hero() {
   return (
-    <Sect style={{ overflow: "visible" }}>
-      <div className="k-r2hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(32px, 4.5vw, 64px) clamp(20px, 4vw, 56px) clamp(36px, 4.5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 0.95fr)", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
-        <div className="k-fade">
-          <Label>{HOME.label}</Label>
-          <h1 style={{ ...display, fontSize: "clamp(2.6rem, 5vw, 4.4rem)", color: K.plum, margin: "20px 0 0" }}>{HOME.headline}</h1>
+    <Sect style={{ overflow: "hidden" }}>
+      <div className="k-hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 0 0 clamp(20px, 4vw, 56px)", display: "grid", gridTemplateColumns: "0.95fr 1.05fr", gap: "clamp(24px, 4vw, 56px)", alignItems: "center", minHeight: "min(84vh, 760px)" }}>
+        <div className="k-hero-text" style={{ padding: "clamp(44px, 6vw, 80px) 0" }}>
+          <div className="k-fade" style={{ animationDelay: "0.05s" }}>
+            <Label>{HOME.label}</Label>
+          </div>
+          <h1 className="k-fade" style={{ ...display, fontSize: "clamp(2.7rem, 5.6vw, 4.7rem)", color: K.plum, margin: "20px 0 0", animationDelay: "0.12s" }}>
+            {HOME.headline}
+          </h1>
           {/* who it's for and what we do, first: Michael's 15-second test */}
-          <p style={{ ...sans, fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "22px 0 0", maxWidth: "36ch" }}>{HOME.lead}</p>
-          {/* Chris's category */}
-          <p style={{ ...sans, fontSize: "clamp(1rem, 1.2vw, 1.08rem)", lineHeight: 1.6, color: K.stone, margin: "14px 0 0", maxWidth: "46ch" }}>{HOME.sub}</p>
-          <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
+          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "22px 0 0", maxWidth: "34ch", animationDelay: "0.24s" }}>
+            {HOME.lead}
+          </p>
+          {/* Chris's category, in the first panel */}
+          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1rem, 1.2vw, 1.08rem)", lineHeight: 1.6, color: K.stone, margin: "14px 0 0", maxWidth: "46ch", animationDelay: "0.32s" }}>
+            {HOME.sub}
+          </p>
+          <div className="k-fade k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30, animationDelay: "0.42s" }}>
             <Primary href={PAGES.score}>
               Get your logistics score <ArrowRight size={16} />
             </Primary>
             <Secondary href={PAGES.contact}>Talk to an advisor</Secondary>
           </div>
-          <ul style={{ listStyle: "none", padding: 0, margin: "24px 0 0", display: "flex", flexWrap: "wrap", gap: "10px 22px" }}>
-            {HOME.ticks.map((t) => (
-              <li key={t} style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14.5, color: K.stone }}>
-                <svg viewBox="0 0 8 12" aria-hidden style={{ width: 6, height: 9, flex: "none" }}>
-                  <path d={CHEV} fill={K.violet} />
-                </svg>
-                {t}
-              </li>
-            ))}
-          </ul>
         </div>
-        <div className="k-fade k-herovis" style={{ position: "relative", minWidth: 0, paddingBottom: 44, animationDelay: "0.15s" }}>
-          <ConsoleView />
-          <LeadCard />
-        </div>
+
+        {/* the dusk aisle is a generated placeholder, labelled, until our own shoot */}
+        <KoherentHeroArt src="/generated/koherent-hero-a.webp" alt="" />
       </div>
     </Sect>
   );
 }
 
-// The numbers, on the first screen: every competitor shows proof above the
-// fold (Oct 30), and until customer logos are approved these are ours, with
-// the systems we connect to.
+// The numbers, straight after the hero: every competitor shows proof early
+// (Oct 30), and until customer logos are approved these are ours, with the
+// systems we connect to.
 function Facts() {
   return (
     <Sect>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(20px, 4vw, 56px) clamp(24px, 3vw, 40px)" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(28px, 3.5vw, 48px) clamp(20px, 4vw, 56px) clamp(24px, 3vw, 40px)" }}>
         <Reveal>
           <div className="k-facts" style={{ ...box, display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
             {HOME.facts.map(([v, l]) => (
@@ -353,10 +339,6 @@ export function KoherentHome() {
         @media (max-width: 640px) {
           .k-q-more { display: none !important; }
           .k-qchip { white-space: normal !important; text-align: center; }
-        }
-        @media (max-width: 960px) {
-          .k-lead { position: relative !important; left: auto !important; width: 100% !important; margin-top: -18px; }
-          .k-herovis { padding-bottom: 0 !important; }
         }
         @media (max-width: 760px) {
           .k-facts { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }

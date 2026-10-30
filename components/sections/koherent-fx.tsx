@@ -29,8 +29,10 @@ export function CountUp({ value, ms = 1100, style }: { value: string; ms?: numbe
 
   // Counts once, the first time it's on screen. With reduced motion the
   // render below shows the target straight away, so nothing runs here.
+  // Not keyed on `m`: match() returns a new array every render, so the first
+  // frame's re-render cancelled the count and the number froze near zero.
   useEffect(() => {
-    if (!m || Number.isNaN(target) || reduced || started.current || !inView) return;
+    if (Number.isNaN(target) || reduced || started.current || !inView) return;
     started.current = true;
     const t0 = performance.now();
     let frame = 0;
@@ -43,7 +45,7 @@ export function CountUp({ value, ms = 1100, style }: { value: string; ms?: numbe
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [inView, reduced, target, ms, m]);
+  }, [inView, reduced, target, ms]);
 
   if (!m) return <span style={style}>{value}</span>;
   const n = reduced ? target : shown;
