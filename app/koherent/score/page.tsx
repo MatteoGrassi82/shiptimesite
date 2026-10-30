@@ -48,7 +48,7 @@ export default function KoherentScorePage() {
       {/* the questionnaire is the hero object, so the first question is on
           screen with the title; the privacy line sits under the words */}
       <PageHead
-        chapter={4}
+        chapter={3}
         label="Your score"
         heading={<>How coherent is your logistics?</>}
         lead={

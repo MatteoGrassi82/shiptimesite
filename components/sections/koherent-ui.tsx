@@ -2,10 +2,8 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-import { CHAPTERS, CHEV, K, Logo, NAV, PAGES, REVIEW, display, inner, mono, sans, title } from "./koherent-brand";
+import { CHAPTERS, CHEV, K, Logo, NAV, PAGES, display, inner, mono, sans, title } from "./koherent-brand";
 import { KoherentNav } from "./koherent-nav";
-import { NotesToggle } from "./koherent-review";
-import { NOTE_COUNT } from "./koherent-copy";
 
 // ── The pieces every /koherent page shares ───────────────────────────────────
 // Buttons, the section frame, the page frame (nav, footer), the detail-page
@@ -28,36 +26,6 @@ export const box: CSSProperties = {
   borderRadius: 12,
   boxShadow: "0 1px 2px rgba(23,16,28,0.04), 0 18px 40px -28px rgba(23,16,28,0.28)",
 };
-
-// ── review tags ──────────────────────────────────────────────────────────────
-// One of Jenny's bracketed notes, where it applies on the page: amber for a
-// fact to confirm, lilac for a decision. Hidden by the review switch, and gone
-// entirely once REVIEW is off.
-export type NoteData = { who: string; text: string; kind?: "confirm" | "decide" };
-
-export function Note({ who, text, kind = "confirm", style }: NoteData & { style?: CSSProperties }) {
-  if (!REVIEW) return null;
-  const decide = kind === "decide";
-  return (
-    <span className="k-note" role="note" style={{ display: "flex", flexDirection: "column", gap: 3, textAlign: "left", background: decide ? "#F4EEFB" : "#FFF6DB", border: `1px solid ${decide ? K.lilac : "#F2CF66"}`, borderRadius: 8, padding: "8px 12px", maxWidth: 560, ...style }}>
-      <span style={{ ...mono, fontSize: 10.5, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700, color: decide ? K.plum : "#5C4300" }}>
-        {decide ? "To decide" : "To confirm"} · {who}
-      </span>
-      <span style={{ ...sans, fontSize: 13.5, lineHeight: 1.45, color: decide ? K.ink : "#4A3700" }}>{text}</span>
-    </span>
-  );
-}
-
-export function Notes({ notes, center = false, style }: { notes?: NoteData[]; center?: boolean; style?: CSSProperties }) {
-  if (!REVIEW || !notes?.length) return null;
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: center ? "center" : "flex-start", gap: 8, marginTop: 18, ...style }}>
-      {notes.map((n) => (
-        <Note key={n.text} {...n} />
-      ))}
-    </div>
-  );
-}
 
 // The steps: the arrowhead turned and repeated. Only ever shows progress.
 // They draw in when their Reveal comes into view, so keep them inside one.
@@ -153,30 +121,22 @@ export function More({ href, children, onDark = false }: { href: string; childre
 // ── footer ───────────────────────────────────────────────────────────────────
 // Centered, like the rest of the site (Matteo, Oct 23), and it ends on the
 // wordmark, set huge and cropped: the last thing on every page is the name.
-// The links follow Jenny's navigation, plus the first revision's How we work
-// and What we bring pages, which still hold Chris's and Michael's asks.
+// The links follow the menu: who we help, then the pages behind it.
 function Footer() {
-  const [who, what] = NAV[0].groups;
   const cols: { title: string; links: [string, string][] }[] = [
-    { title: "Who we help", links: who.items.map((i): [string, string] => [i.name, i.href ?? PAGES.home]) },
-    { title: "What we do", links: what.items.map((i): [string, string] => [i.name, i.href ?? PAGES.home]) },
+    { title: "Who we help", links: NAV[0].groups[0].items.map((i): [string, string] => [i.name, i.href ?? PAGES.home]) },
     {
       title: "Koherent",
       links: [
-        ["Platform", PAGES.platform],
-        ["Network", PAGES.network],
-        ["Integrations", PAGES.integrations],
+        ["How it works", PAGES.works],
+        ["Customer stories", PAGES.cases],
         ["Pricing", PAGES.pricing],
-        ["How it fits together", PAGES.los],
+        ["Logistics Performance Score", PAGES.score],
       ],
     },
     {
-      title: "Resources",
+      title: "Talk to us",
       links: [
-        ["Customer stories", PAGES.cases],
-        ["Logistics Performance Score", PAGES.score],
-        ["How we work", PAGES.how],
-        ["What we bring", PAGES.bring],
         ["Talk to an advisor", PAGES.contact],
         ["ShipTime", "https://www.shiptime.com"],
       ],
@@ -187,7 +147,7 @@ function Footer() {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(56px, 7vw, 88px) clamp(20px, 4vw, 56px) 0", textAlign: "center" }}>
         <Label onDark style={{ fontSize: 12 }}>Your managed logistics network</Label>
         <p style={{ ...title, fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)", color: K.onDark, margin: "16px 0 0" }}>Make it coherent.</p>
-        <nav aria-label="Footer" className="k-foot" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "28px 24px", marginTop: 40, textAlign: "center" }}>
+        <nav aria-label="Footer" className="k-foot" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px 24px", marginTop: 40, maxWidth: 860, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
           {cols.map((c) => (
             <div key={c.title}>
               <p style={{ ...mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>{c.title}</p>
@@ -223,7 +183,6 @@ export function KoherentShell({ children }: { children: ReactNode }) {
       <KoherentNav />
       <main>{children}</main>
       <Footer />
-      {REVIEW && <NotesToggle count={NOTE_COUNT} />}
       <style>{`
         .k-root ::selection { background: ${K.lilac}; color: ${K.ink}; }
         /* one focus ring for every control on the site, in the brand violet.
@@ -300,7 +259,7 @@ export function PageHead({ chapter, label, heading, lead, aside, children }: { c
     <Sect style={{ overflow: "visible" }}>
       <div className="k-ph" style={{ ...inner, paddingTop: "clamp(40px, 5vw, 72px)", paddingBottom: "clamp(40px, 5vw, 72px)", display: "grid", gridTemplateColumns: aside ? "minmax(0, 0.9fr) minmax(0, 1.1fr)" : "1fr", gap: "clamp(28px, 5vw, 72px)", alignItems: "center" }}>
         <div className="k-fade" style={{ textAlign: aside ? "left" : "center" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+          <div className="k-ph-chapter" style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
             {chapter ? <Steps total={CHAPTERS.length} done={chapter} size={13} /> : null}
             <Label>{label}</Label>
           </div>

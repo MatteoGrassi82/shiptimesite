@@ -4,24 +4,25 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { ConsoleView } from "./koherent-motion";
+import { NetworkLattice } from "./koherent-lattice";
 import { BringBento, NetworkMap, RateCard, RateSwitches, ShipletScreen } from "./koherent-bring";
 import { IntegrationsWall, TeamCard } from "./koherent-bring-page";
 import { MethodPlayer } from "./koherent-method";
 import { TargetTriangle } from "./koherent-target";
-import { INTEGRATIONS, LogoChip, LogoRow, chip } from "./koherent-logos";
+
 import { Live } from "./koherent-live";
 import { CASES } from "./koherent-cases";
 import { CHEV } from "./koherent-brand";
-import { GROUPS, pageByKey } from "./koherent-copy";
+import { pageByKey } from "./koherent-copy";
 import type { Block, Card, Page, Widget } from "./koherent-copy";
-import { box, K, KMark, KoherentShell, Label, More, Notes, PAGES, Primary, Secondary, Sect, Steps, display, mono, sans, title } from "./koherent-ui";
+import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, Secondary, Sect, Steps, display, mono, sans, title } from "./koherent-ui";
 
 // ── Revision 2 pages (Oct 30) ────────────────────────────────────────────────
-// One renderer for Jenny's pages (koherent-copy.ts): her headline and subhead
-// on the left with her button, the page's own object on the right, then each
-// of her sections in the shape its words suggest (a split row with a widget,
-// a row of cards, steps, a list), then her closing ask on the plum band with
-// the score beside it (Chris: the score is the ask on every page).
+// One renderer for the door pages and Pricing (koherent-copy.ts): the
+// headline and one sentence on the left with the button, the page's own
+// object on the right, then short sections, each one idea and one visual (a
+// split row with a widget, a row of cards, steps), then the ask on the plum
+// band with the score beside it (Chris: the score is the ask on every page).
 // White throughout, with boxes and soft shadows instead of the tan ground.
 // The widgets are the first revision's own (console, map, rates, the applet,
 // the account team…), so the site still shows the product working instead of
@@ -37,36 +38,6 @@ const chev = (fill: string, size = 8) => (
 );
 
 // ── small widgets new in revision 2 ──────────────────────────────────────────
-
-// "Your logistics has no operating system", drawn from Jenny's own four
-// sentences: two pieces that talk to each other, two that don't.
-function Pieces() {
-  const rows: { a: string; link: string; b: string; broken?: boolean }[] = [
-    { a: "Your store", link: "talks to", b: "Your shipping software" },
-    { a: "Your shipping software", link: "talks to", b: "Six carriers" },
-    { a: "Your warehouse", link: "runs on", b: "Something else", broken: true },
-    { a: "Your returns", link: "run on", b: "Email", broken: true },
-  ];
-  const pill = (t: string, faint = false): CSSProperties => ({ ...sans, fontSize: 14.5, fontWeight: 600, lineHeight: 1.3, color: faint ? K.stone : K.ink, background: K.card, border: `1.5px ${faint ? "dashed" : "solid"} ${faint ? K.lilac : K.line}`, borderRadius: 10, padding: "11px 12px", textAlign: "center", minWidth: 0 });
-  return (
-    <div style={{ ...box, padding: "clamp(18px, 2.6vw, 30px)" }}>
-      <Label style={{ fontSize: 11.5 }}>Your logistics today</Label>
-      <div style={{ display: "grid", gap: 12, marginTop: 18 }}>
-        {rows.map((r) => (
-          <div key={r.a} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 84px minmax(0, 1fr)", alignItems: "center", gap: 8 }}>
-            <span style={pill(r.a)}>{r.a}</span>
-            <span style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <span style={{ ...mono, fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", color: r.broken ? K.violet : K.stone, whiteSpace: "nowrap" }}>{r.link}</span>
-              <span aria-hidden style={{ width: "100%", height: 0, borderTop: `2px ${r.broken ? "dashed" : "solid"} ${r.broken ? K.lilac : K.line}` }} />
-            </span>
-            <span style={pill(r.b, r.broken)}>{r.b}</span>
-          </div>
-        ))}
-      </div>
-      <p style={{ ...title, fontSize: "1.1rem", color: K.plum, margin: "20px 0 0", paddingTop: 16, borderTop: `1px solid ${K.line}` }}>Nobody can see the whole system.</p>
-    </div>
-  );
-}
 
 // The invoice audit (Ship, Optimize, Growing brands): what was quoted, what
 // was billed, and what happened. Figures are illustrative and say so.
@@ -102,63 +73,6 @@ function AuditCard() {
         </div>
       ))}
       <p style={{ ...sans, fontSize: 13.5, lineHeight: 1.5, color: K.stone, margin: 0, padding: "12px 18px 14px", background: K.wash, borderTop: `1px solid ${K.line}` }}>You see the dispute, the outcome and the credit in your account.</p>
-    </div>
-  );
-}
-
-// The API, as one request and its answer. Illustrative, and labelled so.
-function ApiCard() {
-  const k = (s: string) => <span style={{ color: K.lilac }}>{s}</span>;
-  const v = (s: string) => <span style={{ color: "#F2CF66" }}>{s}</span>;
-  return (
-    <div data-k-dark="" style={{ background: K.ink, borderRadius: 14, overflow: "hidden", boxShadow: "0 30px 60px -36px rgba(23,16,28,0.6)" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "14px 18px", borderBottom: `1px solid ${K.darkLine}` }}>
-        <span style={{ ...sans, fontSize: 14, fontWeight: 700, color: K.onDark }}>REST API</span>
-        <span style={{ ...mono, fontSize: 10.5, letterSpacing: "0.08em", textTransform: "uppercase", color: K.lilac }}>Sandbox · illustrative</span>
-      </div>
-      <pre style={{ ...mono, margin: 0, padding: "18px 18px 20px", fontSize: 13, lineHeight: 1.7, color: K.onDark, whiteSpace: "pre-wrap", overflowX: "auto" }}>
-        <span style={{ color: "#9BE2B4" }}>POST</span> /rates{"\n"}
-        {"{"}
-        {"\n  "}
-        {k('"from"')}: {v('"Columbus, OH"')},{"\n  "}
-        {k('"to"')}: {v('"Seattle, WA"')},{"\n  "}
-        {k('"weight_lb"')}: {v("2.4")},{"\n  "}
-        {k('"deliver_by"')}: {v('"2 days"')}
-        {"\n}\n\n"}
-        <span style={{ color: "#9BE2B4" }}>200 OK</span>
-        {"\n{\n  "}
-        {k('"service"')}: {v('"Regional carrier · Ground"')},{"\n  "}
-        {k('"days"')}: {v("2")},{"\n  "}
-        {k('"label"')}: {v('"ready"')}
-        {"\n}"}
-      </pre>
-    </div>
-  );
-}
-
-// Jenny's integration groups: the real marks where we have them, her names
-// for the rest. Each group is an anchor for the Integrations menu.
-function IntegrationGroups() {
-  return (
-    <div className="k-c4" style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 }}>
-      {GROUPS.map((g) => (
-        <div key={g.id} id={g.id} style={{ ...box, padding: "22px 20px", textAlign: "left", scrollMarginTop: 96 }}>
-          {chev(K.violet, 12)}
-          <h3 style={{ ...title, fontSize: "1.15rem", color: K.ink, margin: "12px 0 0" }}>{g.title}</h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16 }}>
-            {g.items.map((it) => {
-              const mark = INTEGRATIONS.find((l) => l.name === it.logo);
-              return mark ? (
-                <LogoChip key={it.name} {...mark} />
-              ) : (
-                <span key={it.name} style={{ ...chip, ...sans, fontSize: 13.5, fontWeight: 600, color: it.name.startsWith("and ") ? K.stone : K.ink, background: it.name.startsWith("and ") ? "transparent" : K.wash, border: `1px ${it.name.startsWith("and ") ? "dashed" : "solid"} ${it.name.startsWith("and ") ? K.lilac : K.line}` }}>
-                  {it.name}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
@@ -330,14 +244,6 @@ export function WidgetView({ name }: { name: Widget }) {
           <IntegrationsWall />
         </Live>
       );
-    case "logos":
-      return (
-        <div style={{ ...box, padding: "clamp(20px, 2.6vw, 28px)" }}>
-          <Label style={{ fontSize: 11.5 }}>Keeps your setup</Label>
-          <LogoRow more="+ 30 more" style={{ marginTop: 16 }} />
-          <p style={{ ...sans, fontSize: 14, lineHeight: 1.5, color: K.stone, margin: "16px 0 0" }}>Your store, your marketplace listings and your warehouse, connected. Labels print from one screen.</p>
-        </div>
-      );
     case "triangle":
       return <TargetTriangle />;
     case "method":
@@ -348,16 +254,12 @@ export function WidgetView({ name }: { name: Widget }) {
       return <CasesRow />;
     case "spectrum":
       return <Spectrum />;
-    case "pieces":
-      return <Pieces />;
     case "score":
       return <ScoreTeaser />;
     case "audit":
       return <AuditCard />;
-    case "api":
-      return <ApiCard />;
-    case "groups":
-      return <IntegrationGroups />;
+    case "lattice":
+      return <NetworkLattice compact />;
   }
 }
 
@@ -393,7 +295,14 @@ function CardBox({ c, n, numbered }: { c: Card; n: number; numbered: boolean }) 
 }
 
 export function CardGrid({ cards, cols = 3 }: { cards: Card[]; cols?: number }) {
-  const cls = cols === 5 ? "k-c5" : cols === 4 ? "k-c4" : cols === 3 ? "k-three" : "k-two";
+  if (cols === 1) {
+    return (
+      <div style={{ maxWidth: 560, margin: "0 auto" }}>
+        <CardBox c={cards[0]} n={0} numbered={false} />
+      </div>
+    );
+  }
+  const cls = cols === 4 ? "k-c4" : cols === 3 ? "k-three" : "k-two";
   const numbered = cards.every((c) => !c.body) && cards.length > 3;
   return (
     <div className={cls} style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap: 16 }}>
@@ -427,31 +336,13 @@ function StepRow({ steps }: { steps: Card[] }) {
   );
 }
 
-function ItemList({ items }: { items: string[] }) {
-  return (
-    <ul className="k-items" style={{ ...box, listStyle: "none", margin: 0, padding: "clamp(18px, 2.6vw, 30px)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 28px", textAlign: "left" }}>
-      {items.map((it) => (
-        <li key={it} style={{ ...sans, display: "flex", gap: 12, alignItems: "flex-start", fontSize: 15.5, lineHeight: 1.5, color: K.ink }}>
-          <span style={{ marginTop: 5 }}>{chev(K.plum, 11)}</span>
-          {it}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 function Heading({ b, center, onDark = false }: { b: Block; center: boolean; onDark?: boolean }) {
   const m = center ? "auto" : undefined;
   return (
     <>
       {b.label && <Label onDark={onDark}>{b.label}</Label>}
       {b.heading && <h2 style={{ ...title, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", color: onDark ? K.onDark : K.ink, margin: b.label ? "14px 0 0" : 0, maxWidth: center ? "28ch" : undefined, marginLeft: m, marginRight: m }}>{b.heading}</h2>}
-      {b.body?.map((p) => (
-        <p key={p.slice(0, 32)} style={{ ...para, color: onDark ? K.onDarkDim : K.stone, marginLeft: m, marginRight: m }}>
-          {p}
-        </p>
-      ))}
-      {b.intro && <p style={{ ...para, color: K.ink, fontWeight: 600, marginLeft: m, marginRight: m }}>{b.intro}</p>}
+      {b.body && <p style={{ ...para, color: onDark ? K.onDarkDim : K.stone, marginLeft: m, marginRight: m }}>{b.body}</p>}
     </>
   );
 }
@@ -465,46 +356,15 @@ function BlockView({ b, i }: { b: Block; i: number }) {
         <div className="k-split" style={{ ...wrap, display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "center" }}>
           <Reveal style={{ order: flip ? 2 : 1 }}>
             <Heading b={b} center={false} />
-            {b.items && <div style={{ marginTop: 22 }}><ItemList items={b.items} /></div>}
-            {b.outro && <p style={para}>{b.outro}</p>}
-            <Notes notes={b.notes} />
+            {b.link && (
+              <div style={{ marginTop: 20 }}>
+                <More href={b.link.href}>{b.link.label}</More>
+              </div>
+            )}
           </Reveal>
           <Reveal delay={120} style={{ order: flip ? 1 : 2, minWidth: 0 }}>
             <WidgetView name={b.widget} />
           </Reveal>
-        </div>
-      </Sect>
-    );
-  }
-
-  // the three layers: one boxed split row each
-  if (b.layers) {
-    return (
-      <Sect id={b.id}>
-        <div style={wrap}>
-          <Reveal style={{ textAlign: "center" }}>
-            <Heading b={b} center />
-          </Reveal>
-          <div style={{ display: "grid", gap: "clamp(18px, 2.6vw, 28px)", marginTop: "clamp(32px, 4.5vw, 52px)" }}>
-            {b.layers.map((l, n) => (
-              <Reveal key={l.name}>
-                <div className="k-split" style={{ ...box, display: "grid", gridTemplateColumns: "minmax(0, 0.9fr) minmax(0, 1.1fr)", gap: "clamp(24px, 4vw, 56px)", alignItems: "center", padding: "clamp(22px, 3.4vw, 44px)" }}>
-                  <div style={{ order: n % 2 ? 2 : 1 }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-                      <Steps total={b.layers!.length} done={n + 1} size={13} />
-                      <Label>Layer {n + 1}</Label>
-                    </span>
-                    <h3 style={{ ...title, fontSize: "clamp(1.5rem, 2.4vw, 2rem)", color: K.plum, margin: "14px 0 0" }}>{l.name}</h3>
-                    <p style={para}>{l.body}</p>
-                    <Notes notes={l.notes} />
-                  </div>
-                  <div style={{ order: n % 2 ? 1 : 2, minWidth: 0 }}>
-                    <WidgetView name={l.widget} />
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </Sect>
     );
@@ -520,15 +380,10 @@ function BlockView({ b, i }: { b: Block; i: number }) {
             <Heading b={b} center onDark={dark} />
           </Reveal>
         )}
-        {(b.cards || b.steps || b.items || b.widget) && (
+        {(b.cards || b.steps || b.widget) && (
           <div style={{ marginTop: b.heading || b.body ? "clamp(32px, 4.5vw, 52px)" : 0 }}>
             {b.cards && <CardGrid cards={b.cards} cols={b.cols} />}
             {b.steps && <StepRow steps={b.steps} />}
-            {b.items && (
-              <Reveal>
-                <ItemList items={b.items} />
-              </Reveal>
-            )}
             {b.widget && (
               <Reveal delay={100}>
                 <WidgetView name={b.widget} />
@@ -536,12 +391,11 @@ function BlockView({ b, i }: { b: Block; i: number }) {
             )}
           </div>
         )}
-        {b.outro && (
-          <Reveal>
-            <p style={{ ...para, color: K.ink, textAlign: "center", marginLeft: "auto", marginRight: "auto", marginTop: 28 }}>{b.outro}</p>
-          </Reveal>
+        {b.link && (
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 26 }}>
+            <More href={b.link.href}>{b.link.label}</More>
+          </div>
         )}
-        <Notes notes={b.notes} center style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", alignItems: "stretch", marginTop: 24 }} />
       </div>
     </Sect>
   );
@@ -554,31 +408,33 @@ export function PageHero({ page }: { page: Page }) {
   const n = page.headline.length;
   const size = n > 100 ? "clamp(1.85rem, 2.9vw, 2.45rem)" : n > 60 ? "clamp(2rem, 3.4vw, 2.9rem)" : "clamp(2.4rem, 4.6vw, 3.9rem)";
   const long = n > 60;
+  const center = !page.hero;
   return (
     <Sect style={{ overflow: "visible" }}>
-      <div className="k-r2hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(36px, 5vw, 72px) clamp(20px, 4vw, 56px) clamp(48px, 6vw, 88px)", display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "center" }}>
-        <div className="k-fade">
+      <div className="k-r2hero" style={{ maxWidth: 1200, margin: "0 auto", padding: center ? "clamp(40px, 5vw, 80px) clamp(20px, 4vw, 56px) 0" : "clamp(36px, 5vw, 72px) clamp(20px, 4vw, 56px) clamp(48px, 6vw, 88px)", display: "grid", gridTemplateColumns: center ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "center", textAlign: center ? "center" : "left" }}>
+        <div className="k-fade" style={{ maxWidth: center ? 760 : undefined, margin: center ? "0 auto" : undefined }}>
           <Label>{page.label}</Label>
           <h1 style={{ ...display, fontSize: size, lineHeight: long ? 1.1 : 1.0, letterSpacing: long ? "-0.025em" : display.letterSpacing, color: K.plum, margin: "18px 0 0" }}>{page.headline}</h1>
-          {page.subhead && <p style={{ ...sans, fontSize: "clamp(1.05rem, 1.35vw, 1.2rem)", lineHeight: 1.6, color: K.stone, margin: "20px 0 0", maxWidth: "50ch" }}>{page.subhead}</p>}
-          <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
+          <p style={{ ...sans, fontSize: "clamp(1.05rem, 1.35vw, 1.2rem)", lineHeight: 1.6, color: K.stone, margin: center ? "20px auto 0" : "20px 0 0", maxWidth: "50ch" }}>{page.subhead}</p>
+          <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: center ? "center" : "flex-start", gap: 12, marginTop: 30 }}>
             <Primary href={page.cta.href}>
               {page.cta.label} <ArrowRight size={16} />
             </Primary>
             {page.secondary && <Secondary href={page.secondary.href}>{page.secondary.label}</Secondary>}
           </div>
-          <Notes notes={page.heroNotes} />
         </div>
-        <div className="k-fade" style={{ minWidth: 0, animationDelay: "0.15s" }}>
-          <WidgetView name={page.hero} />
-        </div>
+        {page.hero && (
+          <div className="k-fade" style={{ minWidth: 0, animationDelay: "0.15s" }}>
+            <WidgetView name={page.hero} />
+          </div>
+        )}
       </div>
     </Sect>
   );
 }
 
 export function CloseBand({ close }: { close: Page["close"] }) {
-  const second = close.cta.href === PAGES.score ? { label: "Talk to an advisor", href: PAGES.contact } : { label: "Get your logistics score", href: PAGES.score };
+  const second = close.noScore ? null : close.cta.href === PAGES.score ? { label: "Talk to an advisor", href: PAGES.contact } : { label: "Get your logistics score", href: PAGES.score };
   return (
     <Sect bg={K.plum}>
       <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "30%", background: K.violet, clipPath: "polygon(55% 0, 100% 0, 100% 100%, 55% 100%, 0 50%)", opacity: 0.4 }} />
@@ -590,11 +446,12 @@ export function CloseBand({ close }: { close: Page["close"] }) {
             <Primary href={close.cta.href} onDark>
               {close.cta.label} <ArrowRight size={16} />
             </Primary>
-            <Secondary href={second.href} onDark>
-              {second.label}
-            </Secondary>
+            {second && (
+              <Secondary href={second.href} onDark>
+                {second.label}
+              </Secondary>
+            )}
           </div>
-          <Notes notes={close.notes} center />
         </Reveal>
       </div>
     </Sect>
@@ -605,14 +462,13 @@ export function CloseBand({ close }: { close: Page["close"] }) {
 export function R2Styles() {
   return (
     <style>{`
-      @media (min-width: 961px) and (max-width: 1180px) { .k-c5 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; } }
       @media (max-width: 960px) {
         .k-r2hero, .k-split { grid-template-columns: 1fr !important; }
         .k-split > * { order: initial !important; }
-        .k-c4, .k-c5 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        .k-c4 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
       }
       @media (max-width: 640px) {
-        .k-c4, .k-c5, .k-items { grid-template-columns: 1fr !important; }
+        .k-c4 { grid-template-columns: 1fr !important; }
         .k-audit-head { display: none !important; }
         .k-audit-row { grid-template-columns: 1fr 1fr !important; }
       }

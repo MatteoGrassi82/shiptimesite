@@ -8,13 +8,11 @@ import { CHEV, K, Logo, NAV, PAGES, mono, sans, title } from "./koherent-brand";
 import type { NavItem, NavMenu } from "./koherent-brand";
 
 // ── The nav ──────────────────────────────────────────────────────────────────
-// Jenny's navigation (Oct 29): Solutions, Platform, Network, Integrations,
-// Pricing, Resources. Solutions opens as two columns, "Who we help" and "What
-// we do"; the others open a short list with the page's overview link on top.
-// Michael's ask stays: a strong, prominent logo top left. The filled button is
-// still the score (Chris: the score is the ask), with Jenny's "Talk to an
-// advisor" beside it where the row has room. Below 1080px the menus fold into
-// one panel with each menu as an accordion.
+// Revision 2: Who we help (Jenny's three doors, as a short menu), How it
+// works, Customer stories, Pricing. Michael's ask stays: a strong, prominent
+// logo top left. The filled button is the score (Chris: the score is the
+// ask), with "Talk to an advisor" beside it where the row has room. Below
+// 940px the menu folds into one panel, Who we help as an accordion.
 // The bottom border only shows once the page scrolls, so the top of the page
 // is one clean white field (Jenny asked to smooth the line at the top).
 
@@ -25,19 +23,8 @@ const isOnHref = (path: string, href?: string) => {
 };
 const menuOn = (path: string, m: NavMenu) => isOnHref(path, m.href) || m.groups.some((g) => g.items.some((i) => isOnHref(path, i.href)));
 
-function Soon() {
-  return <span style={{ ...mono, fontSize: 9.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, background: K.mist, borderRadius: 999, padding: "2px 7px", marginLeft: 8 }}>Soon</span>;
-}
-
 function PanelItem({ item, onPick }: { item: NavItem; onPick: () => void }) {
-  if (!item.href) {
-    return (
-      <span className="kn-item is-soon" style={{ ...sans, display: "flex", alignItems: "center", padding: "9px 12px", borderRadius: 8, fontSize: 15, fontWeight: 600, color: K.stone }}>
-        {item.name}
-        {item.soon && <Soon />}
-      </span>
-    );
-  }
+  if (!item.href) return null;
   return (
     <Link href={item.href} onClick={onPick} className="kn-item" style={{ display: "block", padding: item.line ? "11px 12px" : "9px 12px", borderRadius: 8, textDecoration: "none" }}>
       <span style={{ ...sans, display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 700, color: K.ink }}>
@@ -55,7 +42,7 @@ function Panel({ menu, onPick }: { menu: NavMenu; onPick: () => void }) {
   const wide = menu.groups.length > 1;
   return (
     <div className="kn-panel" style={{ position: "absolute", top: "100%", left: 0, paddingTop: 10, zIndex: 60 }}>
-      <div style={{ width: wide ? 720 : 300, background: K.paper, border: `1px solid ${K.line}`, borderRadius: 12, boxShadow: "0 28px 60px -28px rgba(23,16,28,0.35), 0 2px 6px rgba(23,16,28,0.05)", overflow: "hidden" }}>
+      <div style={{ width: wide ? 720 : menu.groups.some((g) => g.items.some((i) => i.line)) ? 380 : 300, background: K.paper, border: `1px solid ${K.line}`, borderRadius: 12, boxShadow: "0 28px 60px -28px rgba(23,16,28,0.35), 0 2px 6px rgba(23,16,28,0.05)", overflow: "hidden" }}>
         {menu.href && (
           <Link href={menu.href} onClick={onPick} className="kn-over" style={{ ...sans, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "14px 22px", borderBottom: `1px solid ${K.line}`, fontSize: 14.5, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
             {menu.name} overview <ArrowRight size={15} />
@@ -273,7 +260,6 @@ export function KoherentNav() {
         .kn-bar { transform-origin: left center; transition: transform .25s cubic-bezier(.22,1,.36,1); }
         .kn-link:hover .kn-bar, .kn-link[aria-expanded="true"] .kn-bar { transform: scaleX(1) !important; }
         .kn-item:hover, .kn-item:focus-visible { background: ${K.wash}; }
-        .kn-item.is-soon:hover { background: transparent; }
         .kn-over:hover { background: ${K.wash}; }
         .kn-link:focus-visible, .kn-toggle:focus-visible, .kn-item:focus-visible { outline: 2px solid ${K.violet}; outline-offset: 2px; }
         @media (prefers-reduced-motion: no-preference) {
@@ -281,9 +267,9 @@ export function KoherentNav() {
           .kn-panel { animation: kn-panel-kf .18s ease both; }
         }
         .kn-menu[hidden] { display: none !important; }
-        @media (min-width: 1081px) { .kn-menu { display: none !important; } }
+        @media (min-width: 941px) { .kn-menu { display: none !important; } }
         @media (max-width: 1180px) { .kn-talk { display: none; } }
-        @media (max-width: 1080px) {
+        @media (max-width: 940px) {
           .kn-links { display: none !important; }
           .kn-toggle { display: inline-flex !important; }
         }

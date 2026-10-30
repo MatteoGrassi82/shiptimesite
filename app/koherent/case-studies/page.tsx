@@ -33,7 +33,7 @@ export default function KoherentCaseStudiesPage() {
   return (
     <KoherentShell>
       <PageHead
-        chapter={3}
+        chapter={2}
         label="Case studies"
         heading={<>Three businesses, three goals.</>}
         lead="Names stay private until the work is live, and every figure is from our proposals."

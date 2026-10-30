@@ -18,3 +18,9 @@ export function Live({ children, style }: { children: ReactNode; style?: CSSProp
     </div>
   );
 }
+
+// The same rules for a page that mounts the widgets some other way (the How
+// it works scroller sets `.is-in` itself).
+export function KbStyles() {
+  return <style>{KB_CSS}</style>;
+}

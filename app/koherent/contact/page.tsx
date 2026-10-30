@@ -98,7 +98,7 @@ export default function KoherentContactPage() {
           </ol>
           <Reveal delay={200}>
             <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
-              <More href={PAGES.how}>How an engagement runs</More>
+              <More href={PAGES.works}>How it works</More>
             </div>
           </Reveal>
         </div>

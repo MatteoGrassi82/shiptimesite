@@ -3,42 +3,37 @@ import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Marquee } from "@/components/ui/marquee";
 import { ConsoleView } from "./koherent-motion";
+import { BringBento } from "./koherent-bring";
 import { FitSlider } from "./koherent-fit";
 import { CountUp } from "./koherent-fx";
 import { LogoRow } from "./koherent-logos";
 import { CHEV } from "./koherent-brand";
 import { HOME } from "./koherent-copy";
-import { HeroHeadline } from "./koherent-review";
 import { CardGrid, CasesRow, R2Styles, wrap } from "./koherent-page";
-import { box, K, KMark, KoherentShell, Label, More, Notes, PAGES, Primary, ScoreClose, Secondary, Sect, display, mono, sans, title } from "./koherent-ui";
+import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, Secondary, Sect, display, mono, sans, title } from "./koherent-ui";
 
-// ── /koherent — revision 2 (Oct 30) ──────────────────────────────────────────
-// Jenny's home page (copy draft v1 and navigation, Oct 29), in her order:
-// headline, the outcome line, the three doors, the four solutions, the
-// numbers, the advisors. White, with boxes (Oct 29 L10).
-// Every ask from Michael's and Chris's emails that lived on the first
-// revision's home page is still on this one or moved to the page it fits
-// (koherent-copy.ts, ASKS, and /koherent/review list where each one is):
-//   - Michael: the moving questions under one sentence that sums up the
-//     problem, and "one system answers these, and more"; his line, photo and
-//     the account team; the anonymized cases; his headline, as option three
-//     of the headline switch.
-//   - Chris: the score as the ask (nav button, closing band), "Grow your
-//     network, not your overhead" over the door finder, "experienced
-//     operators, not account managers".
-//   - Chris and Michael: when to choose ShipTime or Koherent, now the door
-//     finder (koherent-fit.tsx), landing on Jenny's doors.
-// The first revision's hero art (generated dusk aisle) is off the home page:
-// Jenny wants it to look less AI. The hero shows the product instead, the
-// example account, with the account manager beside it.
+// ── /koherent — revision 2 (Oct 30), "our story, her structure" ──────────────
+// The first revision's story, the one Michael and Chris shaped, in white:
+// what we are and who it's for (Michael's 15-second test), the problem and
+// his moving questions, who it's for, what we bring, the cases, the people,
+// the score. From Jenny's draft (Oct 29): her best line ("a label / a
+// building / the outcome") as the problem's heading, her three doors with
+// the door finder sending smaller shippers to ShipTime, white with boxes.
+// One idea and one visual per section. The hero shows the product, the
+// example account, instead of the generated picture (less AI-looking).
 
-const para = { ...sans, fontSize: "clamp(1.02rem, 1.25vw, 1.12rem)", lineHeight: 1.7, color: K.stone, margin: "18px auto 0", maxWidth: "62ch" };
+const para = { ...sans, fontSize: "clamp(1.02rem, 1.25vw, 1.12rem)", lineHeight: 1.7, color: K.stone, margin: "18px auto 0", maxWidth: "60ch" };
 const h2 = { ...title, fontSize: "clamp(1.9rem, 3.2vw, 2.8rem)", color: K.ink, margin: "14px auto 0", maxWidth: "26ch" };
-const chev = (fill = K.violet) => (
-  <svg viewBox="0 0 8 12" aria-hidden style={{ width: 6, height: 9, flex: "none" }}>
-    <path d={CHEV} fill={fill} />
-  </svg>
-);
+
+function SectionHead({ label, heading, lead }: { label?: string; heading: ReactNode; lead?: string }) {
+  return (
+    <Reveal style={{ textAlign: "center" }}>
+      {label && <Label>{label}</Label>}
+      <h2 style={{ ...h2, marginTop: label ? 14 : 0 }}>{heading}</h2>
+      {lead && <p style={para}>{lead}</p>}
+    </Reveal>
+  );
+}
 
 // ── hero ─────────────────────────────────────────────────────────────────────
 function LeadCard() {
@@ -61,23 +56,27 @@ function Hero() {
       <div className="k-r2hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(32px, 4.5vw, 64px) clamp(20px, 4vw, 56px) clamp(36px, 4.5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 0.95fr)", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
         <div className="k-fade">
           <Label>{HOME.label}</Label>
-          <HeroHeadline options={HOME.headlines} style={{ ...display, fontSize: "clamp(2.4rem, 4.2vw, 3.6rem)", color: K.plum, margin: "20px 0 0" }} />
-          <p style={{ ...sans, fontSize: "clamp(1.08rem, 1.45vw, 1.25rem)", lineHeight: 1.55, color: K.ink, margin: "22px 0 0", maxWidth: "46ch" }}>{HOME.subhead}</p>
+          <h1 style={{ ...display, fontSize: "clamp(2.6rem, 5vw, 4.4rem)", color: K.plum, margin: "20px 0 0" }}>{HOME.headline}</h1>
+          {/* who it's for and what we do, first: Michael's 15-second test */}
+          <p style={{ ...sans, fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "22px 0 0", maxWidth: "36ch" }}>{HOME.lead}</p>
+          {/* Chris's category */}
+          <p style={{ ...sans, fontSize: "clamp(1rem, 1.2vw, 1.08rem)", lineHeight: 1.6, color: K.stone, margin: "14px 0 0", maxWidth: "46ch" }}>{HOME.sub}</p>
           <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
-            <Primary href={HOME.cta.href}>
-              {HOME.cta.label} <ArrowRight size={16} />
+            <Primary href={PAGES.score}>
+              Get your logistics score <ArrowRight size={16} />
             </Primary>
-            <Secondary href={HOME.secondary.href}>{HOME.secondary.label}</Secondary>
+            <Secondary href={PAGES.contact}>Talk to an advisor</Secondary>
           </div>
           <ul style={{ listStyle: "none", padding: 0, margin: "24px 0 0", display: "flex", flexWrap: "wrap", gap: "10px 22px" }}>
             {HOME.ticks.map((t) => (
               <li key={t} style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14.5, color: K.stone }}>
-                {chev()}
+                <svg viewBox="0 0 8 12" aria-hidden style={{ width: 6, height: 9, flex: "none" }}>
+                  <path d={CHEV} fill={K.violet} />
+                </svg>
                 {t}
               </li>
             ))}
           </ul>
-          <Notes notes={HOME.heroNotes} />
         </div>
         <div className="k-fade k-herovis" style={{ position: "relative", minWidth: 0, paddingBottom: 44, animationDelay: "0.15s" }}>
           <ConsoleView />
@@ -88,10 +87,9 @@ function Hero() {
   );
 }
 
-// ── the numbers, on the first screen ─────────────────────────────────────────
-// Every competitor puts proof above the fold (ShipStation, Stord, ShipBob,
-// Flexport, Oct 30). We have no approved logos yet, so: Jenny's four figures,
-// and the systems we connect to.
+// The numbers, on the first screen: every competitor shows proof above the
+// fold (Oct 30), and until customer logos are approved these are ours, with
+// the systems we connect to.
 function Facts() {
   return (
     <Sect>
@@ -114,18 +112,18 @@ function Facts() {
             <LogoRow more="+ 30 more" style={{ justifyContent: "center" }} />
           </div>
         </Reveal>
-        <Notes notes={HOME.factsNotes} center />
       </div>
     </Sect>
   );
 }
 
-// ── the outcome line, then Michael's questions ───────────────────────────────
-// Jenny's best line, drawn as what it says: three things you can buy. Then
-// the moving questions (Michael, Oct 19: "I like the idea of the moving
-// questions"), which move on a desktop and pause under the pointer; on a
-// phone, with reduced motion and for screen readers they're one still list
-// (the six marked `phone` on a phone, his three among them).
+// ── the problem: Jenny's line, then Michael's questions ──────────────────────
+// Michael: one sentence that sums up the problem, then the questions become
+// its specifics, and "one system answers these, and more". The questions move
+// on a desktop and pause under the pointer (Michael, Oct 19: "I like the idea
+// of the moving questions"); on a phone, with reduced motion and for screen
+// readers they're one still list (the six marked `phone` on a phone, his
+// three among them).
 const QUESTIONS: { q: string; michael?: boolean; phone?: boolean }[] = [
   { q: "Why do our shipping costs keep rising?", phone: true },
   { q: "Should we be using regional carriers?", michael: true, phone: true },
@@ -157,10 +155,8 @@ function Outcome() {
   ];
   return (
     <Sect id="outcome">
-      <div style={{ ...wrap, paddingBottom: "clamp(40px, 5vw, 64px)" }}>
-        <Reveal style={{ textAlign: "center" }}>
-          <h2 style={{ ...h2, maxWidth: "30ch", marginTop: 0 }}>{HOME.outcome.heading}</h2>
-        </Reveal>
+      <div style={{ ...wrap, paddingBottom: "clamp(36px, 4.5vw, 56px)" }}>
+        <SectionHead label="The problem" heading={HOME.outcome.heading} />
         <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16, marginTop: "clamp(32px, 4.5vw, 48px)" }}>
           {three.map((c, n) => (
             <Reveal key={c.who} delay={n * 90}>
@@ -172,7 +168,7 @@ function Outcome() {
           ))}
         </div>
         <Reveal>
-          <p style={{ ...para, textAlign: "center", maxWidth: "64ch", marginTop: 32 }}>{HOME.outcome.body}</p>
+          <p style={{ ...para, textAlign: "center", marginTop: 28 }}>{HOME.outcome.body}</p>
         </Reveal>
       </div>
 
@@ -200,29 +196,23 @@ function Outcome() {
         </ul>
       </Reveal>
 
-      <div style={{ ...wrap, paddingTop: "clamp(36px, 4.5vw, 56px)", textAlign: "center" }}>
+      <div style={{ ...wrap, paddingTop: "clamp(32px, 4vw, 48px)", textAlign: "center" }}>
         <Reveal>
           <p style={{ ...title, fontSize: "clamp(1.3rem, 2vw, 1.65rem)", lineHeight: 1.3, color: K.ink, maxWidth: "36ch", margin: "0 auto" }}>
             We’ve heard every one. It’s a design problem. <span style={{ color: K.plum }}>One coherent system answers these, and more.</span>
           </p>
-          <div style={{ marginTop: 18 }}>
-            <More href={PAGES.los}>What is a logistics operating system?</More>
-          </div>
         </Reveal>
       </div>
     </Sect>
   );
 }
 
-// ── the doors, and the finder ────────────────────────────────────────────────
+// ── who it's for: Jenny's doors, and the finder ──────────────────────────────
 function Doors() {
   return (
     <Sect id="doors">
       <div style={wrap}>
-        <Reveal style={{ textAlign: "center" }}>
-          <Label>Who we help</Label>
-          <h2 style={h2}>{HOME.doors.heading}</h2>
-        </Reveal>
+        <SectionHead label={HOME.doors.label} heading={HOME.doors.heading} />
         <div style={{ marginTop: "clamp(32px, 4.5vw, 48px)" }}>
           <CardGrid cards={HOME.doors.cards} cols={3} />
         </div>
@@ -233,43 +223,36 @@ function Doors() {
             <FitSlider />
           </div>
         </Reveal>
-        <Notes notes={HOME.doors.notes} center />
       </div>
     </Sect>
   );
 }
 
-// ── the four solutions ───────────────────────────────────────────────────────
-function Solutions() {
+// ── how it works: the six building blocks ────────────────────────────────────
+// Michael's building blocks as the bento Matteo picked (Oct 23), under Chris's
+// "not what we sell, but what we design with". The detail is on How it works.
+function How() {
   return (
-    <Sect id="solutions">
+    <Sect id="how">
       <div style={wrap}>
-        <Reveal style={{ textAlign: "center" }}>
-          <Label>What we do</Label>
-          <h2 style={h2}>{HOME.solutions.heading}</h2>
-        </Reveal>
-        <div style={{ marginTop: "clamp(32px, 4.5vw, 48px)" }}>
-          <CardGrid cards={HOME.solutions.cards} cols={4} />
-        </div>
-        <Reveal>
-          <p style={{ ...para, color: K.ink, fontWeight: 600, textAlign: "center", marginTop: 28 }}>{HOME.solutions.outro}</p>
+        <SectionHead label={HOME.how.label} heading={HOME.how.heading} lead={HOME.how.lead} />
+        <BringBento />
+        <Reveal delay={120}>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
+            <More href={PAGES.works}>Ship, Fulfill, Optimize and Manage, in detail</More>
+          </div>
         </Reveal>
       </div>
     </Sect>
   );
 }
 
-// ── proof ────────────────────────────────────────────────────────────────────
-function Proof() {
+// ── customer stories ─────────────────────────────────────────────────────────
+function Stories() {
   return (
-    <Sect id="proof">
+    <Sect id="stories">
       <div style={wrap}>
-        <Reveal style={{ textAlign: "center" }}>
-          <Label>Customer stories</Label>
-          <h2 style={h2}>{HOME.proof.heading}</h2>
-          <p style={para}>{HOME.proof.body}</p>
-          <Notes notes={HOME.proof.notes} center />
-        </Reveal>
+        <SectionHead label={HOME.stories.label} heading={HOME.stories.heading} lead={HOME.stories.lead} />
         <div style={{ marginTop: "clamp(32px, 4.5vw, 48px)" }}>
           <CasesRow />
         </div>
@@ -278,46 +261,38 @@ function Proof() {
   );
 }
 
-// ── the advisors ─────────────────────────────────────────────────────────────
-// Jenny's close, then the people behind it: Chris's "experienced operators,
-// not account managers" (Aug 7), Michael's "our technology is the superpower"
-// (Aug 6) and his own line with his photo (Oct 19), the three named roles on
-// every account (deck slide 11). The generated team picture is gone (less AI).
+// ── the people ───────────────────────────────────────────────────────────────
+// Chris's "experienced operators, not account managers" (Aug 7), Michael's
+// "our technology is the superpower" (Aug 6) and his own line with his photo
+// (Oct 19), the three named roles on every account (deck slide 11), and
+// Jenny's ask: talk to someone who has run a logistics operation.
 const TEAM: { role: string; does: string }[] = [
   { role: "Account manager", does: "Owns the relationship, knows your plans. One call for anything." },
   { role: "Operator on the ground", does: "At your sites, in the daily rhythm with your team." },
   { role: "Support lead", does: "Direct lines to customer service, technical and logistics support." },
 ];
 
-function Advisors() {
+function People() {
   return (
-    <Sect id="advisors">
+    <Sect id="people">
       <div style={wrap}>
-        <Reveal style={{ textAlign: "center" }}>
-          <Label>The people behind it</Label>
-          <h2 style={h2}>{HOME.advisors.heading}</h2>
-          <p style={para}>{HOME.advisors.body}</p>
-        </Reveal>
+        <SectionHead label={HOME.people.label} heading={HOME.people.heading} lead={HOME.people.lead} />
         <div className="k-two" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 18, marginTop: "clamp(32px, 4.5vw, 48px)", alignItems: "stretch" }}>
           <Reveal style={{ height: "100%" }}>
-            <div style={{ ...box, height: "100%", padding: "clamp(22px, 3vw, 34px)", textAlign: "left" }}>
-              <h3 style={{ ...title, fontSize: "clamp(1.4rem, 2.2vw, 1.75rem)", color: K.ink, margin: 0 }}>Experienced operators, not account managers.</h3>
-              <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "10px 0 0" }}>Our technology is the superpower. Our people make it work for you, and we look after your customers as if they were our own.</p>
-              <div style={{ display: "grid", gap: 10, marginTop: 20 }}>
-                {TEAM.map((t) => (
-                  <div key={t.role} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: K.wash, border: `1px solid ${K.line}`, borderRadius: 10, padding: "12px 14px" }}>
-                    <span aria-hidden style={{ width: 38, height: 38, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                      <KMark color={K.plum} style={{ width: 15, height: 15 }} />
-                    </span>
-                    <span>
-                      <span style={{ ...title, display: "block", fontSize: "1.02rem", color: K.ink }}>{t.role}</span>
-                      <span style={{ ...sans, display: "block", fontSize: 14, lineHeight: 1.5, color: K.stone, marginTop: 3 }}>{t.does}</span>
-                      <span style={{ ...mono, display: "block", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, marginTop: 6 }}>Named when you join</span>
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ ...sans, fontSize: 15, lineHeight: 1.6, color: K.ink, margin: "16px 0 0" }}>One partner accountable for the whole: we take the issue, own it, and keep you informed until it’s resolved.</p>
+            <div style={{ ...box, height: "100%", padding: "clamp(22px, 3vw, 32px)", display: "grid", gap: 10, alignContent: "start" }}>
+              {TEAM.map((t) => (
+                <div key={t.role} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: K.wash, border: `1px solid ${K.line}`, borderRadius: 10, padding: "14px 16px" }}>
+                  <span aria-hidden style={{ width: 40, height: 40, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                    <KMark color={K.plum} style={{ width: 16, height: 16 }} />
+                  </span>
+                  <span>
+                    <span style={{ ...title, display: "block", fontSize: "1.05rem", color: K.ink }}>{t.role}</span>
+                    <span style={{ ...sans, display: "block", fontSize: 14.5, lineHeight: 1.5, color: K.stone, marginTop: 3 }}>{t.does}</span>
+                    <span style={{ ...mono, display: "block", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, marginTop: 6 }}>Named when you join</span>
+                  </span>
+                </div>
+              ))}
+              <p style={{ ...sans, fontSize: 15, lineHeight: 1.6, color: K.ink, margin: "8px 0 0" }}>One partner accountable for the whole: we take the issue, own it, and keep you informed until it’s resolved.</p>
             </div>
           </Reveal>
           <Reveal delay={120} style={{ height: "100%" }}>
@@ -340,10 +315,13 @@ function Advisors() {
           </Reveal>
         </div>
         <Reveal>
-          <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 32 }}>
-            <Primary href={HOME.advisors.cta.href}>
-              {HOME.advisors.cta.label} <ArrowRight size={16} />
-            </Primary>
+          <div style={{ textAlign: "center", marginTop: 36 }}>
+            <p style={{ ...title, fontSize: "clamp(1.2rem, 1.8vw, 1.45rem)", color: K.ink, margin: 0 }}>{HOME.people.ask}</p>
+            <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 18 }}>
+              <Primary href={PAGES.contact}>
+                Talk to an advisor <ArrowRight size={16} />
+              </Primary>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -359,10 +337,10 @@ export function KoherentHome() {
       <Facts />
       <Outcome />
       <Doors />
-      <Solutions />
-      <Proof />
-      <Advisors />
-      <ScoreClose />
+      <How />
+      <Stories />
+      <People />
+      <ScoreClose next={{ href: PAGES.works, name: "How it works" }} />
       <R2Styles />
       <style>{`
         /* desktop with motion: the moving rows show, the list is for screen readers */
