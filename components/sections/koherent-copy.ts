@@ -103,6 +103,7 @@ export const HOME = {
     heading: "Experienced operators, not account managers.",
     lead: "Our technology is the superpower. Our people make it work for you, and we look after your customers as if they were our own.",
     ask: "Talk to someone who has run a logistics operation.",
+    askNote: "There is no sales deck until you ask for one.",
   },
 };
 

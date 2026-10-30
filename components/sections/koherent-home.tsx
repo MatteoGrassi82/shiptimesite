@@ -303,6 +303,8 @@ function People() {
         <Reveal>
           <div style={{ textAlign: "center", marginTop: 36 }}>
             <p style={{ ...title, fontSize: "clamp(1.2rem, 1.8vw, 1.45rem)", color: K.ink, margin: 0 }}>{HOME.people.ask}</p>
+            {/* Jenny's line from her copy doc (it sat under the hero buttons until Oct 30) */}
+            <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "8px 0 0" }}>{HOME.people.askNote}</p>
             <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 18 }}>
               <Primary href={PAGES.contact}>
                 Talk to an advisor <ArrowRight size={16} />

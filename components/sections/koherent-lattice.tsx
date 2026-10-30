@@ -73,6 +73,14 @@ export function NetworkLattice({ compact = false }: { compact?: boolean } = {}) 
   const reduced = useReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>(0.3);
   const moving = inView && !reduced;
+  // The glow sits just right of the K and is sized to fade to nothing before
+  // the drawing's edges, so it is never cut off; the dots fade out in an oval.
+  // Together there's no box around the drawing on the dark section (Jenny at
+  // the Oct 29 L10: "smooth that line out"; Matteo, Oct 30: "blended better").
+  // Ids carry the layout, since the two layouts' gradients differ.
+  const id = compact ? "klc" : "klw";
+  const glowX = Math.round(HUB.x * 1.37);
+  const glowY = Math.min(HUB.y, H - HUB.y);
   return (
     <div ref={ref} style={{ maxWidth: 1000, margin: "0 auto" }}>
       <svg
@@ -85,13 +93,23 @@ export function NetworkLattice({ compact = false }: { compact?: boolean } = {}) 
           <pattern id="kl-dots" width="22" height="22" patternUnits="userSpaceOnUse">
             <circle cx="2" cy="2" r="1.4" fill="rgba(199,174,230,0.16)" />
           </pattern>
-          <radialGradient id="kl-glow" cx="19%" cy="50%" r="55%">
-            <stop offset="0%" stopColor={C.plum} stopOpacity="0.95" />
-            <stop offset="100%" stopColor={C.ink} stopOpacity="0" />
+          <radialGradient id={`${id}-glow`} gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform={`translate(${glowX} ${HUB.y}) scale(${glowX} ${glowY})`}>
+            <stop offset="0" stopColor={C.plum} stopOpacity="0.95" />
+            <stop offset="0.35" stopColor={C.plum} stopOpacity="0.62" />
+            <stop offset="0.7" stopColor={C.plum} stopOpacity="0.2" />
+            <stop offset="1" stopColor={C.plum} stopOpacity="0" />
           </radialGradient>
+          <radialGradient id={`${id}-fade`} cx="50%" cy="50%" r="50%">
+            <stop offset="0.45" stopColor="#fff" stopOpacity="1" />
+            <stop offset="0.75" stopColor="#fff" stopOpacity="0.45" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </radialGradient>
+          <mask id={`${id}-soft`}>
+            <rect width={W} height={H} fill={`url(#${id}-fade)`} />
+          </mask>
         </defs>
-        <rect width={W} height={H} fill="url(#kl-dots)" />
-        <rect width={W} height={H} fill="url(#kl-glow)" />
+        <rect width={W} height={H} fill="url(#kl-dots)" mask={`url(#${id}-soft)`} />
+        <rect width={W} height={H} fill={`url(#${id}-glow)`} />
         {L.nodes.map((n) => (
           <path key={`p${n.label}`} d={path(n)} stroke="rgba(199,174,230,0.32)" strokeWidth="1.5" fill="none" strokeDasharray={n.kind === "door" ? "6 7" : undefined} />
         ))}
