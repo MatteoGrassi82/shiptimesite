@@ -9,7 +9,9 @@ import { box, K, KoherentShell, Label, PAGES, REVIEW, Sect, display, mono, sans,
 // themselves: what was taken from Jenny's draft and what was left for later,
 // the decisions, her "Confirm…" notes that still apply (by who confirms), and
 // where each of Michael's and Chris's asks lives now. Only while REVIEW is on
-// (koherent-brand.tsx); not in any menu.
+// (koherent-brand.tsx); not in any menu. Never on production: it names the
+// customers the site keeps anonymized and other internal details, so it only
+// shows on previews (behind the team login) and locally.
 
 export const metadata: Metadata = { title: "Review: revision 2", robots: "noindex" };
 
@@ -32,7 +34,7 @@ function Item({ n }: { n: ReviewNote }) {
 }
 
 export default function KoherentReviewPage() {
-  if (!REVIEW) notFound();
+  if (!REVIEW || process.env.VERCEL_ENV === "production") notFound();
   const decide = NOTES.filter((n) => n.kind === "decide");
   const confirm = NOTES.filter((n) => n.kind !== "decide");
   const owners = [...new Set(confirm.map((n) => n.who))];
