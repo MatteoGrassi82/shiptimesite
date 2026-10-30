@@ -6,47 +6,53 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CHEV, K, PAGES, mono, sans, title } from "./koherent-brand";
 
-// ── FitSlider — "Where do you fit?" ──────────────────────────────────────────
-// The three tiers as something to try: drag the monthly orders, tick "more
-// than one site", and the band says ShipTime or Koherent, and what switches
-// on. Answers Chris's and Michael's question (Oct 27) of when a company
-// should choose which. The verdicts are the same three as the tiers they
-// replace; the thresholds (500, 5,000 or a second site) are the deck's fork,
-// revised Oct 28 and still for Michael to confirm.
+// ── FitSlider — "Which door is yours?" ───────────────────────────────────────
+// Drag the monthly orders, tick "more than one site" or "we run a warehouse",
+// and the band names the door (Jenny's three, Oct 29) and which of the four
+// solutions switch on, from her navigation doc: Growing brands start on Ship
+// with Optimize as the upsell; Enterprise is Manage with the other three
+// underneath; 3PL partners join Fulfill and use Ship. Below the first
+// threshold it says ShipTime, the "not big enough for Koherent yet" feeder
+// Jenny asked for in the Oct 29 L10. Started as Chris's and Michael's
+// question (Oct 27) of when to choose which. The thresholds are the Oct 28
+// tiers (500, 5,000 or a second site); Jenny's draft starts Growing brands at
+// 50, so the two numbers below are the decision, in one place.
+const SHIPTIME_BELOW = 500;
+const ENTERPRISE_FROM = 5000;
 
 const STOPS = [100, 250, 500, 1000, 2000, 5000, 10000, 20000];
+const SOLUTIONS = ["Ship", "Fulfill", "Optimize", "Manage"] as const;
+type Solution = (typeof SOLUTIONS)[number];
 
-type Verdict = { name: string; body: string; href?: string; on: number };
-function verdict(orders: number, multi: boolean): Verdict {
-  if (!multi && orders < 500) {
-    return { name: "ShipTime", body: "Our shipping platform: discounted labels from every carrier, in one dashboard. Self-serve, no minimum.", href: "https://www.shiptime.com", on: 1 };
+type Verdict = { name: string; body: string; href: string; on: Solution[] };
+function verdict(orders: number, multi: boolean, warehouse: boolean): Verdict {
+  if (warehouse) {
+    return { name: "3PL and fulfillment partners", body: "We bring the demand and the technology, and you keep running the floor.", href: PAGES.partners, on: ["Ship", "Fulfill"] };
   }
-  if (!multi && orders < 5000) {
-    return { name: "Koherent, at your own dock", body: "We take cost out of what you ship today, with our rates and our engine, and a named team on your account. No new warehouse yet.", on: 2 };
+  if (!multi && orders < SHIPTIME_BELOW) {
+    return { name: "ShipTime", body: "ShipTime is built for you, with the same discounted rates and Heroic Support™ on a self-serve platform.", href: "https://www.shiptime.com", on: [] };
   }
-  return { name: "Koherent, the whole network", body: "We design and run the network with you: partner warehouses placed where your customers are, a go-live plan with owners on both sides, and one number per order.", on: 3 };
+  if (!multi && orders < ENTERPRISE_FROM) {
+    return { name: "Growing brands", body: "We give you better rates, one platform and a team that answers the phone.", href: PAGES.growing, on: ["Ship", "Optimize"] };
+  }
+  return { name: "Enterprise brands", body: "We run it for you, with your rates or ours.", href: PAGES.enterprise, on: ["Ship", "Fulfill", "Optimize", "Manage"] };
 }
-
-const SWITCHES = [
-  "Discounted rates from every carrier, one dashboard",
-  "Routing rules, your sites and reports, with a named team on your account",
-  "Partner warehouses, a go-live plan and the whole network run with you",
-];
 
 const dim: CSSProperties = { ...sans, color: K.onDarkDim };
 
 export function FitSlider() {
   const [i, setI] = useState(3); // 1,000 a month
   const [multi, setMulti] = useState(false);
+  const [warehouse, setWarehouse] = useState(false);
   const orders = STOPS[i];
-  const v = verdict(orders, multi);
+  const v = verdict(orders, multi, warehouse);
 
   return (
     <div style={{ position: "relative", width: "100%", maxWidth: 900, marginTop: 10, textAlign: "left" }}>
       <div className="k-fit" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(20px, 3vw, 40px)", borderTop: `1px solid ${K.darkLine}`, paddingTop: 22 }}>
         {/* the dials */}
         <div>
-          <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.12em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>Where do you fit?</p>
+          <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.12em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>Which door is yours?</p>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 10 }}>
             <span style={{ ...mono, fontSize: "clamp(2rem, 3.6vw, 2.8rem)", fontWeight: 500, lineHeight: 1, color: K.onDark, fontVariantNumeric: "tabular-nums" }}>
               {orders.toLocaleString("en-US")}
@@ -72,30 +78,33 @@ export function FitSlider() {
             <span>5,000</span>
             <span>20,000+</span>
           </div>
-          <label style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 10, marginTop: 18, fontSize: 14.5, color: K.onDark, cursor: "pointer" }}>
+          <label style={{ ...sans, display: "flex", alignItems: "center", gap: 10, marginTop: 18, fontSize: 14.5, color: K.onDark, cursor: "pointer" }}>
             <input type="checkbox" checked={multi} onChange={(e) => setMulti(e.target.checked)} className="k-fit-check" />
             We ship from more than one site, or need to
+          </label>
+          <label style={{ ...sans, display: "flex", alignItems: "center", gap: 10, marginTop: 10, fontSize: 14.5, color: K.onDark, cursor: "pointer" }}>
+            <input type="checkbox" checked={warehouse} onChange={(e) => setWarehouse(e.target.checked)} className="k-fit-check" />
+            We run a warehouse for other brands
           </label>
         </div>
 
         {/* the verdict */}
         <div>
-          <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.12em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>You&rsquo;d start on</p>
+          <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.12em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>Your door</p>
           <p key={v.name} className="k-fit-in" style={{ ...title, fontSize: "clamp(1.3rem, 2vw, 1.6rem)", color: K.onDark, margin: "10px 0 0" }}>
-            {v.href ? (
-              <a href={v.href} style={{ color: K.onDark, textDecoration: "underline", textDecorationColor: K.lilac, textUnderlineOffset: 4 }}>{v.name}</a>
-            ) : (
-              v.name
-            )}
+            <Link href={v.href} style={{ color: K.onDark, textDecoration: "underline", textDecorationColor: K.lilac, textUnderlineOffset: 4 }}>
+              {v.name}
+            </Link>
           </p>
           <p style={{ ...dim, fontSize: 15, lineHeight: 1.55, margin: "8px 0 0" }}>{v.body}</p>
-          <ul style={{ listStyle: "none", padding: 0, margin: "16px 0 0", display: "grid", gap: 8 }}>
-            {SWITCHES.map((s, n) => {
-              const on = n < v.on;
+          <p style={{ ...mono, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: K.lilac, margin: "18px 0 0" }}>{v.on.length ? "Switches on" : "Koherent, when you grow"}</p>
+          <ul style={{ listStyle: "none", padding: 0, margin: "10px 0 0", display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {SOLUTIONS.map((s) => {
+              const on = v.on.includes(s);
               return (
-                <li key={s} style={{ ...sans, display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, lineHeight: 1.5, color: on ? K.onDark : "rgba(246,243,238,0.42)", transition: "color .3s ease" }}>
-                  <svg viewBox="0 0 8 12" aria-hidden style={{ width: 7, height: 11, flex: "none", marginTop: 5 }}>
-                    <path d={CHEV} fill={on ? K.lilac : "rgba(199,174,230,0.25)"} style={{ transition: "fill .3s ease" }} />
+                <li key={s} style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 600, color: on ? K.ink : "rgba(246,243,238,0.5)", background: on ? K.lilac : "transparent", border: `1px solid ${on ? K.lilac : "rgba(199,174,230,0.3)"}`, borderRadius: 999, padding: "6px 12px", transition: "background .3s ease, color .3s ease" }}>
+                  <svg viewBox="0 0 8 12" aria-hidden style={{ width: 6, height: 9, flex: "none" }}>
+                    <path d={CHEV} fill={on ? K.plum : "rgba(199,174,230,0.35)"} />
                   </svg>
                   {s}
                 </li>

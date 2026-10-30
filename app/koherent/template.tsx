@@ -10,7 +10,10 @@ export default function KoherentTemplate({ children }: { children: React.ReactNo
       <style>{`
         @media (prefers-reduced-motion: no-preference) {
           @keyframes k-page-kf { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-          .k-page { animation: k-page-kf .45s cubic-bezier(.22,1,.36,1) both; }
+          /* backwards, not both: a transform left on .k-page after the entrance
+             (even an identity one) pins position: fixed children, like the
+             review switch, to the page instead of the screen */
+          .k-page { animation: k-page-kf .45s cubic-bezier(.22,1,.36,1) backwards; }
         }
       `}</style>
     </div>

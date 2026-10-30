@@ -27,7 +27,7 @@ function Panel({ children, dark = false, pad = 22 }: { children: ReactNode; dark
 }
 
 // The integrations as a wall of the real marks, the API as the last chip.
-function IntegrationsWall() {
+export function IntegrationsWall() {
   return (
     <Panel>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
@@ -46,7 +46,7 @@ function IntegrationsWall() {
 }
 
 // The account team and the support lines, as the card a customer would see.
-function TeamCard() {
+export function TeamCard() {
   const roles: [string, string][] = [
     ["Account manager", "Owns the relationship. One call for anything."],
     ["Operator on the ground", "At your sites, in the daily rhythm."],
@@ -169,9 +169,9 @@ const BLOCKS: Block[] = [
     widget: <IntegrationsWall />,
   },
   {
-    id: "shiplets",
+    id: "applets",
     n: "05",
-    name: "Shiplets",
+    name: "Custom shipping applets",
     tag: "Rolling out",
     line: "Small custom apps for the one workflow that's yours alone, built in days on the same platform.",
     points: [
@@ -181,7 +181,7 @@ const BLOCKS: Block[] = [
       "Labels and shipments generated from any system or form, including ones that aren't integrated.",
       "One example: a “send a job” page that lets the store counters of two national retail chains ship to one workshop in a few clicks.",
     ],
-    link: { href: EXAMPLE_ACCOUNT, label: "See Shiplets in the example account" },
+    link: { href: EXAMPLE_ACCOUNT, label: "See a custom shipping applet in the example account" },
     widget: (
       <div style={{ background: K.mist, borderRadius: 8, padding: 22 }}>
         <ShipletScreen />

@@ -67,7 +67,7 @@ export const CASES: Case[] = [
       ["The business", "A workshop making custom plaques and laminated pieces for the customers of two national retail chains, hundreds of jobs a month."],
       ["The goal", "Let any store counter send a job to the workshop in a few clicks, without each store arranging its own shipping."],
       ["What we built", "A “send a job” page on our network: a store opens a link or scans a code, and the label is ready in a few clicks."],
-      ["Why it matters", "It's a Shiplet: a small app for the one workflow that's this workshop's alone, built on the same platform as everything else."],
+      ["Why it matters", "It's a custom shipping applet: a small app for the one workflow that's this workshop's alone, built on the same platform as everything else."],
       ["What we track", "Jobs sent by each store, and the days from counter to workshop and back."],
     ],
   },

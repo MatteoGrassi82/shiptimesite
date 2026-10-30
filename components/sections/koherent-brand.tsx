@@ -12,8 +12,12 @@ export const K = {
   violet: "#6E3A80",
   lilac: "#C7AEE6",
   mist: "#EEE8F3",
-  paper: "#F6F3EE",
-  card: "#FFFDFA",
+  // Pure white since revision 2 (Jenny, Oct 29 L10: "get away from the
+  // tan-ish white", it read as AI). Was paper #F6F3EE, card #FFFDFA.
+  paper: "#FFFFFF",
+  card: "#FFFFFF",
+  // the faintest tint, for a panel inside a box or a hovered menu row
+  wash: "#F8F6FA",
   stone: "#6A6272",
   line: "#DCD4E2",
   onDark: "#F6F3EE",
@@ -32,16 +36,131 @@ export const inner: CSSProperties = {
   padding: "clamp(76px, 9vw, 140px) clamp(20px, 4vw, 56px)",
 };
 
-// The site map. Each home section hands off to one of these (Michael, Aug 6
-// and Oct 19: keep the story short, let the visitor go deeper per section).
+// The site map. Revision 2 (Oct 30) follows Jenny's navigation ("Koherent
+// Website Solutions Architecture", Oct 29): three doors (who it's for), four
+// solutions (what it does), then Platform, Network, Integrations, Pricing and
+// Resources. The first revision's pages stay up (What we bring, How we work)
+// and the new pages link to them, so none of Michael's or Chris's asks drop.
 export const PAGES = {
   home: "/koherent",
+  los: "/koherent/logistics-operating-system",
+  growing: "/koherent/growing-brands",
+  enterprise: "/koherent/enterprise-brands",
+  partners: "/koherent/partners",
+  ship: "/koherent/ship",
+  fulfill: "/koherent/fulfill",
+  optimize: "/koherent/optimize",
+  manage: "/koherent/manage",
+  platform: "/koherent/platform",
+  network: "/koherent/network",
+  integrations: "/koherent/integrations",
+  pricing: "/koherent/pricing",
+  review: "/koherent/review",
   bring: "/koherent/what-we-bring",
   how: "/koherent/how-we-work",
   cases: "/koherent/case-studies",
   score: "/koherent/score",
   contact: "/koherent/contact",
 };
+
+// Review build: Jenny's bracketed "Confirm…" notes show as tags on the pages,
+// with a switch to hide them, and /koherent/review lists them all. Set to
+// false before launch and the tags, the switch and the review page go.
+export const REVIEW = true;
+
+// Jenny's menus, in her order. `line` is the one sentence under an item in
+// the open menu, taken from her copy; `soon` marks a Resources item that has
+// no page yet (shown, not linked).
+export type NavItem = { name: string; href?: string; line?: string; soon?: boolean };
+export type NavMenu = { name: string; href?: string; groups: { title?: string; items: NavItem[] }[]; foot?: NavItem };
+export const NAV: NavMenu[] = [
+  {
+    name: "Solutions",
+    groups: [
+      {
+        title: "Who we help",
+        items: [
+          { name: "Growing brands", href: PAGES.growing, line: "Shipping 50 to 1,000 orders a month and outgrowing the tools you started with." },
+          { name: "Enterprise brands", href: PAGES.enterprise, line: "More than one location, your own carrier contracts, one partner accountable." },
+          { name: "3PL and fulfillment partners", href: PAGES.partners, line: "More merchants, better shipping margins and a network that sends work your way." },
+        ],
+      },
+      {
+        title: "What we do",
+        items: [
+          { name: "Ship", href: PAGES.ship, line: "Every parcel and pallet through the best carrier at the best rate." },
+          { name: "Fulfill", href: PAGES.fulfill, line: "Inventory in the right warehouses, without owning a building." },
+          { name: "Optimize", href: PAGES.optimize, line: "The money and time hiding in your shipping data." },
+          { name: "Manage", href: PAGES.manage, line: "Your systems connected, and one team responsible for the outcome." },
+        ],
+      },
+    ],
+    foot: { name: "What is a logistics operating system?", href: PAGES.los },
+  },
+  {
+    name: "Platform",
+    href: PAGES.platform,
+    groups: [
+      {
+        items: [
+          { name: "Rate shopping", href: `${PAGES.platform}#rate-shopping` },
+          { name: "Labels", href: `${PAGES.platform}#labels` },
+          { name: "Automation", href: `${PAGES.platform}#automation` },
+          { name: "Freight", href: `${PAGES.ship}#inside` },
+          { name: "Returns", href: `${PAGES.platform}#returns` },
+          { name: "Analytics", href: `${PAGES.platform}#analytics` },
+          { name: "Custom shipping applets", href: `${PAGES.manage}#applets` },
+          { name: "API and developer hub", href: `${PAGES.platform}#api` },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Network",
+    href: PAGES.network,
+    groups: [
+      {
+        items: [
+          { name: "Carriers", href: `${PAGES.network}#carriers` },
+          { name: "Warehouse locations", href: `${PAGES.network}#warehouses` },
+          { name: "Final mile", href: `${PAGES.network}#carriers` },
+          { name: "Partner 3PL program", href: PAGES.partners },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Integrations",
+    href: PAGES.integrations,
+    groups: [
+      {
+        items: [
+          { name: "Carriers", href: `${PAGES.integrations}#carriers` },
+          { name: "Marketplaces", href: `${PAGES.integrations}#marketplaces` },
+          { name: "Online stores", href: `${PAGES.integrations}#stores` },
+          { name: "WMS and ERP", href: `${PAGES.integrations}#systems` },
+          { name: "APIs", href: `${PAGES.integrations}#api` },
+        ],
+      },
+    ],
+  },
+  { name: "Pricing", href: PAGES.pricing, groups: [] },
+  {
+    name: "Resources",
+    groups: [
+      {
+        items: [
+          { name: "Customer stories", href: PAGES.cases },
+          { name: "Logistics Performance Score", href: PAGES.score },
+          { name: "Benchmark report", soon: true },
+          { name: "Blog", soon: true },
+          { name: "Podcast", soon: true },
+          { name: "Guides", soon: true },
+        ],
+      },
+    ],
+  },
+];
 
 // The story, in order. Detail pages show where they sit in it and hand on to
 // the next one, so a visitor who goes deeper still gets the whole story.

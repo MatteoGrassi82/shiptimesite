@@ -2,8 +2,10 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-import { CHAPTERS, CHEV, K, Logo, PAGES, display, inner, mono, sans, title } from "./koherent-brand";
+import { CHAPTERS, CHEV, K, Logo, NAV, PAGES, REVIEW, display, inner, mono, sans, title } from "./koherent-brand";
 import { KoherentNav } from "./koherent-nav";
+import { NotesToggle } from "./koherent-review";
+import { NOTE_COUNT } from "./koherent-copy";
 
 // ── The pieces every /koherent page shares ───────────────────────────────────
 // Buttons, the section frame, the page frame (nav, footer), the detail-page
@@ -15,7 +17,47 @@ import { KoherentNav } from "./koherent-nav";
 // (K, sans, title…) directly. A "use client" file would hand them over as
 // references and every style spread would come through empty.
 
-export { CHAPTERS, K, KMark, Logo, PAGES, display, inner, mono, sans, title } from "./koherent-brand";
+export { CHAPTERS, K, KMark, Logo, NAV, PAGES, REVIEW, display, inner, mono, sans, title } from "./koherent-brand";
+
+// A white box with a hairline and a soft shadow: on the white site the boxes
+// carry the shape the tan background used to (Jenny and Julia, Oct 29: "just
+// put boxes around them", "some shading so they pop out").
+export const box: CSSProperties = {
+  background: K.card,
+  border: `1px solid ${K.line}`,
+  borderRadius: 12,
+  boxShadow: "0 1px 2px rgba(23,16,28,0.04), 0 18px 40px -28px rgba(23,16,28,0.28)",
+};
+
+// ── review tags ──────────────────────────────────────────────────────────────
+// One of Jenny's bracketed notes, where it applies on the page: amber for a
+// fact to confirm, lilac for a decision. Hidden by the review switch, and gone
+// entirely once REVIEW is off.
+export type NoteData = { who: string; text: string; kind?: "confirm" | "decide" };
+
+export function Note({ who, text, kind = "confirm", style }: NoteData & { style?: CSSProperties }) {
+  if (!REVIEW) return null;
+  const decide = kind === "decide";
+  return (
+    <span className="k-note" role="note" style={{ display: "flex", flexDirection: "column", gap: 3, textAlign: "left", background: decide ? "#F4EEFB" : "#FFF6DB", border: `1px solid ${decide ? K.lilac : "#F2CF66"}`, borderRadius: 8, padding: "8px 12px", maxWidth: 560, ...style }}>
+      <span style={{ ...mono, fontSize: 10.5, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700, color: decide ? K.plum : "#5C4300" }}>
+        {decide ? "To decide" : "To confirm"} · {who}
+      </span>
+      <span style={{ ...sans, fontSize: 13.5, lineHeight: 1.45, color: decide ? K.ink : "#4A3700" }}>{text}</span>
+    </span>
+  );
+}
+
+export function Notes({ notes, center = false, style }: { notes?: NoteData[]; center?: boolean; style?: CSSProperties }) {
+  if (!REVIEW || !notes?.length) return null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: center ? "center" : "flex-start", gap: 8, marginTop: 18, ...style }}>
+      {notes.map((n) => (
+        <Note key={n.text} {...n} />
+      ))}
+    </div>
+  );
+}
 
 // The steps: the arrowhead turned and repeated. Only ever shows progress.
 // They draw in when their Reveal comes into view, so keep them inside one.
@@ -111,18 +153,54 @@ export function More({ href, children, onDark = false }: { href: string; childre
 // ── footer ───────────────────────────────────────────────────────────────────
 // Centered, like the rest of the site (Matteo, Oct 23), and it ends on the
 // wordmark, set huge and cropped: the last thing on every page is the name.
+// The links follow Jenny's navigation, plus the first revision's How we work
+// and What we bring pages, which still hold Chris's and Michael's asks.
 function Footer() {
-  const links: [string, string][] = [...CHAPTERS.map((c): [string, string] => [c.name, c.href]), ["Talk to our team", PAGES.contact], ["ShipTime", "https://www.shiptime.com"]];
+  const [who, what] = NAV[0].groups;
+  const cols: { title: string; links: [string, string][] }[] = [
+    { title: "Who we help", links: who.items.map((i): [string, string] => [i.name, i.href ?? PAGES.home]) },
+    { title: "What we do", links: what.items.map((i): [string, string] => [i.name, i.href ?? PAGES.home]) },
+    {
+      title: "Koherent",
+      links: [
+        ["Platform", PAGES.platform],
+        ["Network", PAGES.network],
+        ["Integrations", PAGES.integrations],
+        ["Pricing", PAGES.pricing],
+        ["How it fits together", PAGES.los],
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        ["Customer stories", PAGES.cases],
+        ["Logistics Performance Score", PAGES.score],
+        ["How we work", PAGES.how],
+        ["What we bring", PAGES.bring],
+        ["Talk to an advisor", PAGES.contact],
+        ["ShipTime", "https://www.shiptime.com"],
+      ],
+    },
+  ];
   return (
     <footer data-k-dark="" style={{ background: K.ink, color: K.onDarkDim, overflow: "hidden" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(56px, 7vw, 88px) clamp(20px, 4vw, 56px) 0", textAlign: "center" }}>
         <Label onDark style={{ fontSize: 12 }}>Your managed logistics network</Label>
         <p style={{ ...title, fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)", color: K.onDark, margin: "16px 0 0" }}>Make it coherent.</p>
-        <nav aria-label="Footer" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px 28px", marginTop: 30 }}>
-          {links.map(([l, h]) => (
-            <Link key={l} href={h} className="k-footlink" style={{ ...sans, fontSize: 15, color: K.onDark, textDecoration: "none" }}>
-              {l}
-            </Link>
+        <nav aria-label="Footer" className="k-foot" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "28px 24px", marginTop: 40, textAlign: "center" }}>
+          {cols.map((c) => (
+            <div key={c.title}>
+              <p style={{ ...mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: K.lilac, margin: 0 }}>{c.title}</p>
+              <ul style={{ listStyle: "none", padding: 0, margin: "14px 0 0", display: "grid", gap: 10 }}>
+                {c.links.map(([l, h]) => (
+                  <li key={l}>
+                    <Link href={h} className="k-footlink" style={{ ...sans, fontSize: 15, color: K.onDark, textDecoration: "none" }}>
+                      {l}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </nav>
         <div style={{ borderTop: `1px solid ${K.darkLine}`, marginTop: "clamp(40px, 5vw, 56px)", paddingTop: 20, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px 24px" }}>
@@ -133,6 +211,7 @@ function Footer() {
       <div aria-hidden style={{ display: "flex", justifyContent: "center", height: "clamp(64px, 15vw, 214px)", overflow: "hidden", marginTop: "clamp(24px, 3.5vw, 44px)" }}>
         <Logo size="clamp(90px, 21vw, 300px)" color="rgba(199,174,230,0.13)" />
       </div>
+      <style>{`@media (max-width: 760px) { .k-foot { grid-template-columns: 1fr 1fr !important; } }`}</style>
     </footer>
   );
 }
@@ -144,6 +223,7 @@ export function KoherentShell({ children }: { children: ReactNode }) {
       <KoherentNav />
       <main>{children}</main>
       <Footer />
+      {REVIEW && <NotesToggle count={NOTE_COUNT} />}
       <style>{`
         .k-root ::selection { background: ${K.lilac}; color: ${K.ink}; }
         /* one focus ring for every control on the site, in the brand violet.

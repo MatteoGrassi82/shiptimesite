@@ -18,8 +18,8 @@ export const C = {
   violet: "#6E3A80",
   lilac: "#C7AEE6",
   mist: "#EEE8F3",
-  paper: "#F6F3EE",
-  card: "#FFFDFA",
+  paper: "#FFFFFF", // white since revision 2, as koherent-brand.tsx
+  card: "#FFFFFF",
   stone: "#6A6272",
   line: "#DCD4E2",
   onDark: "#F6F3EE",

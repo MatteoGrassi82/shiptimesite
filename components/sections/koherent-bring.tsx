@@ -29,7 +29,7 @@ const B: Record<Key, { title: string; body: string; tag?: string }> = {
   rates: { title: "Discounted rates", body: "Our buying power, passed through to you. Bring your own rates too: we compare yours and ours on every shipment, and the best value wins." },
   warehouses: { title: "A warehouse network", body: "Certified partner warehouses in Canada and the US. We don't own them; we pick the right ones for you." },
   integrations: { title: "The integration library", body: "Shopify, Amazon, NetSuite, QuickBooks and 30 more, plus an open API for anything else you run." },
-  shiplets: { title: "Shiplets", body: "Small custom apps for the one workflow that's yours alone, built in days on the same platform.", tag: "Rolling out" },
+  shiplets: { title: "Custom shipping applets", body: "Small custom apps for the one workflow that's yours alone, built in days on the same platform.", tag: "Rolling out" },
   people: { title: "People and support", body: "Experienced operators and a support team that knows your account. Calls, texts and email." },
 };
 

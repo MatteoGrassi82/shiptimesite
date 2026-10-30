@@ -2,110 +2,130 @@ import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Marquee } from "@/components/ui/marquee";
-import { KoherentHeroArt } from "./koherent-hero-art";
-import { BringBento } from "./koherent-bring";
-import { MethodPlayer } from "./koherent-method";
-import { TargetTriangle } from "./koherent-target";
-import { CASES } from "./koherent-cases";
+import { ConsoleView } from "./koherent-motion";
 import { FitSlider } from "./koherent-fit";
-import { ChapterProgress, Drift } from "./koherent-fx";
-import { Head, inner, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, Secondary, Sect, Steps, display, mono, sans, title } from "./koherent-ui";
+import { CountUp } from "./koherent-fx";
+import { LogoRow } from "./koherent-logos";
+import { CHEV } from "./koherent-brand";
+import { HOME } from "./koherent-copy";
+import { HeroHeadline } from "./koherent-review";
+import { CardGrid, CasesRow, R2Styles, wrap } from "./koherent-page";
+import { box, K, KMark, KoherentShell, Label, More, Notes, PAGES, Primary, ScoreClose, Secondary, Sect, display, mono, sans, title } from "./koherent-ui";
 
-// ── /koherent — first revision (Oct 23, 2026) ────────────────────────────────
-// The enterprise site under the Koherent name, replacing ShipTime One (Oct 22
-// L10). Sources, in order of authority:
-//   - Michael's notes on /plus/v3 (email "New website", Oct 19): strong logo
-//     top left; one sentence that sums up the problem before the questions;
-//     his three extra questions; "one system answers these and more"; drop the
-//     $100M+ banner; broaden to anyone shipping to consumers (InnoWave); order
-//     = what we bring → how we work → the design target → the people, and
-//     only then why we're different; three case studies; less content per
-//     section with a way to go deeper.
-//   - The brand deck "Make it coherent." (Oct 22): the idea, the K, plum,
-//     Schibsted Grotesk + JetBrains Mono, triangle and steps as the only
-//     shapes, "one number per order", the positioning statement.
-//   - Chris (Oct 22): the first step is taking cost out, from their own order
-//     data and our network, not "cheaper rates"; we work alongside them and
-//     they keep control; "how we work" is the product.
-// Case-study figures are proposals, labelled as such on the page. PG Golf's
-// "~$600K a year" is left out on purpose: its real volume is a fraction of the
-// model it came from.
-//
-// Second pass (Oct 25), from every website email since Aug 4 (Michael, Chris):
-//   - the case studies are anonymized, as Michael asked ("less specific") and
-//     as his own Sep 15 write-up of the promotional-company case does;
-//   - Why we're different is the "in between" positioning both of them asked
-//     for, in our customers' words (Chris's markup), not "a prospect's";
-//   - Michael's "one team… optimized as you scale" is the People quote;
-//   - the score is the main button (Chris, Aug 7), and the hero says who it's
-//     for, for Michael's 15-second test;
-//   - shorter: the ShipTime ladder folds into the 500+ band, the console demo
-//     moves to /koherent/how-we-work, and each section hands off to a detail
-//     page (PAGES in koherent-ui.tsx) instead of the old ShipTime Plus pages.
+// ── /koherent — revision 2 (Oct 30) ──────────────────────────────────────────
+// Jenny's home page (copy draft v1 and navigation, Oct 29), in her order:
+// headline, the outcome line, the three doors, the four solutions, the
+// numbers, the advisors. White, with boxes (Oct 29 L10).
+// Every ask from Michael's and Chris's emails that lived on the first
+// revision's home page is still on this one or moved to the page it fits
+// (koherent-copy.ts, ASKS, and /koherent/review list where each one is):
+//   - Michael: the moving questions under one sentence that sums up the
+//     problem, and "one system answers these, and more"; his line, photo and
+//     the account team; the anonymized cases; his headline, as option three
+//     of the headline switch.
+//   - Chris: the score as the ask (nav button, closing band), "Grow your
+//     network, not your overhead" over the door finder, "experienced
+//     operators, not account managers".
+//   - Chris and Michael: when to choose ShipTime or Koherent, now the door
+//     finder (koherent-fit.tsx), landing on Jenny's doors.
+// The first revision's hero art (generated dusk aisle) is off the home page:
+// Jenny wants it to look less AI. The hero shows the product instead, the
+// example account, with the account manager beside it.
 
-// Tokens, the K, nav, footer and buttons are shared with the detail pages
-// (koherent-ui.tsx).
+const para = { ...sans, fontSize: "clamp(1.02rem, 1.25vw, 1.12rem)", lineHeight: 1.7, color: K.stone, margin: "18px auto 0", maxWidth: "62ch" };
+const h2 = { ...title, fontSize: "clamp(1.9rem, 3.2vw, 2.8rem)", color: K.ink, margin: "14px auto 0", maxWidth: "26ch" };
+const chev = (fill = K.violet) => (
+  <svg viewBox="0 0 8 12" aria-hidden style={{ width: 6, height: 9, flex: "none" }}>
+    <path d={CHEV} fill={fill} />
+  </svg>
+);
 
 // ── hero ─────────────────────────────────────────────────────────────────────
-// Hero C from the Oct 28 lab (Matteo's pick): words left, the picture right,
-// tall and off the page edge. The headline says what we are, "Your managed
-// logistics network" (Michael,
-// Oct 27: make it prominent; Oct 28: "Make it coherent" reads as generic, a
-// cold reader took the site for personal finance). The deck's line stays as
-// the tagline in the footer and in the question lines. Then who it's for and
-// what we do in one plain sentence (Michael's 15-second test), then Chris's category: not
-// another 3PL, not another shipping platform. Text left, the visual right
-// (Matteo, Oct 23): the problem pieces pull together into the K, the photo
-// opens from the arrow tip behind the steps, and the cost card counts down to
-// the golf brand's proposed figure. See koherent-hero-art.tsx. Everything
-// below the hero stays centered.
+function LeadCard() {
+  return (
+    <div className="k-lead" style={{ ...box, position: "absolute", left: "-7%", bottom: 0, width: "min(330px, 72%)", display: "flex", gap: 12, alignItems: "center", padding: "14px 16px", boxShadow: "0 26px 50px -24px rgba(23,16,28,0.5)" }}>
+      <span aria-hidden style={{ width: 44, height: 44, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+        <KMark style={{ width: 18, height: 18 }} />
+      </span>
+      <span>
+        <span style={{ ...mono, display: "block", fontSize: 10.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet }}>Your account manager</span>
+        <span style={{ ...sans, display: "block", fontSize: 14, lineHeight: 1.4, fontWeight: 600, color: K.ink, marginTop: 3 }}>Owns the relationship, knows your plans. One call for anything.</span>
+      </span>
+    </div>
+  );
+}
+
 function Hero() {
   return (
-    <Sect style={{ overflow: "hidden" }}>
-      <div className="k-hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 0 0 clamp(20px, 4vw, 56px)", display: "grid", gridTemplateColumns: "0.95fr 1.05fr", gap: "clamp(24px, 4vw, 56px)", alignItems: "center", minHeight: "min(84vh, 760px)" }}>
-        <div className="k-hero-text" style={{ padding: "clamp(44px, 6vw, 80px) 0" }}>
-          <div className="k-fade" style={{ animationDelay: "0.05s" }}>
-            <Label>Logistics, designed and run with you</Label>
-          </div>
-          <h1 className="k-fade" style={{ ...display, fontSize: "clamp(2.7rem, 5.6vw, 4.7rem)", color: K.plum, margin: "20px 0 0", animationDelay: "0.12s" }}>
-            Your managed logistics network.
-          </h1>
-          {/* who it's for and what we do, first: Michael's 15-second test */}
-          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "22px 0 0", maxWidth: "34ch", animationDelay: "0.24s" }}>
-            We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to individuals.
-          </p>
-          {/* Chris's category, in the first panel */}
-          <p className="k-fade" style={{ ...sans, fontSize: "clamp(1rem, 1.2vw, 1.08rem)", lineHeight: 1.6, color: K.stone, margin: "14px 0 0", maxWidth: "46ch", animationDelay: "0.32s" }}>
-            Not another 3PL, not another shipping platform. One team designs your network from your own order data and
-            runs it with you: no rebuild, and you stay in control.
-          </p>
-          <div className="k-fade k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30, animationDelay: "0.42s" }}>
-            <Primary href={PAGES.score}>
-              Get your logistics score <ArrowRight size={16} />
+    <Sect style={{ overflow: "visible" }}>
+      <div className="k-r2hero" style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(32px, 4.5vw, 64px) clamp(20px, 4vw, 56px) clamp(36px, 4.5vw, 56px)", display: "grid", gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 0.95fr)", gap: "clamp(32px, 5vw, 64px)", alignItems: "center" }}>
+        <div className="k-fade">
+          <Label>{HOME.label}</Label>
+          <HeroHeadline options={HOME.headlines} style={{ ...display, fontSize: "clamp(2.4rem, 4.2vw, 3.6rem)", color: K.plum, margin: "20px 0 0" }} />
+          <p style={{ ...sans, fontSize: "clamp(1.08rem, 1.45vw, 1.25rem)", lineHeight: 1.55, color: K.ink, margin: "22px 0 0", maxWidth: "46ch" }}>{HOME.subhead}</p>
+          <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
+            <Primary href={HOME.cta.href}>
+              {HOME.cta.label} <ArrowRight size={16} />
             </Primary>
-            <Secondary href={PAGES.contact}>Talk to our team</Secondary>
+            <Secondary href={HOME.secondary.href}>{HOME.secondary.label}</Secondary>
           </div>
+          <ul style={{ listStyle: "none", padding: 0, margin: "24px 0 0", display: "flex", flexWrap: "wrap", gap: "10px 22px" }}>
+            {HOME.ticks.map((t) => (
+              <li key={t} style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14.5, color: K.stone }}>
+                {chev()}
+                {t}
+              </li>
+            ))}
+          </ul>
+          <Notes notes={HOME.heroNotes} />
         </div>
-
-        {/* Hero C (Matteo, Oct 28): the picture tall and off the right edge,
-            with the pieces, the K, the sweep and the cost card; the dusk aisle
-            is a generated placeholder, labelled, until our own shoot */}
-        <KoherentHeroArt src="/generated/koherent-hero-a.webp" alt="" />
+        <div className="k-fade k-herovis" style={{ position: "relative", minWidth: 0, paddingBottom: 44, animationDelay: "0.15s" }}>
+          <ConsoleView />
+          <LeadCard />
+        </div>
       </div>
     </Sect>
   );
 }
 
-// ── the problem ──────────────────────────────────────────────────────────────
-// Michael: one sentence that sums up the problem, then the questions become
-// the specifics of it. His three questions are in (bold), and "one system
-// answers all nine" becomes "these, and more".
-// The questions move on a desktop, as Michael asked ("I like the idea of the
-// moving questions", Oct 19), and pause under the pointer so any one can be
-// read. On a phone, with reduced motion and for screen readers they are one
-// still list instead (the six marked `phone` on a phone, his three among
-// them), because a marquee there shows a chip and a half and reads every
-// question four times.
+// ── the numbers, on the first screen ─────────────────────────────────────────
+// Every competitor puts proof above the fold (ShipStation, Stord, ShipBob,
+// Flexport, Oct 30). We have no approved logos yet, so: Jenny's four figures,
+// and the systems we connect to.
+function Facts() {
+  return (
+    <Sect>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(20px, 4vw, 56px) clamp(24px, 3vw, 40px)" }}>
+        <Reveal>
+          <div className="k-facts" style={{ ...box, display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
+            {HOME.facts.map(([v, l]) => (
+              <div key={l} className="k-fact" style={{ padding: "22px 24px", borderRight: `1px solid ${K.line}` }}>
+                <div style={{ ...mono, fontSize: "clamp(1.7rem, 2.6vw, 2.3rem)", fontWeight: 500, lineHeight: 1, color: K.plum }}>
+                  <CountUp value={v} />
+                </div>
+                <p style={{ ...sans, fontSize: 14, color: K.stone, margin: "8px 0 0" }}>{l}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={120}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "12px 18px", marginTop: 22 }}>
+            <span style={{ ...mono, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: K.stone }}>Connects to the systems you already run</span>
+            <LogoRow more="+ 30 more" style={{ justifyContent: "center" }} />
+          </div>
+        </Reveal>
+        <Notes notes={HOME.factsNotes} center />
+      </div>
+    </Sect>
+  );
+}
+
+// ── the outcome line, then Michael's questions ───────────────────────────────
+// Jenny's best line, drawn as what it says: three things you can buy. Then
+// the moving questions (Michael, Oct 19: "I like the idea of the moving
+// questions"), which move on a desktop and pause under the pointer; on a
+// phone, with reduced motion and for screen readers they're one still list
+// (the six marked `phone` on a phone, his three among them).
 const QUESTIONS: { q: string; michael?: boolean; phone?: boolean }[] = [
   { q: "Why do our shipping costs keep rising?", phone: true },
   { q: "Should we be using regional carriers?", michael: true, phone: true },
@@ -123,59 +143,227 @@ const QUESTIONS: { q: string; michael?: boolean; phone?: boolean }[] = [
 
 function QuestionChip({ children, strong = false }: { children: ReactNode; strong?: boolean }) {
   return (
-    <span className="k-qchip" style={{ ...sans, display: "inline-flex", alignItems: "center", fontSize: 15, fontWeight: strong ? 600 : 500, color: K.ink, background: K.card, border: `1px solid ${strong ? K.violet : K.line}`, borderRadius: 999, padding: "10px 18px", whiteSpace: "nowrap" }}>
+    <span className="k-qchip" style={{ ...sans, display: "inline-flex", alignItems: "center", fontSize: 15, fontWeight: strong ? 600 : 500, color: K.ink, background: K.card, border: `1px solid ${strong ? K.violet : K.line}`, borderRadius: 999, padding: "10px 18px", whiteSpace: "nowrap", boxShadow: "0 6px 16px -12px rgba(23,16,28,0.3)" }}>
       {children}
     </span>
   );
 }
 
-function Problem() {
+function Outcome() {
+  const three: { who: string; what: string; us?: boolean }[] = [
+    { who: "Shipping software", what: "A label." },
+    { who: "A 3PL", what: "A building." },
+    { who: "Koherent", what: "The outcome.", us: true },
+  ];
   return (
-    <Sect id="problem" bg={K.mist}>
-      <div style={{ ...inner }}>
+    <Sect id="outcome">
+      <div style={{ ...wrap, paddingBottom: "clamp(40px, 5vw, 64px)" }}>
+        <Reveal style={{ textAlign: "center" }}>
+          <h2 style={{ ...h2, maxWidth: "30ch", marginTop: 0 }}>{HOME.outcome.heading}</h2>
+        </Reveal>
+        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16, marginTop: "clamp(32px, 4.5vw, 48px)" }}>
+          {three.map((c, n) => (
+            <Reveal key={c.who} delay={n * 90}>
+              <div data-k-dark={c.us ? "" : undefined} style={{ ...box, height: "100%", textAlign: "center", padding: "26px 22px", background: c.us ? K.plum : K.card, borderColor: c.us ? K.plum : K.line }}>
+                <Label onDark={c.us}>{c.who}</Label>
+                <p style={{ ...display, fontSize: "clamp(1.9rem, 3.2vw, 2.6rem)", color: c.us ? K.onDark : K.ink, margin: "12px 0 0" }}>{c.what}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
         <Reveal>
-          <Head
-            n={1}
-            label="The problem"
-            heading={<>Logistics isn&rsquo;t hard because it&rsquo;s big.{" "}<span className="k-br">It&rsquo;s hard because it&rsquo;s in pieces.</span></>}
-            lead="Carriers here, warehouses there, spreadsheets everywhere, and nobody accountable for the whole. So the same questions keep coming back."
-          />
+          <p style={{ ...para, textAlign: "center", maxWidth: "64ch", marginTop: 32 }}>{HOME.outcome.body}</p>
         </Reveal>
+      </div>
 
-        <Reveal delay={120}>
-          <div aria-hidden className="k-mq" style={{ position: "relative", margin: "clamp(36px, 4.5vw, 52px) calc(-1 * clamp(20px, 4vw, 56px)) 0", display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "clamp(40px, 8vw, 140px)", zIndex: 2, background: `linear-gradient(90deg, ${K.mist}, transparent)` }} />
-            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "clamp(40px, 8vw, 140px)", zIndex: 2, background: `linear-gradient(270deg, ${K.mist}, transparent)` }} />
-            {[0, 1, 2].map((row) => (
-              <Marquee key={row} pauseOnHover reverse={row === 1} className={["[--duration:52s]", "[--duration:60s]", "[--duration:48s]"][row] + " [--gap:0.75rem]"} repeat={4}>
-                {QUESTIONS.filter((_, i) => i % 3 === row).map((q) => (
-                  <QuestionChip key={q.q} strong={q.michael}>{q.q}</QuestionChip>
-                ))}
-              </Marquee>
-            ))}
-          </div>
-          <ul className="k-qlist" style={{ listStyle: "none", padding: 0, margin: "clamp(36px, 4.5vw, 52px) auto 0", maxWidth: 1040, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
-            {QUESTIONS.map((q) => (
-              <li key={q.q} className={q.phone ? undefined : "k-q-more"}>
-                <QuestionChip strong={q.michael}>{q.q}</QuestionChip>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+      <Reveal delay={80}>
+        <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.14em", textTransform: "uppercase", color: K.violet, textAlign: "center", margin: 0 }}>The questions that keep coming back</p>
+        <div aria-hidden className="k-mq" style={{ position: "relative", margin: "22px 0 0", display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "clamp(40px, 8vw, 140px)", zIndex: 2, background: `linear-gradient(90deg, ${K.paper}, transparent)` }} />
+          <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "clamp(40px, 8vw, 140px)", zIndex: 2, background: `linear-gradient(270deg, ${K.paper}, transparent)` }} />
+          {[0, 1, 2].map((row) => (
+            <Marquee key={row} pauseOnHover reverse={row === 1} className={["[--duration:52s]", "[--duration:60s]", "[--duration:48s]"][row] + " [--gap:0.75rem]"} repeat={4}>
+              {QUESTIONS.filter((_, i) => i % 3 === row).map((q) => (
+                <QuestionChip key={q.q} strong={q.michael}>
+                  {q.q}
+                </QuestionChip>
+              ))}
+            </Marquee>
+          ))}
+        </div>
+        <ul className="k-qlist" style={{ listStyle: "none", padding: "0 clamp(20px, 4vw, 56px)", margin: "22px auto 0", maxWidth: 1100, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+          {QUESTIONS.map((q) => (
+            <li key={q.q} className={q.phone ? undefined : "k-q-more"}>
+              <QuestionChip strong={q.michael}>{q.q}</QuestionChip>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
 
-        {/* the pivot: one centered answer under the questions */}
-        <Reveal delay={200}>
-          <div style={{ marginTop: "clamp(44px, 5.5vw, 64px)", textAlign: "center" }}>
-            <p style={{ ...title, fontSize: "clamp(1.3rem, 2vw, 1.65rem)", lineHeight: 1.3, color: K.ink, maxWidth: "36ch", margin: "0 auto" }}>
-              We&rsquo;ve heard every one. It&rsquo;s a design problem.{" "}
-              <span style={{ color: K.plum }}>One coherent system answers these, and more.</span>
-            </p>
-            <p style={{ ...sans, fontSize: 16, lineHeight: 1.6, color: K.stone, maxWidth: "52ch", margin: "12px auto 0" }}>
-              Carriers, warehouses, inventory, returns and data, designed together instead of piecemeal.
-            </p>
+      <div style={{ ...wrap, paddingTop: "clamp(36px, 4.5vw, 56px)", textAlign: "center" }}>
+        <Reveal>
+          <p style={{ ...title, fontSize: "clamp(1.3rem, 2vw, 1.65rem)", lineHeight: 1.3, color: K.ink, maxWidth: "36ch", margin: "0 auto" }}>
+            We’ve heard every one. It’s a design problem. <span style={{ color: K.plum }}>One coherent system answers these, and more.</span>
+          </p>
+          <div style={{ marginTop: 18 }}>
+            <More href={PAGES.los}>What is a logistics operating system?</More>
           </div>
         </Reveal>
       </div>
+    </Sect>
+  );
+}
+
+// ── the doors, and the finder ────────────────────────────────────────────────
+function Doors() {
+  return (
+    <Sect id="doors">
+      <div style={wrap}>
+        <Reveal style={{ textAlign: "center" }}>
+          <Label>Who we help</Label>
+          <h2 style={h2}>{HOME.doors.heading}</h2>
+        </Reveal>
+        <div style={{ marginTop: "clamp(32px, 4.5vw, 48px)" }}>
+          <CardGrid cards={HOME.doors.cards} cols={3} />
+        </div>
+        <Reveal delay={120}>
+          <div data-k-dark="" style={{ position: "relative", overflow: "hidden", marginTop: 18, background: K.plum, borderRadius: 14, padding: "clamp(28px, 3.6vw, 44px) clamp(22px, 3.4vw, 44px)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 14 }}>
+            <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "26%", background: K.violet, clipPath: "polygon(48% 0, 100% 0, 100% 100%, 48% 100%, 0 50%)", opacity: 0.45 }} />
+            <p style={{ ...title, position: "relative", fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)", color: K.onDark, margin: 0 }}>Grow your network, not your overhead.</p>
+            <FitSlider />
+          </div>
+        </Reveal>
+        <Notes notes={HOME.doors.notes} center />
+      </div>
+    </Sect>
+  );
+}
+
+// ── the four solutions ───────────────────────────────────────────────────────
+function Solutions() {
+  return (
+    <Sect id="solutions">
+      <div style={wrap}>
+        <Reveal style={{ textAlign: "center" }}>
+          <Label>What we do</Label>
+          <h2 style={h2}>{HOME.solutions.heading}</h2>
+        </Reveal>
+        <div style={{ marginTop: "clamp(32px, 4.5vw, 48px)" }}>
+          <CardGrid cards={HOME.solutions.cards} cols={4} />
+        </div>
+        <Reveal>
+          <p style={{ ...para, color: K.ink, fontWeight: 600, textAlign: "center", marginTop: 28 }}>{HOME.solutions.outro}</p>
+        </Reveal>
+      </div>
+    </Sect>
+  );
+}
+
+// ── proof ────────────────────────────────────────────────────────────────────
+function Proof() {
+  return (
+    <Sect id="proof">
+      <div style={wrap}>
+        <Reveal style={{ textAlign: "center" }}>
+          <Label>Customer stories</Label>
+          <h2 style={h2}>{HOME.proof.heading}</h2>
+          <p style={para}>{HOME.proof.body}</p>
+          <Notes notes={HOME.proof.notes} center />
+        </Reveal>
+        <div style={{ marginTop: "clamp(32px, 4.5vw, 48px)" }}>
+          <CasesRow />
+        </div>
+      </div>
+    </Sect>
+  );
+}
+
+// ── the advisors ─────────────────────────────────────────────────────────────
+// Jenny's close, then the people behind it: Chris's "experienced operators,
+// not account managers" (Aug 7), Michael's "our technology is the superpower"
+// (Aug 6) and his own line with his photo (Oct 19), the three named roles on
+// every account (deck slide 11). The generated team picture is gone (less AI).
+const TEAM: { role: string; does: string }[] = [
+  { role: "Account manager", does: "Owns the relationship, knows your plans. One call for anything." },
+  { role: "Operator on the ground", does: "At your sites, in the daily rhythm with your team." },
+  { role: "Support lead", does: "Direct lines to customer service, technical and logistics support." },
+];
+
+function Advisors() {
+  return (
+    <Sect id="advisors">
+      <div style={wrap}>
+        <Reveal style={{ textAlign: "center" }}>
+          <Label>The people behind it</Label>
+          <h2 style={h2}>{HOME.advisors.heading}</h2>
+          <p style={para}>{HOME.advisors.body}</p>
+        </Reveal>
+        <div className="k-two" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 18, marginTop: "clamp(32px, 4.5vw, 48px)", alignItems: "stretch" }}>
+          <Reveal style={{ height: "100%" }}>
+            <div style={{ ...box, height: "100%", padding: "clamp(22px, 3vw, 34px)", textAlign: "left" }}>
+              <h3 style={{ ...title, fontSize: "clamp(1.4rem, 2.2vw, 1.75rem)", color: K.ink, margin: 0 }}>Experienced operators, not account managers.</h3>
+              <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "10px 0 0" }}>Our technology is the superpower. Our people make it work for you, and we look after your customers as if they were our own.</p>
+              <div style={{ display: "grid", gap: 10, marginTop: 20 }}>
+                {TEAM.map((t) => (
+                  <div key={t.role} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: K.wash, border: `1px solid ${K.line}`, borderRadius: 10, padding: "12px 14px" }}>
+                    <span aria-hidden style={{ width: 38, height: 38, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                      <KMark color={K.plum} style={{ width: 15, height: 15 }} />
+                    </span>
+                    <span>
+                      <span style={{ ...title, display: "block", fontSize: "1.02rem", color: K.ink }}>{t.role}</span>
+                      <span style={{ ...sans, display: "block", fontSize: 14, lineHeight: 1.5, color: K.stone, marginTop: 3 }}>{t.does}</span>
+                      <span style={{ ...mono, display: "block", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, marginTop: 6 }}>Named when you join</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ ...sans, fontSize: 15, lineHeight: 1.6, color: K.ink, margin: "16px 0 0" }}>One partner accountable for the whole: we take the issue, own it, and keep you informed until it’s resolved.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={120} style={{ height: "100%" }}>
+            <figure data-k-dark="" style={{ position: "relative", overflow: "hidden", height: "100%", margin: 0, background: K.plum, borderRadius: 12, padding: "clamp(28px, 3.6vw, 44px) clamp(22px, 3.4vw, 40px)", display: "flex", flexDirection: "column", justifyContent: "center", textAlign: "center" }}>
+              <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "34%", background: K.violet, clipPath: "polygon(48% 0, 100% 0, 100% 100%, 48% 100%, 0 50%)", opacity: 0.45 }} />
+              <div style={{ position: "relative" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- a 200px headshot */}
+                <img src="/team/michael-trueman.jpg" alt="Michael Trueman" width={200} height={200} loading="lazy" style={{ width: 88, height: 88, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto", border: `3px solid ${K.paper}`, boxShadow: "0 16px 36px -16px rgba(23,16,28,0.7)" }} />
+                <blockquote style={{ margin: "20px auto 0", padding: 0, maxWidth: 520 }}>
+                  <p style={{ ...title, fontSize: "clamp(1.25rem, 1.9vw, 1.55rem)", lineHeight: 1.3, color: K.onDark, margin: 0 }}>
+                    &ldquo;Our team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
+                  </p>
+                  <footer style={{ ...mono, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac, marginTop: 14 }}>Michael Trueman · President</footer>
+                </blockquote>
+                <p style={{ ...sans, fontSize: "clamp(0.98rem, 1.2vw, 1.05rem)", lineHeight: 1.6, color: K.onDarkDim, margin: "22px auto 0", maxWidth: "46ch", paddingTop: 20, borderTop: `1px solid ${K.darkLine}` }}>
+                  <strong style={{ color: K.onDark }}>Why we get up every day:</strong> to help our customers grow their business through logistics done smarter. Same side of the table, for the long run.
+                </p>
+              </div>
+            </figure>
+          </Reveal>
+        </div>
+        <Reveal>
+          <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 32 }}>
+            <Primary href={HOME.advisors.cta.href}>
+              {HOME.advisors.cta.label} <ArrowRight size={16} />
+            </Primary>
+          </div>
+        </Reveal>
+      </div>
+    </Sect>
+  );
+}
+
+// ── page ─────────────────────────────────────────────────────────────────────
+export function KoherentHome() {
+  return (
+    <KoherentShell>
+      <Hero />
+      <Facts />
+      <Outcome />
+      <Doors />
+      <Solutions />
+      <Proof />
+      <Advisors />
+      <ScoreClose />
+      <R2Styles />
       <style>{`
         /* desktop with motion: the moving rows show, the list is for screen readers */
         @media (min-width: 641px) and (prefers-reduced-motion: no-preference) {
@@ -188,406 +376,17 @@ function Problem() {
           .k-q-more { display: none !important; }
           .k-qchip { white-space: normal !important; text-align: center; }
         }
-      `}</style>
-    </Sect>
-  );
-}
-
-// ── who it's for ─────────────────────────────────────────────────────────────
-// Michael: broaden past e-commerce to anyone with a lot of orders going to
-// consumers (InnoWave is a gift-box shipper, not a DTC brand), and replace the
-// "$100M+" banner, which read as if we only work with very large companies.
-// Michael (Aug 6) found "who we work with" too generic, and Chris wants the
-// first panels to answer "is this built for companies like me?", so the three
-// enterprise-fit profiles (Jennie's) say who, at what stage, and why. The
-// third carries Chris's line, "Grow your network, not your overhead" (Oct 22),
-// the bigger promise behind the first step. The lead is Michael's Aug 4 brief
-// in a sentence. The 500-a-month line is the deck's ShipTime → Koherent fork
-// (slide 15), stated in plain words. The band also carries how Koherent sits
-// next to ShipTime (Michael: re-orient this with ShipTime's offering). The
-// tiers were revised on Oct 28 after both flagged the 500 vs 5,000 clash:
-// Koherent starts at 500 at the customer's own dock (cost first, Chris's entry
-// point, and how InnoWave starts), and runs the whole network from 5,000 or a
-// second site. For Michael to confirm.
-const TRAITS: { title: string; body: string }[] = [
-  { title: "You ship to people's doors.", body: "Online brands, and businesses that deliver to individuals for someone else: gifts, programs, subscriptions, store to door." },
-  { title: "You've outgrown a shipping app.", body: "A warehouse or a 3PL today, more than one site soon, and a shipping bill that matters to the plan." },
-  { title: "Grow your network, not your overhead.", body: "New regions, faster delivery, a new channel, without adding the people and systems to run it all." },
-];
-
-
-function WhoItsFor() {
-  return (
-    <Sect id="who">
-      <div style={{ ...inner }}>
-        <Reveal>
-          <Head
-            n={2}
-            label="Who it's for"
-            heading={<>For businesses with a lot of orders going to individuals.</>}
-            lead="Growing businesses that want their logistics to make them more money, not hold their growth back."
-          />
-        </Reveal>
-        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(36px, 4.5vw, 52px)" }}>
-          {TRAITS.map((t, i) => (
-            <Reveal key={t.title} delay={i * 90}>
-              <div style={{ height: "100%", background: K.card, border: `1px solid ${K.line}`, borderRadius: 4, padding: "28px 28px 30px", textAlign: "center" }}>
-                <Steps total={3} done={i + 1} />
-                <h3 style={{ ...title, fontSize: "clamp(1.3rem, 1.9vw, 1.55rem)", color: K.ink, margin: "20px 0 0" }}>{t.title}</h3>
-                <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "10px 0 0" }}>{t.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={120}>
-          <div className="k-band" data-k-dark="" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 14, marginTop: 18, background: K.plum, borderRadius: 4, padding: "clamp(30px, 3.6vw, 44px) clamp(26px, 3.4vw, 44px)", position: "relative", overflow: "hidden" }}>
-            <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "26%", background: K.violet, clipPath: "polygon(48% 0, 100% 0, 100% 100%, 48% 100%, 0 50%)", opacity: 0.45 }} />
-            <div style={{ ...mono, position: "relative", fontSize: "clamp(2.2rem, 4.2vw, 3.2rem)", fontWeight: 500, lineHeight: 1, color: K.onDark }}>500+</div>
-            <p style={{ ...sans, position: "relative", fontSize: "clamp(1rem, 1.35vw, 1.14rem)", lineHeight: 1.6, color: K.onDarkDim, margin: 0, maxWidth: "56ch" }}>
-              <strong style={{ color: K.onDark }}>You don&rsquo;t need to be huge.</strong>{" "}Koherent starts to pay off at
-              around 500 orders a month, and there&rsquo;s no ceiling.
-            </p>
-            {/* the three tiers as a slider: drag your volume, see where you start */}
-            <FitSlider />
-          </div>
-        </Reveal>
-      </div>
-    </Sect>
-  );
-}
-
-// ── what we bring ────────────────────────────────────────────────────────────
-// Michael's building blocks, in his order, as one bento with a map, the
-// buying power behind the rates, photos and the stats in the tiles they prove
-// (koherent-bring.tsx). Matteo picked the bento on Oct 23 over the lattice in
-// the arrowhead frame, which How we work right below already uses. It hands
-// off to the detail page the same way How we work and Case studies do.
-// The lead is Chris's point (Aug 7): we don't sell warehouses, rates or
-// technology; they're the capabilities that prove we can design the whole.
-function WhatWeBring() {
-  return (
-    <Sect id="bring">
-      <div style={{ ...inner, paddingTop: 0 }}>
-        <Reveal>
-          <Head
-            n={3}
-            label="What we bring"
-            heading={<>Everything a coherent operation needs.{" "}<span className="k-br">Already connected.</span></>}
-            lead="Not what we sell, but what we design and run with. We connect the blocks you need into a single network, and you see all of it in one place."
-          />
-        </Reveal>
-        <BringBento />
-        <Reveal delay={120}>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
-            <More href={PAGES.bring}>Every block, in detail</More>
-          </div>
-        </Reveal>
-      </div>
-    </Sect>
-  );
-}
-
-// ── how we work ──────────────────────────────────────────────────────────────
-// Chris: "how we work" is the enterprise product. His method, in his words:
-// assess, plan, design, test, strategize and execute alongside the customer,
-// "as if it was our business"; we suggest, they stay in control. His four
-// ingredients, "the secret sauce" (Oct 22), sit under the player.
-const INGREDIENTS: string[] = [
-  "A control tower watching every order",
-  "Experts on the ground at your sites",
-  "A daily rhythm with your team",
-  "Technology that shows you everything",
-];
-
-function HowWeWork() {
-  return (
-    <Sect id="how" bg={K.mist}>
-      <div style={{ ...inner }}>
-        <Reveal>
-          <Head
-            n={4}
-            label="How we work"
-            heading={<>Alongside your team, as if it were our business.{" "}<span className="k-br">You stay in control.</span></>}
-            lead="We suggest, you approve. Start with one piece, like your shipping costs, or design the whole network. Either way it's the same six steps."
-          />
-        </Reveal>
-        <Reveal delay={80}>
-          <div style={{ marginTop: "clamp(40px, 5vw, 64px)" }}>
-            <MethodPlayer />
-          </div>
-        </Reveal>
-        <Reveal delay={160}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 26, marginTop: 30 }}>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
-              {INGREDIENTS.map((t) => (
-                <li key={t} style={{ ...sans, fontSize: 14.5, fontWeight: 500, color: K.ink, border: `1px solid ${K.line}`, background: K.paper, borderRadius: 999, padding: "9px 16px" }}>
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <More href={PAGES.how}>How an engagement runs</More>
-          </div>
-        </Reveal>
-      </div>
-    </Sect>
-  );
-}
-
-// ── the design target ────────────────────────────────────────────────────────
-// The triangle carries all three pillars, always (deck slide 26): never "pick
-// two". Pillars as agreed on Oct 16: direct cost, operational efficiency,
-// customer experience. Interactive since Oct 23: visitors put in their own
-// numbers and see their triangle against the target (koherent-target.tsx).
-function DesignTarget() {
-  return (
-    <Sect id="target" bg={K.ink}>
-      <div style={{ ...inner }}>
-        <Reveal>
-          <Head
-            n={5}
-            label="The design target"
-            onDark
-            heading={<>Always all three. Never pick two.</>}
-            lead="Every network we design is held to lower cost, smoother operations and a better customer experience, all at once. Put in your numbers to see your triangle."
-          />
-        </Reveal>
-        <Reveal delay={100}>
-          <div style={{ marginTop: "clamp(44px, 5vw, 72px)" }}>
-            <TargetTriangle />
-          </div>
-        </Reveal>
-      </div>
-    </Sect>
-  );
-}
-
-// ── the people ───────────────────────────────────────────────────────────────
-// Chris (Aug 7): "experienced operators, not account managers". The account
-// team is from the deck (slide 11). The quote is Michael's own line (email
-// "New website", Oct 19), with "optimized" over "tuned" as he asked. The photo
-// (koherent-bring-people-a, made with the bento's) is a labelled placeholder
-// until our own shoot.
-const TEAM: { role: string; does: string }[] = [
-  { role: "Account manager", does: "Owns the relationship, knows your plans. One call for anything." },
-  { role: "Operator on the ground", does: "At your sites, in the daily rhythm with your team." },
-  { role: "Support lead", does: "Direct lines to customer service, technical and logistics support." },
-];
-
-function People() {
-  return (
-    <Sect id="people">
-      <div style={{ ...inner }}>
-        <Reveal>
-          <Head
-            n={6}
-            label="The people behind it"
-            heading={<>Experienced operators, not account managers.</>}
-            lead="Our technology is the superpower. Our people make it work for you, and we look after your customers as if they were our own."
-          />
-        </Reveal>
-
-        {/* the account team: three named roles on every account (deck slide
-            11, the Strategic Account Support overview). The K stands in for
-            a face until the people are named when a customer joins. */}
-        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, maxWidth: 1000, margin: "clamp(32px, 4vw, 48px) auto 0" }}>
-          {TEAM.map((t, i) => (
-            <Reveal key={t.role} delay={i * 90}>
-              <div style={{ height: "100%", display: "flex", gap: 14, alignItems: "flex-start", textAlign: "left", background: K.card, border: `1px solid ${K.line}`, borderRadius: 4, padding: "18px 18px 18px 16px" }}>
-                <span aria-hidden style={{ width: 44, height: 44, flex: "none", borderRadius: "50%", background: K.mist, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                  <KMark color={K.plum} style={{ width: 18, height: 18 }} />
-                </span>
-                <div>
-                  <p style={{ ...title, fontSize: "1.08rem", color: K.ink, margin: 0 }}>{t.role}</p>
-                  <p style={{ ...sans, fontSize: 14.5, lineHeight: 1.5, color: K.stone, margin: "5px 0 0" }}>{t.does}</p>
-                  <p style={{ ...mono, fontSize: 10.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.violet, margin: "10px 0 0" }}>Named when you join</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={200}>
-          <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, textAlign: "center", margin: "18px auto 0", maxWidth: "58ch" }}>
-            One partner accountable for the whole: we take the issue, own it, and keep you informed until it&rsquo;s resolved.
-          </p>
-        </Reveal>
-
-        {/* Michael: the one real face on the page, his line, and why we get
-            up every day (both his, Oct 19 and Oct 27) */}
-        <Reveal delay={120}>
-          <figure data-k-dark="" style={{ position: "relative", overflow: "hidden", maxWidth: 1000, margin: "clamp(36px, 4.5vw, 56px) auto 0", background: K.plum, borderRadius: 4, padding: "clamp(32px, 4vw, 52px) clamp(22px, 4vw, 64px)", textAlign: "center" }}>
-            <div aria-hidden style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "30%", background: K.violet, clipPath: "polygon(48% 0, 100% 0, 100% 100%, 48% 100%, 0 50%)", opacity: 0.45 }} />
-            <div style={{ position: "relative" }}>
-              <img src="/team/michael-trueman.jpg" alt="Michael Trueman" width={200} height={200} loading="lazy" style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover", display: "block", margin: "0 auto", border: `3px solid ${K.paper}`, boxShadow: "0 16px 36px -16px rgba(23,16,28,0.7)" }} />
-              <blockquote style={{ margin: "22px auto 0", padding: 0, maxWidth: 680 }}>
-                <p style={{ ...title, fontSize: "clamp(1.3rem, 2.1vw, 1.7rem)", lineHeight: 1.3, color: K.onDark, margin: 0 }}>
-                  &ldquo;Our team of experienced operators, one plan across warehousing, fulfillment, carriers and borders, optimized as you scale.&rdquo;
-                </p>
-                <footer style={{ ...mono, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac, marginTop: 14 }}>Michael Trueman · President</footer>
-              </blockquote>
-              <p style={{ ...sans, fontSize: "clamp(1rem, 1.25vw, 1.08rem)", lineHeight: 1.6, color: K.onDarkDim, margin: "26px auto 0", maxWidth: "50ch", paddingTop: 22, borderTop: `1px solid ${K.darkLine}` }}>
-                <strong style={{ color: K.onDark }}>Why we get up every day:</strong> to help our customers grow their business through logistics done smarter. Same side of the table, for the long run.
-              </p>
-            </div>
-          </figure>
-        </Reveal>
-
-        {/* the team picture, a placeholder until our own shoot */}
-        <Reveal delay={200}>
-          <div style={{ position: "relative", maxWidth: 1000, margin: "clamp(36px, 4.5vw, 56px) auto 0", clipPath: "polygon(10% 0, 100% 0, 100% 100%, 10% 100%, 0 50%)", background: K.mist }}>
-            <Drift amount={32}>
-            <img
-              src="/generated/koherent-bring-people-a.webp"
-              alt=""
-              width={1024}
-              height={1536}
-              loading="lazy"
-              className="k-wideimg" style={{ width: "100%", height: "auto", aspectRatio: "21 / 9", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
-            />
-            </Drift>
-            <span style={{ ...mono, position: "absolute", top: 14, right: 14, fontSize: 10.5, lineHeight: 1.4, letterSpacing: "0.04em", color: K.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 8, padding: "5px 10px" }}>Illustrative photo</span>
-          </div>
-        </Reveal>
-      </div>
-      <style>{`
-        @media (max-width: 640px) {
-          .k-root #people .k-wideimg { aspect-ratio: 4 / 3 !important; }
+        @media (max-width: 960px) {
+          .k-lead { position: relative !important; left: auto !important; width: 100% !important; margin-top: -18px; }
+          .k-herovis { padding-bottom: 0 !important; }
         }
-      `}</style>
-    </Sect>
-  );
-}
-
-// ── why we're different ──────────────────────────────────────────────────────
-// Moved after the solution (Michael). Where we sit in the market, as both
-// Michael (Aug 6) and Chris (Aug 7) asked: between the independent 3PLs and
-// the big asset-based ones, drawn as one line with us on it, not as a fifth
-// row of three cards. "The global giants" is the one name for the big end all
-// the way through. It's how our customers put it, so it says "our customers"
-// (Chris's markup on v3), and it closes on Chris's new category: not a 3PL,
-// not a shipping platform. The console demo that sat here is on
-// /koherent/how-we-work now.
-function WhyDifferent() {
-  const cols: { label: string; head: string; body: string; us?: boolean }[] = [
-    { label: "Independent 3PLs", head: "Willing, but limited.", body: "A small network, and no one to design the whole operation or the technology to run it." },
-    { label: "Koherent", head: "Deliberately in between.", body: "The design and technology of the global giants, named people who know your operation, and Shiplets built for the way you work.", us: true },
-    { label: "The global giants", head: "Capable, but you're a number.", body: "One account among thousands, at prices built for the very largest shippers." },
-  ];
-  return (
-    <Sect id="different" bg={K.mist}>
-      <div style={{ ...inner, textAlign: "center" }}>
-        <Reveal>
-          <Head
-            n={7}
-            label="Why we're different"
-            heading={<>More capable than the independents.{" "}<span className="k-br">More personal than the giants.</span></>}
-            lead="That's how our customers describe us, and it's the gap we're built for."
-          />
-        </Reveal>
-        {/* the spectrum: one line from the independents to the giants, with
-            the K sitting on it in between */}
-        <div className="k-spec" style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, maxWidth: 1040, margin: "clamp(44px, 5.5vw, 64px) auto 0" }}>
-          <div aria-hidden className="k-spec-line" style={{ position: "absolute", top: 12, left: "16.67%", right: "16.67%", height: 2, background: K.line }} />
-          {cols.map((c, i) => (
-            <Reveal key={c.label} delay={i * 90}>
-              <div style={{ position: "relative", textAlign: "center" }}>
-                <div aria-hidden style={{ height: 26, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>
-                  {c.us ? (
-                    <span style={{ display: "inline-flex", background: K.mist, padding: "0 10px" }}>
-                      <KMark color={K.plum} style={{ width: 26, height: 26 }} />
-                    </span>
-                  ) : (
-                    <span className="k-spec-tick" style={{ width: 2, height: 16, background: K.stone }} />
-                  )}
-                </div>
-                <Label style={{ color: c.us ? K.plum : K.stone }}>{c.label}</Label>
-                <h3 style={{ ...title, fontSize: "clamp(1.3rem, 1.9vw, 1.55rem)", color: c.us ? K.plum : K.ink, margin: "12px 0 0" }}>{c.head}</h3>
-                <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "10px auto 0", maxWidth: "30ch" }}>{c.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={240}>
-          <p style={{ ...title, fontSize: "clamp(1.4rem, 2.4vw, 1.9rem)", lineHeight: 1.25, color: K.ink, margin: "clamp(36px, 4.5vw, 52px) auto 0", maxWidth: "44ch" }}>
-            <span style={{ color: K.plum }}>Operations, technology and a network, combined in one team that designs your logistics and runs it with you.</span>{" "}Most providers bring one of the three.
-          </p>
-        </Reveal>
-      </div>
-      <style>{`
         @media (max-width: 760px) {
-          .k-spec { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .k-spec-line, .k-spec-tick { display: none; }
+          .k-facts { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+          .k-fact:nth-child(2n) { border-right: none !important; }
+          .k-fact:nth-child(-n + 2) { border-bottom: 1px solid ${K.line}; }
         }
+        @media (min-width: 761px) { .k-fact:last-child { border-right: none !important; } }
       `}</style>
-    </Sect>
-  );
-}
-
-// ── case studies ─────────────────────────────────────────────────────────────
-// Three cases, as Michael asked, anonymized (koherent-cases.ts). None is live,
-// so the label says "Case studies", as the nav and the detail page do, not
-// "Proof"; the one figure shown is labelled "proposed" and none is a realized
-// saving. The rest show what's being built.
-function Proof() {
-  return (
-    <Sect id="proof">
-      <div style={{ ...inner }}>
-        <Reveal>
-          <Head n={8} label="Case studies" heading={<>What we&rsquo;re designing right now.</>} lead="Three businesses, three goals. Names stay private until the work is live, and every figure is from our proposals." />
-        </Reveal>
-        <div className="k-three" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: "clamp(40px, 5vw, 60px)" }}>
-          {CASES.map((c, i) => (
-            <Reveal key={c.id} delay={i * 90}>
-              <div style={{ height: "100%", display: "flex", flexDirection: "column", textAlign: "center", background: K.card, border: `1px solid ${K.line}`, borderRadius: 4, padding: "28px 28px 26px" }}>
-                <Label>{c.sector}</Label>
-                <h3 style={{ ...title, fontSize: "clamp(1.5rem, 2.2vw, 1.85rem)", color: K.ink, margin: "12px 0 0" }}>{c.shape}</h3>
-                <p style={{ ...sans, fontSize: 15, lineHeight: 1.6, color: K.stone, margin: "10px 0 0" }}>{c.short}</p>
-                <div style={{ marginTop: "auto", paddingTop: 22 }}>
-                  {c.figure ? (
-                    <div style={{ background: K.ink, borderRadius: 4, padding: "16px 18px 14px" }}>
-                      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
-                        <span style={{ ...mono, fontSize: 30, fontWeight: 500, lineHeight: 1, color: K.onDark }}>{c.figure.to}</span>
-                        <span className="sr-only">down from </span>
-                        <s style={{ ...mono, fontSize: 14, color: K.onDarkDim, textDecorationColor: K.lilac }}>{c.figure.from}</s>
-                        <span style={{ ...sans, fontSize: 13, color: K.onDarkDim }}>{c.figure.unit}</span>
-                      </div>
-                      <p style={{ ...mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: K.lilac, margin: "10px 0 0" }}>{c.status}</p>
-                    </div>
-                  ) : (
-                    <div style={{ background: K.mist, borderRadius: 4, padding: "16px 18px 14px" }}>
-                      <p style={{ ...mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: K.plum, margin: 0 }}>{c.status}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal delay={200}>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
-            <More href={PAGES.cases}>Read the case studies</More>
-          </div>
-        </Reveal>
-      </div>
-    </Sect>
-  );
-}
-
-// ── page ─────────────────────────────────────────────────────────────────────
-export function KoherentHome() {
-  return (
-    <KoherentShell>
-      <ChapterProgress ids={["problem", "who", "bring", "how", "target", "people", "different", "proof"]} />
-      <Hero />
-      <Problem />
-      <WhoItsFor />
-      <WhatWeBring />
-      <HowWeWork />
-      <DesignTarget />
-      <People />
-      <WhyDifferent />
-      <Proof />
-      <ScoreClose />
     </KoherentShell>
   );
 }

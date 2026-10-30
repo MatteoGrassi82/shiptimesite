@@ -15,7 +15,7 @@ import { inner, K, KoherentShell, Label, PAGES, ScoreClose, Sect, Steps, display
 
 export const metadata: Metadata = {
   title: "What we bring",
-  description: "Carriers, rates, warehouses, integrations, Shiplets and people: the building blocks we design with, already connected.",
+  description: "Carriers, rates, warehouses, integrations, custom shipping applets and people: the building blocks we design with, already connected.",
 };
 
 const STATS: [string, string][] = [
