@@ -19,17 +19,19 @@ import { INTEGRATIONS, LogoChip } from "./koherent-logos";
 //   - The three stats sit in the tiles they prove.
 // The two photos were made for these tiles (koherent-bring-* in
 // scripts/generate-images.mjs, Oct 23) and are AI placeholders until our own
-// shoot, like the hero's and People's. Carrier, integration and Shiplet names
-// are the ones the Plus pages already use; the order and the messages are
-// labelled as examples.
+// shoot, like the hero's and People's. Carrier and integration names are the
+// ones the Plus pages already use; the order and the messages are labelled as
+// examples.
+// Five tiles since the Oct 29 L10: the custom shipping applets tile is off
+// until their launch (Jenny: "we shouldn't be talking about it" on the website
+// yet; Michael agreed, "Koherent first, and then we add").
 
-type Key = "carriers" | "rates" | "warehouses" | "integrations" | "shiplets" | "people";
+type Key = "carriers" | "rates" | "warehouses" | "integrations" | "people";
 const B: Record<Key, { title: string; body: string; tag?: string }> = {
   carriers: { title: "Integrated carriers", body: "National and regional couriers, last-mile partners, LTL and FTL, compared on every shipment for cost and speed." },
   rates: { title: "Discounted rates", body: "Our buying power, passed through to you. Bring your own rates too: we compare yours and ours on every shipment, and the best value wins." },
   warehouses: { title: "A warehouse network", body: "Certified partner warehouses in Canada and the US. We don't own them; we pick the right ones for you." },
   integrations: { title: "The integration library", body: "Shopify, Amazon, NetSuite, QuickBooks and 30 more, plus an open API for anything else you run." },
-  shiplets: { title: "Custom shipping applets", body: "Small custom apps for the one workflow that's yours alone, built in days on the same platform.", tag: "Rolling out" },
   people: { title: "People and support", body: "Experienced operators and a support team that knows your account. Calls, texts and email." },
 };
 
@@ -339,6 +341,7 @@ export function RateSwitches() {
 // The Shiplet Michael named (Oct 27): the "send a job" page built for two
 // national retail chains' store counters (koherent-cases.ts, case 3), as
 // the small screen a counter sees. Details are illustrative and say so.
+// On no page since the Oct 29 L10; kept for the applets' launch.
 export function ShipletScreen() {
   const rows: [string, string][] = [
     ["Job", "2 pieces"],
@@ -401,11 +404,11 @@ export const KB_CSS = `
 export function BringBento() {
   return (
     <div className="kb" style={{ maxWidth: 1120, margin: "clamp(36px, 5vw, 56px) auto 0" }}>
-      {/* Six tiles for the six blocks, nothing else: the map and the carriers
-          on top, three equal tiles in the middle, people as one wide tile at
-          the bottom. DOM order is Michael's order, which is also the phone
-          order. */}
-      <div className="kb-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gridTemplateAreas: `"map map map map map map map car car car car car" "map map map map map map map car car car car car" "rat rat rat rat int int int int shp shp shp shp" "ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl"`, gap: 14 }}>
+      {/* One tile per block, nothing else: the map and the carriers on top,
+          rates and integrations side by side in the middle, people as one
+          wide tile at the bottom. DOM order is Michael's order, which is also
+          the phone order. */}
+      <div className="kb-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gridTemplateAreas: `"map map map map map map map car car car car car" "map map map map map map map car car car car car" "rat rat rat rat rat rat int int int int int int" "ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl ppl"`, gap: 14 }}>
         {/* 01 · carriers: the comparison over a photo */}
         <PhotoTile area="car" delay={120} src="/generated/koherent-bring-carriers-a.webp" focus="50% 14%" shade={SHADE} chevrons={{ size: 58, style: { right: 22, top: 22 } }} credit="Illustrative photo">
           <TileHead k="carriers" dark />
@@ -441,15 +444,7 @@ export function BringBento() {
           </div>
         </Tile>
 
-        {/* 05 · Shiplets: the real example */}
-        <Tile area="shp" tone="mist" delay={360}>
-          <TileHead k="shiplets" />
-          <div style={{ marginTop: "auto" }}>
-            <ShipletScreen />
-          </div>
-        </Tile>
-
-        {/* 06 · people: one wide tile, the photo on the left */}
+        {/* 05 · people: one wide tile, the photo on the left */}
         <Tile area="ppl" tone="ink" delay={120} className="kb-people">
           <div className="kb-people-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0, 0.85fr) minmax(0, 1.15fr)", gap: 24, margin: -24 }}>
             <div className="kb-people-photo kb-photo" style={{ position: "relative", minHeight: 300 }}>
@@ -500,7 +495,7 @@ export function BringBento() {
           .kb-tile.is-in .kb-tick { animation: kb-pop-kf .4s cubic-bezier(.22,1,.36,1) both; animation-delay: calc(var(--d) + 350ms + var(--i)); }
         }
         @media (max-width: 1024px) {
-          .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-areas: "map map" "car rat" "int shp" "ppl ppl" !important; }
+          .kb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-areas: "map map" "car rat" "int int" "ppl ppl" !important; }
         }
         @media (max-width: 760px) {
           .kb-grid { display: flex !important; flex-direction: column; }

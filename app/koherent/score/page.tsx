@@ -13,6 +13,8 @@ import { ScoreFlow } from "./score-flow";
 // now lives in the PageHead, so the shiplet's own intro card would only say it
 // twice. Nothing under it either: once someone has started sixteen questions,
 // the page stops selling (the result screen has its own talk button).
+// brand="koherent": the written report and the answers on the result come
+// from a Koherent engineer, not ShipTime One's (the default elsewhere).
 
 const LEAD =
   "Sixteen questions, five minutes. Each answer scores a level from 1 to 5 across three pillars, logistics costs, operational excellence and customer experience, weighted into one score out of 100 against world-class logistics. You get the score, a read on each pillar, and a short written report on where the leverage is.";
@@ -62,7 +64,7 @@ export default function KoherentScorePage() {
         aside={
           <ScoreFlow>
             <div style={lpsTheme}>
-              <LpsShiplet autoStart />
+              <LpsShiplet autoStart brand="koherent" />
             </div>
           </ScoreFlow>
         }

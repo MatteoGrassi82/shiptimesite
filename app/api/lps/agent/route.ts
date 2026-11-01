@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { QUESTIONS, scoreAssessment, type Answers } from "@/lib/lps";
+import { LPS_BRANDS, lpsBrand } from "@/lib/lps-report";
 
 // ── The agentic half of the LPS shiplet ──────────────────────────────────────
 // Michael's "micro-ask" from the 2026-08-18 prep call: the assessment isn't a
@@ -22,7 +23,9 @@ export const maxDuration = 45;
 
 const MODEL = process.env.LPS_MODEL || "gpt-4.1-mini";
 
-const VOICE = `VOICE: one logistics operator talking to another. Specific, calm, concrete. Never use "leverage", "streamline", "seamless", "unlock", "solution" or "platform". Never invent numbers, savings or facts the visitor did not give you. Do not pitch ShipTime.`;
+// The brand is whose engineer is speaking: ShipTime One, or Koherent on /koherent.
+const voice = (company: string) =>
+  `VOICE: one logistics operator talking to another. Specific, calm, concrete. Never use "leverage", "streamline", "seamless", "unlock", "solution" or "platform". Never invent numbers, savings or facts the visitor did not give you. Do not pitch ${company}.`;
 
 async function llm(prompt: string, json: boolean) {
   const key = process.env.OPENAI_API_KEY;
@@ -64,9 +67,11 @@ export async function POST(req: NextRequest) {
     priority?: string;
     asked?: { question: string; answer: string }[];
     question?: string;
+    brand?: string;
   };
 
   const answers = body.answers || {};
+  const b = LPS_BRANDS[lpsBrand(body.brand)];
 
   // ── micro-ask: a generated follow-up, specific to this operation ───────────
   if (body.mode === "micro-ask") {
@@ -74,7 +79,7 @@ export async function POST(req: NextRequest) {
     const prior = (body.asked || []).map((a) => `Q: ${a.question}\nA: ${a.answer}`).join("\n\n");
 
     const out = await llm(
-      `A prospect just completed ShipTime's 16-question Logistics Performance Assessment.
+      `A prospect just completed ${b.company}'s 16-question Logistics Performance Assessment.
 
 THEIR ANSWERS (maturity 1-5)
 ${answerDigest(answers)}
@@ -91,7 +96,7 @@ Return JSON only:
   "why": "max 12 words on why you're asking",
   "options": ["4 short plausible answers, 2-7 words each, covering the realistic range"]
 }
-${VOICE}`,
+${voice(b.company)}`,
       true,
     );
 
@@ -134,7 +139,7 @@ ${VOICE}`,
     const r = scoreAssessment(answers);
 
     const out = await llm(
-      `You are a ShipTime One logistics engineer answering a prospect's question about their own Logistics Performance Score. Be genuinely useful — this is the moment that earns the call, not a place to withhold.
+      `You are a ${b.team} logistics engineer answering a prospect's question about their own Logistics Performance Score. Be genuinely useful — this is the moment that earns the call, not a place to withhold.
 
 THEIR RESULT
 LPS ${r.total}/100 (${r.band}). Cost ${r.pillars[0].score}/100, Operations ${r.pillars[1].score}/100, Customer experience ${r.pillars[2].score}/100.
@@ -150,7 +155,7 @@ ${r.gaps.slice(0, 5).map((g) => `${g.question.title}: ${g.level}/5, −${g.lost}
 THEIR QUESTION: "${q}"
 
 Answer in 2-4 short sentences, grounded in their actual answers above. If the honest answer is "it depends on something we don't know yet", say what that something is. If the question is outside logistics, say so briefly and redirect to their score.
-${VOICE}`,
+${voice(b.company)}`,
       false,
     );
 

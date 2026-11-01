@@ -8,11 +8,12 @@ import { CHEV, K, Logo, NAV, PAGES, mono, sans, title } from "./koherent-brand";
 import type { NavItem, NavMenu } from "./koherent-brand";
 
 // ── The nav ──────────────────────────────────────────────────────────────────
-// Revision 2: Who we help (Jenny's three doors, as a short menu), How it
-// works, Customer stories, Pricing. Michael's ask stays: a strong, prominent
-// logo top left. The filled button is the score (Chris: the score is the
-// ask), with "Talk to an advisor" beside it where the row has room. Below
-// 940px the menu folds into one panel, Who we help as an accordion.
+// Revision 2: Who we help (Jenny's three doors) and How it works (her four
+// solutions) as short menus, then Customer stories and Pricing. Michael's ask
+// stays: a strong, prominent logo top left. The filled button is the score
+// (Chris: the score is the ask), with "Talk to an advisor" beside it where the
+// row has room. Below 940px the menu folds into one panel, the two menus as
+// accordions.
 // The bottom border only shows once the page scrolls, so the top of the page
 // is one clean white field (Jenny asked to smooth the line at the top).
 

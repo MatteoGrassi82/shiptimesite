@@ -8,7 +8,9 @@ import { PAGES } from "./koherent-brand";
 // you, you stay in control. From Jenny's draft (Oct 29) come the structure and
 // her strongest lines: three doors, four solutions on one How it works page,
 // "a label / a building / the outcome", the rate comparison, the pilot and
-// the partner onboarding, and "custom shipping applet" in place of "Shiplet".
+// the partner onboarding. From the Oct 29 L10: the tagline "One network. One
+// partner.", and no custom shipping applets on the site until their launch
+// (Jenny; Michael agreed). They can still come up in a sales conversation.
 // Short on purpose: one idea and one visual per section.
 // Her bracketed notes are not on the pages; they're on /koherent/review.
 // No "use client": server pages read this.
@@ -160,7 +162,6 @@ export const HOW = {
       line: "Your systems connected to ours, and one team responsible for the result.",
       points: [
         "Shopify, Amazon, NetSuite, QuickBooks and 30 more, plus an open API.",
-        "Custom shipping applets for the one workflow that’s yours alone.",
         "Branded tracking, and exception reports before your customers notice.",
         "A named account manager, an operator on the ground and a support lead.",
       ],
@@ -229,12 +230,6 @@ export const PAGES_R2: Page[] = [
       { heading: "Your rates, or ours.", body: "If you have negotiated contracts, we run them. Our platform shops your rates alongside ours on every order and picks the service that meets your rules.", widget: "rateSwitches" },
       { heading: "More than one site, one system.", body: "Inventory placed across our network, each order shipped from the site that gets it there fastest at the lowest cost. You see every site, unit and order in one view.", widget: "map" },
       { heading: "A team that owns the outcome.", body: "A named account manager, an operator on the ground and a support lead own onboarding, escalations, claims, reporting and the quarterly review.", widget: "team" },
-      {
-        id: "applets",
-        heading: "Custom shipping applets.",
-        body: "For the workflow that doesn’t exist off the shelf, our team builds a small app on the platform. This one lets the store counters of two national retail chains send jobs to a workshop in a few clicks.",
-        widget: "applet",
-      },
       { heading: "", widget: "spectrum", wide: true },
       {
         label: "How it starts",
@@ -346,12 +341,11 @@ export const NOTES: ReviewNote[] = [
   { kind: "decide", who: "Jenny and Chris", page: "Home", href: PAGES.home, text: "Main button: the score leads (Chris, Aug 7), with “Talk to an advisor” beside it. Jenny’s draft led with the advisor." },
   { kind: "decide", who: "Jenny and Michael", page: "Growing brands", href: PAGES.growing, text: "Growing brands threshold: the site uses 500 to 5,000 orders a month and sends smaller shippers to ShipTime (tiers set Oct 28). Jenny’s draft says 50 to 1,000." },
   { kind: "decide", who: "Jenny and Michael", page: "Pricing", href: PAGES.pricing, text: "Pricing: publish the enterprise model (subscription plus a per-label fee), or talk to sales only, as Jenny’s navigation suggested?" },
-  { kind: "decide", who: "Matteo", page: "How it works", href: PAGES.works, text: "The example account (lp.shiptime.com/dashboard) still says “Shiplets” throughout." },
+  { kind: "decide", who: "Matteo", page: "How it works", href: PAGES.works, text: "The example account (lp.shiptime.com/dashboard), linked from Manage, still says “Shiplets” throughout, and the Oct 29 L10 kept applets off the site until their launch. Keep the link, or drop it until then?" },
   { kind: "decide", who: "Matteo", page: "3PL partners", href: PAGES.partners, text: "There’s no partner application form yet: “Apply to join the network” goes to the contact form." },
   { who: "Michael", page: "Home", href: PAGES.home, text: "Figures: 2M+ shipments a year, 1,000+ businesses and 20 years are on the live site already; Michael gave 800 partner warehouses on Oct 27. Jenny asked to check all four against the corporate deck." },
   { who: "Michael", page: "Home", href: PAGES.home, text: "Customer logos: PG Golf, Kahoots and InnoWave are pending approval. The cases stay anonymized until then." },
   { who: "Michael", page: "Home", href: PAGES.home, text: "The bento names “last-mile partners”: fine to say before the Five String earnout ends?" },
-  { who: "Eugene", page: "Home", href: PAGES.home, text: "Custom shipping applets are “built in days” in the bento: is the build-time claim safe?" },
   { who: "Eugene", page: "How it works", href: PAGES.works, text: "Feature availability at launch: branded tracking, exception reports, dashboards by lane and site." },
   { who: "David", page: "How it works", href: PAGES.works, text: "The integrations named: Shopify, Amazon, NetSuite, QuickBooks, WooCommerce, BigCommerce and “30 more”. Also returns processing in Fulfill." },
   { who: "Michael", page: "How it works", href: PAGES.works, text: "Fulfill: “no lease and no minimum”, and the vetting of partner warehouses." },
@@ -370,7 +364,10 @@ export const FROM_JENNY: { kept: string[]; later: string[] } = {
     "The 15-minute rate comparison, the 90-day audit and pilot, and the partner onboarding steps.",
     "A way to ShipTime for smaller shippers: the door finder and Pricing.",
     "Pure white with boxes instead of the tan.",
-    "“Custom shipping applet” instead of “Shiplet”.",
+    "“One network. One partner.” as the tagline (Oct 29 L10).",
+    "How it works as a menu with her four solutions (Oct 29 L10: “more drop down”).",
+    "No custom shipping applets on the site until their launch (Oct 29 L10), and never “Shiplet”.",
+    "The lattice on the home page as well (Oct 29 L10).",
   ],
   later: [
     "Separate Platform, Network and Integrations pages: their content is in How it works for now.",
@@ -392,15 +389,15 @@ export const ASKS: { ask: string; who: string; where: string; href: string }[] =
   { ask: "“Grow your network, not your overhead.”", who: "Chris", where: "Home, over the door finder", href: `${PAGES.home}#doors` },
   { ask: "The score as the main ask", who: "Chris", where: "Home hero, the nav and every closing band", href: PAGES.home },
   { ask: "“Not what we sell, but what we design with”", who: "Chris", where: "Home, How it works", href: `${PAGES.home}#how` },
-  { ask: "The six building blocks", who: "Michael", where: "Home, the bento", href: `${PAGES.home}#how` },
-  { ask: "The lattice", who: "Michael", where: "How it works, the hero", href: PAGES.works },
+  { ask: "The six building blocks", who: "Michael", where: "Home, the bento: five until the applets launch (Oct 29 L10)", href: `${PAGES.home}#how` },
+  { ask: "The lattice", who: "Michael", where: "Home, under the problem; How it works, the hero", href: `${PAGES.home}#network` },
   { ask: "How we work is the product: the six steps", who: "Chris", where: "How it works", href: `${PAGES.works}#method` },
   { ask: "The four ingredients", who: "Chris", where: "How it works, under the six steps", href: `${PAGES.works}#method` },
   { ask: "The design target triangle", who: "The deck", where: "How it works", href: `${PAGES.works}#target` },
   { ask: "In between the independents and the giants", who: "Michael and Chris", where: "Enterprise brands", href: PAGES.enterprise },
   { ask: "Experienced operators, the account team, Michael’s quote and photo", who: "Chris and Michael", where: "Home, the people", href: `${PAGES.home}#people` },
   { ask: "Three case studies, anonymized", who: "Michael", where: "Home; Enterprise brands; Customer stories", href: PAGES.cases },
-  { ask: "A custom shipping applet shown as a real deliverable", who: "Michael", where: "Enterprise brands", href: `${PAGES.enterprise}#applets` },
+  { ask: "A custom shipping applet shown as a real deliverable", who: "Michael", where: "Waits for the launch (Oct 29 L10, Michael agreed); the workshop case tells the shipping side", href: `${PAGES.cases}#jobs-from-every-counter` },
   { ask: "The example account", who: "Matteo", where: "How it works, Manage", href: `${PAGES.works}#manage` },
-  { ask: "“Make it coherent.” as the tagline", who: "The deck", where: "The footer", href: PAGES.home },
+  { ask: "“Make it coherent.” as the tagline", who: "The deck", where: "Replaced at the Oct 29 L10 by “One network. One partner.”: the footer, and the network band on Home", href: `${PAGES.home}#network` },
 ];

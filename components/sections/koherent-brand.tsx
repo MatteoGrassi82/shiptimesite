@@ -68,7 +68,8 @@ export const CHAPTERS: { href: string; name: string }[] = [
 
 // The menu: one way to slice the offer (who it's for), then how it works,
 // the proof and the price. `line` is the sentence under an item in the open
-// menu.
+// menu. How it works opens on Jenny's four solutions, each line a short form
+// of her definition (Oct 29 L10: "it's just more drop down").
 export type NavItem = { name: string; href?: string; line?: string };
 export type NavMenu = { name: string; href?: string; groups: { title?: string; items: NavItem[] }[]; foot?: NavItem };
 export const NAV: NavMenu[] = [
@@ -85,7 +86,22 @@ export const NAV: NavMenu[] = [
     ],
     foot: { name: "Not sure? Find your door", href: `${PAGES.home}#doors` },
   },
-  { name: "How it works", href: PAGES.works, groups: [] },
+  {
+    name: "How it works",
+    href: PAGES.works,
+    groups: [
+      {
+        title: "Four solutions",
+        items: [
+          { name: "Ship", href: `${PAGES.works}#ship`, line: "Every parcel and pallet through the best carrier at the best rate." },
+          { name: "Fulfill", href: `${PAGES.works}#fulfill`, line: "Inventory in the right warehouses, without owning a building." },
+          { name: "Optimize", href: `${PAGES.works}#optimize`, line: "The money and time hiding in your shipping data, found daily." },
+          { name: "Manage", href: `${PAGES.works}#manage`, line: "Your systems connected to ours, one team responsible." },
+        ],
+      },
+    ],
+    foot: { name: "How we work, step by step", href: `${PAGES.works}#method` },
+  },
   { name: "Customer stories", href: PAGES.cases, groups: [] },
   { name: "Pricing", href: PAGES.pricing, groups: [] },
 ];

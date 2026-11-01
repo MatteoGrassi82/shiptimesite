@@ -5,8 +5,9 @@ import { C, K_ARROW, K_BAR, sans, useInView, useReducedMotion } from "./koherent
 // ── NetworkLattice — Michael's network graphic ───────────────────────────────
 // Michael (Oct 19): "the dots give it a tech feel and the idea of a network… a
 // network graphic (lattice) depicting our network of carriers & warehouses
-// that we use to implement our solution". It sits on /koherent/what-we-bring;
-// the home page keeps the bento Matteo picked on Oct 23.
+// that we use to implement our solution". It's the How it works hero and,
+// since Jenny's ask at the Oct 29 L10, a band on the home page too, where the
+// bento Matteo picked on Oct 23 stays as well.
 //
 // Rebuilt from the Oct 23 NetworkLive (git 2d9a878) without its made-up
 // "orders this week" counter. Labels stay generic, with no partner names or

@@ -122,6 +122,9 @@ export function More({ href, children, onDark = false }: { href: string; childre
 // Centered, like the rest of the site (Matteo, Oct 23), and it ends on the
 // wordmark, set huge and cropped: the last thing on every page is the name.
 // The links follow the menu: who we help, then the pages behind it.
+// The tagline is "One network. One partner.", agreed at the Oct 29 L10
+// (Jenny's line); "Make it coherent." no longer leads anywhere (Michael, same
+// call: fine in the text, not as a big title).
 function Footer() {
   const cols: { title: string; links: [string, string][] }[] = [
     { title: "Who we help", links: NAV[0].groups[0].items.map((i): [string, string] => [i.name, i.href ?? PAGES.home]) },
@@ -146,7 +149,7 @@ function Footer() {
     <footer data-k-dark="" style={{ background: K.ink, color: K.onDarkDim, overflow: "hidden" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(56px, 7vw, 88px) clamp(20px, 4vw, 56px) 0", textAlign: "center" }}>
         <Label onDark style={{ fontSize: 12 }}>Your managed logistics network</Label>
-        <p style={{ ...title, fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)", color: K.onDark, margin: "16px 0 0" }}>Make it coherent.</p>
+        <p style={{ ...title, fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)", color: K.onDark, margin: "16px 0 0" }}>One network. One partner.</p>
         <nav aria-label="Footer" className="k-foot" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px 24px", marginTop: 40, maxWidth: 860, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
           {cols.map((c) => (
             <div key={c.title}>

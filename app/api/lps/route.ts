@@ -1,6 +1,6 @@
 import { after, type NextRequest, NextResponse } from "next/server";
 import { QUESTIONS, scoreAssessment, type Answers } from "@/lib/lps";
-import { generateReport, renderReportHtml } from "@/lib/lps-report";
+import { generateReport, lpsBrand, renderReportHtml } from "@/lib/lps-report";
 
 // ── The Logistics Performance Score shiplet ──────────────────────────────────
 // The first agentic "shiplet" (Michael + Matteo, 2026-08-18 prep call). This
@@ -43,6 +43,8 @@ type Body = {
   utm?: Record<string, string>;
   /** "live" (default) shows the report on screen; "email" mails it later. */
   deliver?: "live" | "email";
+  /** Whose engineer writes the report (lib/lps-report.ts). */
+  brand?: string;
 };
 
 /** One door to the HubSpot sink. Both writes go through /api/lead rather than
@@ -126,6 +128,7 @@ export async function POST(req: NextRequest) {
         company: body.company,
         priority,
         microAnswers: body.microAnswers,
+        brand: lpsBrand(body.brand),
       });
 
       // No report, no stamp. `lps_report_ready_at` is the workflow's enrolment

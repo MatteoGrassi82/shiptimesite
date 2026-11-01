@@ -11,6 +11,7 @@ import {
   type Answers,
   type LpsResult,
 } from "@/lib/lps";
+import type { LpsBrand } from "@/lib/lps-report";
 import { P as BASE, serif as BASE_SERIF, sans as BASE_SANS } from "./plus-v2-kit";
 
 // Themeable through --lps-* custom properties, so a page can reskin the
@@ -224,11 +225,15 @@ function LpsShipletStages({
   autoStart = false,
   /** Where the written report goes. See the note at the top of this file. */
   reportDelivery = "live",
+  /** Whose engineer the report and the answers speak as: ShipTime One unless a
+   *  page sets it (/koherent/score sets "koherent"). */
+  brand = "shiptime",
 }: {
   compact?: boolean;
   startHref?: string;
   autoStart?: boolean;
   reportDelivery?: "live" | "email";
+  brand?: LpsBrand;
 }) {
   const [stage, setStage] = useState<Stage>(autoStart ? "questions" : "intro");
   const [idx, setIdx] = useState(0);
@@ -280,7 +285,7 @@ function LpsShipletStages({
       const res = await fetch("/api/lps/agent", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ mode: "micro-ask", answers: full, asked: microAnswers }),
+        body: JSON.stringify({ mode: "micro-ask", answers: full, asked: microAnswers, brand }),
       });
       const data = await res.json();
       if (data?.ok) setMicro(data as MicroAsk);
@@ -308,7 +313,7 @@ function LpsShipletStages({
       const res = await fetch("/api/lps/agent", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ mode: "ask", answers, question, company: form.company, priority }),
+        body: JSON.stringify({ mode: "ask", answers, question, company: form.company, priority, brand }),
       });
       const data = await res.json();
       setChat((c) => c.map((t, i) => (i === c.length - 1 ? { ...t, a: data?.answer || "Something went wrong there." } : t)));
@@ -333,7 +338,7 @@ function LpsShipletStages({
       const res = await fetch("/api/lps", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...form, priority, priorityOther, answers, microAnswers, utm, deliver: reportDelivery }),
+        body: JSON.stringify({ ...form, priority, priorityOther, answers, microAnswers, utm, deliver: reportDelivery, brand }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || "failed");
@@ -366,7 +371,7 @@ function LpsShipletStages({
       const res = await fetch("/api/lps/report", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ answers, company: form.company, priority, microAnswers }),
+        body: JSON.stringify({ answers, company: form.company, priority, microAnswers, brand }),
       });
       if (!res.body) throw new Error("no stream");
       const reader = res.body.getReader();
@@ -382,7 +387,7 @@ function LpsShipletStages({
     } catch {
       setReport((r) => (r ? { ...r, streaming: false } : null));
     }
-  }, [answers, form.company, priority, microAnswers]);
+  }, [answers, form.company, priority, microAnswers, brand]);
 
   // rotate the thinking lines while the report is still streaming its headline
   useEffect(() => {

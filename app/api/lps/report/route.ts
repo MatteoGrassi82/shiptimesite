@@ -1,6 +1,6 @@
 import { type NextRequest } from "next/server";
 import { type Answers } from "@/lib/lps";
-import { LPS_MODEL, buildReportPrompt } from "@/lib/lps-report";
+import { LPS_MODEL, buildReportPrompt, lpsBrand } from "@/lib/lps-report";
 
 // ── Streaming report writer ──────────────────────────────────────────────────
 // The commentary streams token-by-token instead of arriving as a finished
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
     company?: string;
     priority?: string;
     microAnswers?: { question: string; answer: string }[];
+    brand?: string;
   };
 
   const prompt = buildReportPrompt({
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
     company: body.company,
     priority: body.priority,
     microAnswers: body.microAnswers,
+    brand: lpsBrand(body.brand),
   });
 
   const key = process.env.OPENAI_API_KEY;

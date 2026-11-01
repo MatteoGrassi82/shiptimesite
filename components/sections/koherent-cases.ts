@@ -15,6 +15,8 @@
 // labelled proposed. PG Golf's "~$600K a year" stays out: its real volume is a
 // fraction of the model behind it. The promotional company's "5× in a year"
 // stays out too, because its volume has come down since.
+// Since the Oct 29 L10 the workshop case tells the shipping side only: the
+// applet behind it stays off the site until the applets launch.
 
 export type Case = {
   id: string;
@@ -61,13 +63,12 @@ export const CASES: Case[] = [
     id: "jobs-from-every-counter",
     sector: "Custom plaques and laminating",
     shape: "Jobs from every store counter",
-    short: "Customers hand in orders at the counters of two national retail chains. We built a simple “send a job” page on our network, so any store can ship to the workshop in a few clicks.",
+    short: "Customers hand in orders at the counters of two national retail chains. We set up one shipping flow for every store, so any counter can send a job to the workshop in a few clicks.",
     status: "Built",
     detail: [
       ["The business", "A workshop making custom plaques and laminated pieces for the customers of two national retail chains, hundreds of jobs a month."],
       ["The goal", "Let any store counter send a job to the workshop in a few clicks, without each store arranging its own shipping."],
-      ["What we built", "A “send a job” page on our network: a store opens a link or scans a code, and the label is ready in a few clicks."],
-      ["Why it matters", "It's a custom shipping applet: a small app for the one workflow that's this workshop's alone, built on the same platform as everything else."],
+      ["What we built", "One shipping flow for every store on our network: a counter opens a link or scans a code, and the label to the workshop is ready in a few clicks."],
       ["What we track", "Jobs sent by each store, and the days from counter to workshop and back."],
     ],
   },

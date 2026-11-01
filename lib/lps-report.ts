@@ -12,11 +12,24 @@ import { QUESTIONS, scoreAssessment, type Answers } from "@/lib/lps";
 
 export const LPS_MODEL = process.env.LPS_MODEL || "gpt-4.1-mini";
 
+/** Whose engineer writes the report and answers the questions. The score runs
+ *  on the ShipTime One pages and on /koherent, and each speaks for its own
+ *  brand. ShipTime One unless a page says otherwise, so /plus/assessment and
+ *  the Parcel Forum flow read exactly as before. */
+export type LpsBrand = "shiptime" | "koherent";
+export const LPS_BRANDS: Record<LpsBrand, { team: string; company: string }> = {
+  shiptime: { team: "ShipTime One", company: "ShipTime" },
+  koherent: { team: "Koherent", company: "Koherent" },
+};
+/** Request bodies are untrusted: anything but "koherent" is ShipTime One. */
+export const lpsBrand = (v: unknown): LpsBrand => (v === "koherent" ? "koherent" : "shiptime");
+
 export type ReportInput = {
   answers: Answers;
   company?: string;
   priority?: string;
   microAnswers?: { question: string; answer: string }[];
+  brand?: LpsBrand;
 };
 
 export type LpsReport = {
@@ -27,11 +40,12 @@ export type LpsReport = {
   closing: string;
 };
 
-export function buildReportPrompt({ answers, company, priority, microAnswers }: ReportInput): string {
+export function buildReportPrompt({ answers, company, priority, microAnswers, brand = "shiptime" }: ReportInput): string {
   const r = scoreAssessment(answers);
   const micro = microAnswers || [];
+  const b = LPS_BRANDS[brand];
 
-  return `You are a logistics engineer at ShipTime One writing a short personalized report on a prospect's Logistics Performance Score.
+  return `You are a logistics engineer at ${b.team} writing a short personalized report on a prospect's Logistics Performance Score.
 
 THEIR RESULT
 Company: ${company || "not given"}
@@ -66,7 +80,7 @@ One sentence connecting their stated priority to where the score says the levera
 
 Exactly three PRIORITY blocks, ordered by weighted impact, phrased as operational realities rather than question titles.
 
-VOICE: one logistics operator talking to another. Specific, calm, no hype. Never use "leverage", "streamline", "seamless", "unlock", "solution" or "platform". Do not pitch ShipTime, do not mention booking a call. Never invent numbers, savings or facts they did not give us. Do not use dashes as punctuation: no em dashes, no en dashes, no hyphen between two words. Use a comma, a colon or a full stop instead.`;
+VOICE: one logistics operator talking to another. Specific, calm, no hype. Never use "leverage", "streamline", "seamless", "unlock", "solution" or "platform". Do not pitch ${b.company}, do not mention booking a call. Never invent numbers, savings or facts they did not give us. Do not use dashes as punctuation: no em dashes, no en dashes, no hyphen between two words. Use a comma, a colon or a full stop instead.`;
 }
 
 /** Parse the marker format. Tolerant by design: a truncated response still

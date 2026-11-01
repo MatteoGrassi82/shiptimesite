@@ -24,9 +24,9 @@ import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, Secondary, S
 // split row with a widget, a row of cards, steps), then the ask on the plum
 // band with the score beside it (Chris: the score is the ask on every page).
 // White throughout, with boxes and soft shadows instead of the tan ground.
-// The widgets are the first revision's own (console, map, rates, the applet,
-// the account team…), so the site still shows the product working instead of
-// describing it.
+// The widgets are the first revision's own (console, map, rates, the account
+// team…), so the site still shows the product working instead of describing
+// it. The applet widget waits for the applets' launch (Oct 29 L10).
 
 export const wrap: CSSProperties = { maxWidth: 1200, margin: "0 auto", padding: "clamp(48px, 6vw, 84px) clamp(20px, 4vw, 56px)" };
 const para: CSSProperties = { ...sans, fontSize: "clamp(1.02rem, 1.25vw, 1.12rem)", lineHeight: 1.7, color: K.stone, margin: "18px 0 0", maxWidth: "62ch" };
@@ -126,7 +126,7 @@ function ScoreTeaser() {
 export function Spectrum() {
   const cols: { label: string; head: string; body: string; us?: boolean }[] = [
     { label: "Independent 3PLs", head: "Willing, but limited.", body: "A small network, and no one to design the whole operation or the technology to run it." },
-    { label: "Koherent", head: "Deliberately in between.", body: "The design and technology of the global giants, named people who know your operation, and custom shipping applets built for the way you work.", us: true },
+    { label: "Koherent", head: "Deliberately in between.", body: "The design and technology of the global giants, with named people who know your operation and a network built around the way you work.", us: true },
     { label: "The global giants", head: "Capable, but you’re a number.", body: "One account among thousands, at prices built for the very largest shippers." },
   ];
   return (

@@ -4,6 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Marquee } from "@/components/ui/marquee";
 import { KoherentHeroArt } from "./koherent-hero-art";
 import { BringBento } from "./koherent-bring";
+import { NetworkLattice } from "./koherent-lattice";
 import { FitSlider } from "./koherent-fit";
 import { CountUp } from "./koherent-fx";
 import { LogoRow } from "./koherent-logos";
@@ -20,6 +21,8 @@ import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, ScoreClose, 
 // the door finder sending smaller shippers to ShipTime, white with boxes.
 // One idea and one visual per section. The hero stays Hero C, Matteo's Oct 28
 // pick: Jenny's "looks AI" (Oct 29 L10) was about the tan, not the picture.
+// Michael's lattice follows the problem, under the tagline agreed at the same
+// L10; the bento stays too (Michael: "I like that one though, too").
 
 const para = { ...sans, fontSize: "clamp(1.02rem, 1.25vw, 1.12rem)", lineHeight: 1.7, color: K.stone, margin: "18px auto 0", maxWidth: "60ch" };
 const h2 = { ...title, fontSize: "clamp(1.9rem, 3.2vw, 2.8rem)", color: K.ink, margin: "14px auto 0", maxWidth: "26ch" };
@@ -193,6 +196,38 @@ function Outcome() {
   );
 }
 
+// ── the network: Michael's lattice, under the tagline ────────────────────────
+// Jenny at the Oct 29 L10: "that one should probably be on the home page,
+// because it's communicating how" (Matteo: "I thought so too"). It answers
+// the line just above it, and it stays the How it works hero as well. The
+// heading is the tagline agreed on the same call, her "one network, one
+// partner", which "drives the arrow to the one": everything runs into the K.
+function Network() {
+  return (
+    <Sect id="network" bg={K.ink}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "clamp(56px, 7vw, 96px) clamp(20px, 4vw, 56px)", textAlign: "center" }}>
+        <Reveal>
+          <Label onDark>Our network</Label>
+          <h2 style={{ ...h2, color: K.onDark }}>One network. One partner.</h2>
+          <p style={{ ...para, color: K.onDarkDim }}>Carriers, partner warehouses and the systems you already run, connected into one network and run with you by one team.</p>
+        </Reveal>
+        <Reveal delay={100}>
+          <div style={{ marginTop: "clamp(24px, 3vw, 40px)" }}>
+            <NetworkLattice />
+          </div>
+        </Reveal>
+        <Reveal delay={160}>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 26 }}>
+            <More href={PAGES.works} onDark>
+              See how it works
+            </More>
+          </div>
+        </Reveal>
+      </div>
+    </Sect>
+  );
+}
+
 // ── who it's for: Jenny's doors, and the finder ──────────────────────────────
 function Doors() {
   return (
@@ -324,6 +359,7 @@ export function KoherentHome() {
       <Hero />
       <Facts />
       <Outcome />
+      <Network />
       <Doors />
       <How />
       <Stories />
