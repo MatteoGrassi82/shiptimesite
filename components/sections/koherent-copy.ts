@@ -166,7 +166,6 @@ export const HOW = {
         "A named account manager, an operator on the ground and a support lead.",
       ],
       widget: "team" as Widget,
-      link: { label: "Open the example account", href: "https://lp.shiptime.com/dashboard" },
     },
   ],
   method: {
@@ -341,7 +340,6 @@ export const NOTES: ReviewNote[] = [
   { kind: "decide", who: "Jenny and Chris", page: "Home", href: PAGES.home, text: "Main button: the score leads (Chris, Aug 7), with “Talk to an advisor” beside it. Jenny’s draft led with the advisor." },
   { kind: "decide", who: "Jenny and Michael", page: "Growing brands", href: PAGES.growing, text: "Growing brands threshold: the site uses 500 to 5,000 orders a month and sends smaller shippers to ShipTime (tiers set Oct 28). Jenny’s draft says 50 to 1,000." },
   { kind: "decide", who: "Jenny and Michael", page: "Pricing", href: PAGES.pricing, text: "Pricing: publish the enterprise model (subscription plus a per-label fee), or talk to sales only, as Jenny’s navigation suggested?" },
-  { kind: "decide", who: "Matteo", page: "How it works", href: PAGES.works, text: "The example account (lp.shiptime.com/dashboard), linked from Manage, still says “Shiplets” throughout, and the Oct 29 L10 kept applets off the site until their launch. Keep the link, or drop it until then?" },
   { kind: "decide", who: "Matteo", page: "3PL partners", href: PAGES.partners, text: "There’s no partner application form yet: “Apply to join the network” goes to the contact form." },
   { who: "Michael", page: "Home", href: PAGES.home, text: "Figures: 2M+ shipments a year, 1,000+ businesses and 20 years are on the live site already; Michael gave 800 partner warehouses on Oct 27. Jenny asked to check all four against the corporate deck." },
   { who: "Michael", page: "Home", href: PAGES.home, text: "Customer logos: PG Golf, Kahoots and InnoWave are pending approval. The cases stay anonymized until then." },
@@ -398,6 +396,5 @@ export const ASKS: { ask: string; who: string; where: string; href: string }[] =
   { ask: "Experienced operators, the account team, Michael’s quote and photo", who: "Chris and Michael", where: "Home, the people", href: `${PAGES.home}#people` },
   { ask: "Three case studies, anonymized", who: "Michael", where: "Home; Enterprise brands; Customer stories", href: PAGES.cases },
   { ask: "A custom shipping applet shown as a real deliverable", who: "Michael", where: "Waits for the launch (Oct 29 L10, Michael agreed); the workshop case tells the shipping side", href: `${PAGES.cases}#jobs-from-every-counter` },
-  { ask: "The example account", who: "Matteo", where: "How it works, Manage", href: `${PAGES.works}#manage` },
   { ask: "“Make it coherent.” as the tagline", who: "The deck", where: "Replaced at the Oct 29 L10 by “One network. One partner.”: the footer, and the network band on Home", href: `${PAGES.home}#network` },
 ];

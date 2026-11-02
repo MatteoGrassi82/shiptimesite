@@ -32,7 +32,6 @@ export default function KoherentHowItWorksPage() {
     line: b.line,
     points: b.points,
     widget: <WidgetView name={b.widget} />,
-    link: "link" in b ? b.link : undefined,
   }));
   return (
     <KoherentShell>
