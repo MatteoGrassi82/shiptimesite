@@ -18,6 +18,8 @@ export type Block = {
   line: string;
   points: string[];
   tag?: string;
+  // Jenny's "Who buys … on its own" (Nov 16)
+  who?: string;
   widget: ReactNode;
   link?: { href: string; label: string };
 };
@@ -92,6 +94,12 @@ export function BlockScroller({ blocks }: { blocks: Block[] }) {
                 </li>
               ))}
             </ul>
+            {b.who && (
+              <div style={{ marginTop: 24, paddingTop: 18, borderTop: `1px solid ${K.line}`, maxWidth: "44ch" }}>
+                <p style={{ ...sans, fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", color: K.plum, margin: 0 }}>Who buys {b.name} on its own</p>
+                <p style={{ ...sans, fontSize: 15.5, lineHeight: 1.6, color: K.stone, margin: "8px 0 0" }}>{b.who}</p>
+              </div>
+            )}
             {b.link && (
               <a href={b.link.href} className="k-more" style={{ ...sans, display: "inline-flex", alignItems: "center", gap: 7, marginTop: 20, fontSize: 15, fontWeight: 700, color: K.plum, textDecoration: "none" }}>
                 {b.link.label} &rarr;

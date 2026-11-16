@@ -31,6 +31,7 @@ export default function KoherentHowItWorksPage() {
     name: b.name,
     line: b.line,
     points: b.points,
+    who: b.who,
     widget: <WidgetView name={b.widget} />,
   }));
   return (

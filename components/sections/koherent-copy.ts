@@ -13,6 +13,10 @@ import { PAGES } from "./koherent-brand";
 // (Jenny; Michael agreed). They can still come up in a sales conversation.
 // Short on purpose: one idea and one visual per section.
 // Her bracketed notes are not on the pages; they're on /koherent/review.
+// Nov 16: her lines that had been cut without a note are back, in her words
+// (Matteo: make Jennie happy): Heroic Support, the four "Who buys … on its
+// own", the 3PL "What it costs", Manage's returns portal and white-label,
+// and her Pricing headline and enterprise card.
 // No "use client": server pages read this.
 
 export type Widget =
@@ -131,6 +135,7 @@ export const HOW = {
         "Every invoice checked against the quote, with adjustments disputed for you.",
       ],
       widget: "rateCard" as Widget,
+      who: "Every Koherent customer starts here. Growing brands use Ship to replace list-rate shipping and a pile of tools. Enterprise brands use it to run their own contracts alongside ours. Partners use it to turn shipping into margin.",
     },
     {
       id: "fulfill",
@@ -143,6 +148,7 @@ export const HOW = {
         "No lease and no minimum: add space for Q4, let it go in January.",
       ],
       widget: "map" as Widget,
+      who: "Enterprise brands that ship from more than one location use Fulfill to stop managing warehouses one at a time. Growing brands at the 3PL transition point, usually around 500 orders a month, use it as their first warehouse without switching platforms. And 3PLs join from the supply side as partners.",
     },
     {
       id: "optimize",
@@ -155,6 +161,7 @@ export const HOW = {
         "Your Logistics Performance Score, against world-class logistics.",
       ],
       widget: "score" as Widget,
+      who: "Growing brands buy it to find out where the money went. Enterprise brands buy it to get one set of numbers across every location and carrier. It is also the most common reason a brand that is happy with its current provider ends up talking to us.",
     },
     {
       id: "manage",
@@ -162,10 +169,12 @@ export const HOW = {
       line: "Your systems connected to ours, and one team responsible for the result.",
       points: [
         "Shopify, Amazon, NetSuite, QuickBooks and 30 more, plus an open API.",
-        "Branded tracking, and exception reports before your customers notice.",
+        "Branded tracking pages and notifications in your name, a returns portal, and exception reports that reach you before your customers notice.",
+        "Heroic Support™: people who ship, by phone, chat and email, who file claims and chase carriers for you.",
         "A named account manager, an operator on the ground and a support lead.",
       ],
       widget: "team" as Widget,
+      who: "Enterprise brands buy Manage as the wrapper around everything else. White-label partners, agents and buying groups buy the integration and API layer to run their own shipping programs on our platform.",
     },
   ],
   method: {
@@ -188,16 +197,18 @@ export const PAGES_R2: Page[] = [
     path: PAGES.growing,
     label: "Who we help",
     title: "Growing brands",
-    description: "For brands shipping 500 to 5,000 orders a month: better rates, one platform and a team that answers the phone.",
+    description: "For brands shipping 500 to 5,000 orders a month: better rates, one platform and a team that answers the phone, without a contract or a minimum.",
     headline: "Outgrown your tools. Not ready for a 3PL.",
-    subhead: "For brands shipping 500 to 5,000 orders a month: better rates, one platform and a team that answers the phone.",
+    subhead: "For brands shipping 500 to 5,000 orders a month: better rates, one platform and a team that answers the phone, without a contract or a minimum.",
     cta: { label: "Get a 15-minute rate comparison", href: PAGES.contact },
     secondary: score,
     hero: "rateCard",
     blocks: [
       { heading: "Our rates, and yours.", body: "Our negotiated rates across national and regional couriers, LTL and cross-border, compared with your own contracts on every order. The best value wins.", widget: "rateSwitches" },
       { heading: "Every invoice, audited.", body: "We check every carrier invoice against the quote, dispute the adjustments and show you the credit. You see by lane and by carrier where the savings are.", widget: "audit" },
+      { heading: "Real people, under two minutes.", body: "Heroic Support™ is staffed by people who ship, and they pick up the phone. If a carrier loses a package or charges you for a box that was the right size, we file the claim and we fight it. You should not have to learn the carrier’s claims process to get your money back.", widget: "team" },
       { heading: "A warehouse when you’re ready.", body: "When it’s time for a 3PL, you don’t switch vendors. We add warehouse space from our network where your customers are, on the same platform and the same invoice.", widget: "map" },
+      { heading: "Three things you will not find here.", body: "There is no monthly platform fee. There is no volume commitment. And there is no custom pricing you have to call about: you see our rates before you ship." },
       {
         heading: "How it starts.",
         steps: [
@@ -281,6 +292,7 @@ export const PAGES_R2: Page[] = [
           { title: "Go live", body: "Your first merchant ships." },
         ],
       },
+      { heading: "What it costs.", body: "There is no cost to join the network. You earn on every order you fulfill and on every label you ship, and the shipping margin alone typically makes up the majority of partner revenue." },
       { heading: "Who we’re looking for.", body: "Independent, fulfillment-capable 3PLs doing roughly $1 million to $10 million in revenue, with a WMS, a dock and room to grow, in the US or Canada." },
     ],
     close: {
@@ -297,7 +309,7 @@ export const PAGES_R2: Page[] = [
     label: "Pricing",
     title: "Pricing",
     description: "No platform fee to start, a subscription when we run your network, and free to join for 3PL partners.",
-    headline: "Pricing for the way you ship.",
+    headline: "You pay for what you ship, and you see the rate before you ship it.",
     subhead: "No platform fee to start, a subscription when we run your network, and free to join for 3PL partners.",
     cta: { label: "Talk to an advisor", href: PAGES.contact },
     secondary: score,
@@ -307,7 +319,7 @@ export const PAGES_R2: Page[] = [
         heading: "",
         cards: [
           { title: "Growing brands", href: PAGES.growing, body: "You pay the shipping rate you see on screen, with our discount in it. No monthly platform fee, no volume commitment. Add Optimize and Fulfill when you want them." },
-          { title: "Enterprise brands", href: PAGES.enterprise, body: "A platform subscription plus a per-label fee, with your own carrier rates on the platform. Managed services and fulfillment are scoped to your volume and sites. It starts with a free shipping audit." },
+          { title: "Enterprise brands", href: PAGES.enterprise, body: "A platform subscription plus a per-label fee, with your own carrier rates running on the platform. Managed services, fulfillment and the named account lead are scoped to your volume and locations. Every engagement starts with a free shipping audit and most start with a pilot." },
           { title: "3PL and fulfillment partners", href: PAGES.partners, body: "Free to join. You earn on every order you fulfill and every label you ship." },
         ],
         cols: 3,
@@ -351,6 +363,9 @@ export const NOTES: ReviewNote[] = [
   { who: "David", page: "Enterprise brands", href: PAGES.enterprise, text: "The security questionnaire or SOC 2 status, before the pilot is published." },
   { who: "Matteo", page: "3PL partners", href: PAGES.partners, text: "Partner terms: regional protection, the weekly review, the four onboarding steps and 30 to 45 days." },
   { who: "Peter", page: "3PL partners", href: PAGES.partners, text: "The response-time promise: a partner lead calls within two business days." },
+  { who: "Michael", page: "3PL partners", href: PAGES.partners, text: "“Shipping margin typically makes up the majority of partner revenue” (Jenny’s line, back Nov 16). Jenny asked whether the 75 percent figure can be public; the site doesn’t give a number." },
+  { who: "Eugene", page: "How it works", href: PAGES.works, text: "Manage: the returns portal (on the roadmap for Q3–Q4 2026), back on the page Nov 16 in Jenny’s words." },
+  { who: "Michael", page: "How it works", href: PAGES.works, text: "Manage: is white-label for partners, agents and buying groups a public offer at launch? (Jenny’s question; her line is back Nov 16.)" },
   { who: "Michael", page: "Pricing", href: PAGES.pricing, text: "Growing brands: no monthly platform fee, no volume commitment. Enterprise: subscription plus a per-label fee." },
 ];
 
@@ -371,7 +386,7 @@ export const FROM_JENNY: { kept: string[]; later: string[] } = {
     "Separate Platform, Network and Integrations pages: their content is in How it works for now.",
     "Resources: the benchmark report, blog, podcast and guides.",
     "The “logistics operating system” explainer: software vendors already use the term (Orbit, Trenvar, CargoWise), so it doesn’t set us apart.",
-    "The long-form copy: her lines are used in short form; the full draft stays in her doc.",
+    "The long-form copy: her lines are used in short form; the full draft stays in her doc. Nov 16: the sections that had been cut without a note are back in her words.",
   ],
 };
 
