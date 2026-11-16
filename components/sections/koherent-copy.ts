@@ -73,6 +73,8 @@ const score: Cta = { label: "Get your logistics score", href: PAGES.score };
 export const HOME = {
   label: "Logistics, designed and run with you",
   headline: "Your managed logistics network.",
+  // Jenny's headline from her Draft v1, right under Michael's (Nov 16)
+  jennie: "Your logistics should run like one system, and now it does.",
   lead: "We cut shipping costs, improve operations and simplify fulfillment for businesses sending 500+ orders a month to individuals.",
   sub: "Not another 3PL, not another shipping platform. One team designs your network from your own order data and runs it with you: no rebuild, and you stay in control.",
   facts: [
@@ -198,7 +200,7 @@ export const PAGES_R2: Page[] = [
     label: "Who we help",
     title: "Growing brands",
     description: "For brands shipping 500 to 5,000 orders a month: better rates, one platform and a team that answers the phone, without a contract or a minimum.",
-    headline: "Outgrown your tools. Not ready for a 3PL.",
+    headline: "You have outgrown the tools you started with, and you are not ready to hand everything to a 3PL.",
     subhead: "For brands shipping 500 to 5,000 orders a month: better rates, one platform and a team that answers the phone, without a contract or a minimum.",
     cta: { label: "Get a 15-minute rate comparison", href: PAGES.contact },
     secondary: score,
@@ -231,7 +233,7 @@ export const PAGES_R2: Page[] = [
     label: "Who we help",
     title: "Enterprise brands",
     description: "For brands with more than one site or 5,000+ orders a month: one partner for the whole logistics flow.",
-    headline: "One partner for your whole logistics flow.",
+    headline: "One partner is responsible for your whole logistics flow, and it is us.",
     subhead: "For brands with more than one site or 5,000+ orders a month. We design your network from your own order data and run it with you, with your carrier contracts or ours.",
     cta: { label: "Talk to an enterprise advisor", href: PAGES.contact },
     secondary: score,
@@ -262,7 +264,7 @@ export const PAGES_R2: Page[] = [
     label: "Who we help",
     title: "3PL and fulfillment partners",
     description: "Join the Koherent network: merchants in your region, our rates and technology, and shipping that becomes margin.",
-    headline: "You run the warehouse. We bring the merchants.",
+    headline: "You run the warehouse. We bring the merchants, the technology and the shipping margin.",
     subhead: "Join the Koherent network: brands that need fulfillment in your region, our rates and technology, and shipping that becomes margin.",
     cta: { label: "Apply to join the network", href: PAGES.contact },
     hero: "map",

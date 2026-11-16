@@ -53,6 +53,10 @@ function Hero() {
           <h1 className="k-fade" style={{ ...display, fontSize: "clamp(2.7rem, 5.6vw, 4.7rem)", color: K.plum, margin: "20px 0 0", animationDelay: "0.12s" }}>
             {HOME.headline}
           </h1>
+          {/* Jenny's headline, under Michael's (Nov 16) */}
+          <p className="k-fade" style={{ ...title, fontSize: "clamp(1.25rem, 2vw, 1.6rem)", lineHeight: 1.3, color: K.plum, margin: "18px 0 0", maxWidth: "30ch", animationDelay: "0.2s" }}>
+            {HOME.jennie}
+          </p>
           {/* who it's for and what we do, first: Michael's 15-second test */}
           <p className="k-fade" style={{ ...sans, fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", fontWeight: 500, lineHeight: 1.45, color: K.ink, margin: "22px 0 0", maxWidth: "34ch", animationDelay: "0.24s" }}>
             {HOME.lead}
