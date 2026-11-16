@@ -406,7 +406,8 @@ export function PageHero({ page }: { page: Page }) {
   // Some of Jenny's headlines are a whole sentence (Ship, Fulfill…): those set
   // a size or two smaller so they stay around four lines.
   const n = page.headline.length;
-  const size = n > 100 ? "clamp(1.85rem, 2.9vw, 2.45rem)" : n > 60 ? "clamp(2rem, 3.4vw, 2.9rem)" : "clamp(2.4rem, 4.6vw, 3.9rem)";
+  // Nov 16: Jenny's door headlines read too big at the old middle size.
+  const size = n > 100 ? "clamp(1.6rem, 2.4vw, 2.05rem)" : n > 60 ? "clamp(1.7rem, 2.6vw, 2.25rem)" : "clamp(2.4rem, 4.6vw, 3.9rem)";
   const long = n > 60;
   const center = !page.hero;
   return (
@@ -414,7 +415,7 @@ export function PageHero({ page }: { page: Page }) {
       <div className="k-r2hero" style={{ maxWidth: 1200, margin: "0 auto", padding: center ? "clamp(40px, 5vw, 80px) clamp(20px, 4vw, 56px) 0" : "clamp(36px, 5vw, 72px) clamp(20px, 4vw, 56px) clamp(48px, 6vw, 88px)", display: "grid", gridTemplateColumns: center ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "center", textAlign: center ? "center" : "left" }}>
         <div className="k-fade" style={{ maxWidth: center ? 760 : undefined, margin: center ? "0 auto" : undefined }}>
           <Label>{page.label}</Label>
-          <h1 style={{ ...display, fontSize: size, lineHeight: long ? 1.1 : 1.0, letterSpacing: long ? "-0.025em" : display.letterSpacing, color: K.plum, margin: "18px 0 0" }}>{page.headline}</h1>
+          <h1 style={{ ...display, fontSize: size, fontWeight: long ? 700 : display.fontWeight, lineHeight: long ? 1.18 : 1.0, letterSpacing: long ? "-0.02em" : display.letterSpacing, color: K.plum, margin: "18px 0 0" }}>{page.headline}</h1>
           <p style={{ ...sans, fontSize: "clamp(1.05rem, 1.35vw, 1.2rem)", lineHeight: 1.6, color: K.stone, margin: center ? "20px auto 0" : "20px 0 0", maxWidth: "50ch" }}>{page.subhead}</p>
           <div className="k-cta" style={{ display: "flex", flexWrap: "wrap", justifyContent: center ? "center" : "flex-start", gap: 12, marginTop: 30 }}>
             <Primary href={page.cta.href}>
