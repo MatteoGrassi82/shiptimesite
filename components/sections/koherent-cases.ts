@@ -26,6 +26,10 @@ export type Case = {
   figure?: { from: string; to: string; unit: string };
   status: string;
   detail: [string, string][];
+  // The human side (Nov 16, Matteo: "a little more of the human aspect"):
+  // who the work is for and what their day was like, from what we know of
+  // each case. Photos are generated and labelled illustrative.
+  people: { photo: string; who: string; before: string; after: string; afterLabel: string };
 };
 
 export const CASES: Case[] = [
@@ -36,6 +40,13 @@ export const CASES: Case[] = [
     short: "Every order shipped from Texas at cross-border rates, with customs delays customers felt. We designed a phased entry, starting with bulk shipping into Canada.",
     figure: { from: "$25.00", to: "$13.22", unit: "delivered cost per shipment" },
     status: "Proposed, not yet realized",
+    people: {
+      photo: "/generated/koherent-case-golf.webp",
+      who: "The team in Texas that ships every order, and the golfers in Canada waiting for theirs.",
+      before: "Every Canadian order left Texas as its own cross-border parcel, and customers waited out customs delays to get it.",
+      after: "The team sends one consolidated shipment north instead of a stack of parcels, and orders reach Canadian customers from inside the country.",
+      afterLabel: "With Koherent · proposed",
+    },
     detail: [
       ["The business", "A US golf brand with a growing base of customers in Canada."],
       ["The goal", "Sell into Canada at a delivered cost that works. Every order was shipping from Texas at cross-border parcel rates, with customs delays reaching the customer."],
@@ -50,6 +61,13 @@ export const CASES: Case[] = [
     shape: "Campaigns to consumers",
     short: "Gift boxes for its clients' campaigns, shipped to people's homes, each campaign with its own rules. We start at their own dock, then add a warehouse where the customers are.",
     status: "In design",
+    people: {
+      photo: "/generated/koherent-case-campaigns.webp",
+      who: "The people packing every campaign at one dock, and the people opening the gift box at home.",
+      before: "Every campaign shipped from a single dock, however far the box had to travel to reach someone’s door.",
+      after: "They keep packing at their own dock on our platform, and the next campaigns ship from a warehouse nearer the people receiving them.",
+      afterLabel: "With Koherent · in design",
+    },
     detail: [
       ["The business", "A large promotional company running campaigns for its clients, with gift boxes shipped straight to consumers. Not an e-commerce brand, but a lot of orders going to people's homes."],
       ["The goal", "Deliver each client's campaign to people's homes at the lowest cost and time, with every campaign's own distribution rules met."],
@@ -65,6 +83,13 @@ export const CASES: Case[] = [
     shape: "Jobs from every store counter",
     short: "Customers hand in orders at the counters of two national retail chains. We set up one shipping flow for every store, so any counter can send a job to the workshop in a few clicks.",
     status: "Built",
+    people: {
+      photo: "/generated/koherent-case-counter.webp",
+      who: "The store staff who take the order at the counter, and the craftspeople in the workshop who make it.",
+      before: "Each store had to arrange its own shipping to get a job to the workshop.",
+      after: "Any counter opens a link or scans a code, and the label to the workshop is ready in a few clicks.",
+      afterLabel: "Now",
+    },
     detail: [
       ["The business", "A workshop making custom plaques and laminated pieces for the customers of two national retail chains, hundreds of jobs a month."],
       ["The goal", "Let any store counter send a job to the workshop in a few clicks, without each store arranging its own shipping."],

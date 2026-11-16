@@ -52,6 +52,13 @@ export type Block = {
   link?: Cta;
 };
 
+// A door's hero picture (Nov 16, Matteo: "the hero needs to be better"):
+// a generated, labelled photo with one small proof card over its corner.
+export type Photo = {
+  src: string;
+  card: { label: string; rows: { k: string; v: string; on?: boolean }[]; foot: string };
+};
+
 export type Page = {
   key: string;
   path: string;
@@ -63,6 +70,7 @@ export type Page = {
   cta: Cta;
   secondary?: Cta;
   hero?: Widget;
+  photo?: Photo;
   blocks: Block[];
   close: { heading: string; body?: string; cta: Cta; noScore?: boolean };
 };
@@ -205,7 +213,29 @@ export const PAGES_R2: Page[] = [
     cta: { label: "Get a 15-minute rate comparison", href: PAGES.contact },
     secondary: score,
     hero: "rateCard",
+    photo: {
+      src: "/generated/koherent-door-growing.webp",
+      card: {
+        label: "One order to Seattle · due in 2 days",
+        rows: [
+          { k: "Regional carrier", v: "2 days · picked", on: true },
+          { k: "National courier", v: "2 days" },
+          { k: "Postal service", v: "4 days · too slow" },
+        ],
+        foot: "Our rates next to yours, on every order.",
+      },
+    },
     blocks: [
+      {
+        heading: "You know the signs.",
+        body: "Shipping is your second-biggest cost after the product itself, and it keeps growing faster than sales.",
+        cards: [
+          { title: "List rates, or close to them", body: "No carrier will negotiate at your volume." },
+          { title: "Three tools and a spreadsheet", body: "Orders in one, labels in another, tracking in a third, and the spreadsheet that ties them together is a week out of date." },
+          { title: "An afternoon on hold", body: "Returns are handled over email, and when a package goes missing you spend an afternoon on hold." },
+        ],
+        cols: 3,
+      },
       { heading: "Our rates, and yours.", body: "Our negotiated rates across national and regional couriers, LTL and cross-border, compared with your own contracts on every order. The best value wins.", widget: "rateSwitches" },
       { heading: "Every invoice, audited.", body: "We check every carrier invoice against the quote, dispute the adjustments and show you the credit. You see by lane and by carrier where the savings are.", widget: "audit" },
       { heading: "Real people, under two minutes.", body: "Heroic Support™ is staffed by people who ship, and they pick up the phone. If a carrier loses a package or charges you for a box that was the right size, we file the claim and we fight it. You should not have to learn the carrier’s claims process to get your money back.", widget: "team" },
@@ -238,7 +268,23 @@ export const PAGES_R2: Page[] = [
     cta: { label: "Talk to an enterprise advisor", href: PAGES.contact },
     secondary: score,
     hero: "console",
+    photo: {
+      src: "/generated/koherent-door-enterprise.webp",
+      card: {
+        label: "2-day reach · example network",
+        rows: [
+          { k: "Columbus", v: "54%" },
+          { k: "+ Reno", v: "74%" },
+          { k: "+ Memphis", v: "82%", on: true },
+        ],
+        foot: "Share of US customers within two days.",
+      },
+    },
     blocks: [
+      {
+        heading: "You have the volume and the contracts. What you do not have is one party that answers for all of it.",
+        body: "At your size the problem is rarely the rate. It is that your shipping software, your 3PL, your carriers and your returns provider each report to a different vendor, each one blames the next, and your team spends its time reconciling. You need one party that owns the flow end to end and brings you the numbers every month.",
+      },
       { heading: "Your rates, or ours.", body: "If you have negotiated contracts, we run them. Our platform shops your rates alongside ours on every order and picks the service that meets your rules.", widget: "rateSwitches" },
       { heading: "More than one site, one system.", body: "Inventory placed across our network, each order shipped from the site that gets it there fastest at the lowest cost. You see every site, unit and order in one view.", widget: "map" },
       { heading: "A team that owns the outcome.", body: "A named account manager, an operator on the ground and a support lead own onboarding, escalations, claims, reporting and the quarterly review.", widget: "team" },
@@ -268,10 +314,23 @@ export const PAGES_R2: Page[] = [
     subhead: "Join the Koherent network: brands that need fulfillment in your region, our rates and technology, and shipping that becomes margin.",
     cta: { label: "Apply to join the network", href: PAGES.contact },
     hero: "map",
+    photo: {
+      src: "/generated/koherent-door-partners.webp",
+      card: {
+        label: "Partner onboarding",
+        rows: [
+          { k: "Connect", v: "your WMS" },
+          { k: "Integrate", v: "live orders" },
+          { k: "Standardize", v: "rate cards" },
+          { k: "Go live", v: "first merchant", on: true },
+        ],
+        foot: "Live in 30 to 45 days.",
+      },
+    },
     blocks: [
       {
         heading: "An integrated network, not a referral list.",
-        body: "We find the merchants, build the integrations to their store and your WMS, run the rate shopping and handle the billing and the audit. You receive, pick, pack and ship.",
+        body: "Most partner programs send you a lead and wish you luck. Koherent does the merchant acquisition, builds the integrations to the merchant’s store and your WMS, runs the carrier rate shopping, handles the billing and the audit, and brings you the merchant ready to ship. You focus on receiving, picking, packing and getting it out the door on time.",
         widget: "integrations",
       },
       {
@@ -312,9 +371,9 @@ export const PAGES_R2: Page[] = [
     title: "Pricing",
     description: "No platform fee to start, a subscription when we run your network, and free to join for 3PL partners.",
     headline: "You pay for what you ship, and you see the rate before you ship it.",
-    subhead: "No platform fee to start, a subscription when we run your network, and free to join for 3PL partners.",
-    cta: { label: "Talk to an advisor", href: PAGES.contact },
-    secondary: score,
+    subhead: "No platform fee to start, a subscription when we run your network, and free to join for 3PL partners. Answer a few questions to see what you could save.",
+    cta: { label: "Calculate your savings", href: `${PAGES.pricing}#calculator` },
+    secondary: { label: "Talk to an advisor", href: PAGES.contact },
     blocks: [
       {
         id: "tiers",

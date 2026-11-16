@@ -107,6 +107,32 @@ export default function KoherentCaseStudiesPage() {
                 </div>
               </Reveal>
 
+              {/* the people: who it's for, and their day before and after */}
+              <Reveal delay={40}>
+                <div className="k-case-people" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1fr)", gap: "clamp(24px, 4vw, 56px)", alignItems: "center", marginTop: "clamp(28px, 4vw, 48px)", textAlign: "left" }}>
+                  <div style={{ position: "relative", aspectRatio: "3 / 2", borderRadius: 10, overflow: "hidden", background: dark ? "#241a29" : K.mist }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={c.people.photo} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <span style={{ ...mono, position: "absolute", right: 12, top: 12, fontSize: 10.5, letterSpacing: "0.04em", color: K.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 3, padding: "3px 7px" }}>Illustrative photo</span>
+                  </div>
+                  <div>
+                    <p style={{ ...mono, fontSize: 11.5, letterSpacing: "0.1em", textTransform: "uppercase", color: dark ? K.lilac : K.violet, margin: 0 }}>The people behind it</p>
+                    <p style={{ ...title, fontSize: "clamp(1.3rem, 2.1vw, 1.7rem)", lineHeight: 1.3, color: fg, margin: "12px 0 0" }}>{c.people.who}</p>
+                    <div style={{ display: "grid", gap: 14, marginTop: 22 }}>
+                      {([["Before", c.people.before], [c.people.afterLabel, c.people.after]] as [string, string][]).map(([k, v], n) => (
+                        <div key={k} style={{ display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", gap: 14, alignItems: "start" }}>
+                          <span aria-hidden style={{ width: 10, height: 10, borderRadius: 99, marginTop: 7, background: n ? (dark ? K.lilac : K.plum) : "transparent", border: `2px solid ${n ? (dark ? K.lilac : K.plum) : line}` }} />
+                          <span>
+                            <span style={{ ...mono, display: "block", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: dim }}>{k}</span>
+                            <span style={{ ...sans, display: "block", fontSize: 16, lineHeight: 1.6, color: fg, marginTop: 4 }}>{v}</span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+
               {/* the story on the left, what it looks like on the right */}
               <div className="k-case-body" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "clamp(28px, 5vw, 72px)", alignItems: "start", marginTop: "clamp(28px, 4vw, 48px)" }}>
                 <Reveal delay={80}>
@@ -137,7 +163,7 @@ export default function KoherentCaseStudiesPage() {
           .k-case-head { grid-template-columns: 1fr !important; align-items: start !important; }
           .k-case-fig { text-align: left !important; }
           .k-case-fig > div { justify-content: flex-start !important; }
-          .k-case-body { grid-template-columns: 1fr !important; }
+          .k-case-body, .k-case-people { grid-template-columns: 1fr !important; }
           .k-case-screen { position: relative !important; top: auto !important; }
         }
       `}</style>

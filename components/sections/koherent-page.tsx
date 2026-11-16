@@ -14,7 +14,7 @@ import { Live } from "./koherent-live";
 import { CASES } from "./koherent-cases";
 import { CHEV } from "./koherent-brand";
 import { pageByKey } from "./koherent-copy";
-import type { Block, Card, Page, Widget } from "./koherent-copy";
+import type { Block, Card, Page, Photo, Widget } from "./koherent-copy";
 import { box, K, KMark, KoherentShell, Label, More, PAGES, Primary, Secondary, Sect, Steps, display, mono, sans, title } from "./koherent-ui";
 
 // ── Revision 2 pages (Oct 30) ────────────────────────────────────────────────
@@ -347,7 +347,7 @@ function Heading({ b, center, onDark = false }: { b: Block; center: boolean; onD
   );
 }
 
-function BlockView({ b, i }: { b: Block; i: number }) {
+export function BlockView({ b, i }: { b: Block; i: number }) {
   // a split row: the words on one side, the widget on the other, alternating
   if (b.widget && !b.wide) {
     const flip = i % 2 === 1;
@@ -424,13 +424,50 @@ export function PageHero({ page }: { page: Page }) {
             {page.secondary && <Secondary href={page.secondary.href}>{page.secondary.label}</Secondary>}
           </div>
         </div>
-        {page.hero && (
-          <div className="k-fade" style={{ minWidth: 0, animationDelay: "0.15s" }}>
-            <WidgetView name={page.hero} />
-          </div>
+        {page.photo ? (
+          <HeroPhoto photo={page.photo} />
+        ) : (
+          page.hero && (
+            <div className="k-fade" style={{ minWidth: 0, animationDelay: "0.15s" }}>
+              <WidgetView name={page.hero} />
+            </div>
+          )
         )}
       </div>
     </Sect>
+  );
+}
+
+// A door's picture, cut by the K's arrowhead like the home hero (Hero C),
+// labelled illustrative, with one proof card over its lower-left corner.
+function HeroPhoto({ photo }: { photo: Photo }) {
+  const { card } = photo;
+  return (
+    <div className="k-fade k-hphoto" style={{ position: "relative", minWidth: 0, height: "clamp(420px, 44vw, 600px)", animationDelay: "0.15s" }}>
+      <div style={{ position: "absolute", inset: 0, clipPath: "polygon(12% 0, 100% 0, 100% 100%, 12% 100%, 0 50%)", borderRadius: 4, overflow: "hidden", background: K.mist }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={photo.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        <span style={{ ...mono, position: "absolute", right: 14, top: 14, fontSize: 10.5, letterSpacing: "0.04em", color: K.onDark, background: "rgba(23,16,28,0.55)", borderRadius: 3, padding: "3px 7px" }}>Illustrative photo</span>
+      </div>
+      <div data-k-dark="" className="k-hcard" style={{ position: "absolute", left: "-4%", bottom: "8%", width: "min(330px, 78%)", background: K.ink, color: K.onDark, borderRadius: 10, padding: "18px 20px 16px", boxShadow: "0 24px 50px -24px rgba(23,16,28,0.6)" }}>
+        <span style={{ ...mono, display: "block", fontSize: 10.5, letterSpacing: "0.1em", textTransform: "uppercase", color: K.lilac }}>{card.label}</span>
+        <div style={{ display: "grid", gap: 8, marginTop: 12 }}>
+          {card.rows.map((r) => (
+            <div key={r.k} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, paddingBottom: 8, borderBottom: `1px solid ${K.darkLine}` }}>
+              <span style={{ ...sans, fontSize: 14.5, fontWeight: r.on ? 700 : 500, color: r.on ? K.onDark : K.onDarkDim }}>{r.k}</span>
+              <span style={{ ...mono, fontSize: 13, color: r.on ? K.lilac : K.onDarkDim }}>{r.v}</span>
+            </div>
+          ))}
+        </div>
+        <span style={{ ...sans, display: "block", fontSize: 13, lineHeight: 1.5, color: K.onDarkDim, marginTop: 10 }}>{card.foot}</span>
+      </div>
+      <style>{`
+        @media (max-width: 960px) {
+          .k-hphoto { height: 360px !important; margin-bottom: 70px; }
+          .k-hcard { left: 16px !important; bottom: -56px !important; }
+        }
+      `}</style>
+    </div>
   );
 }
 
